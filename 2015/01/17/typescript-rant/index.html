@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Rant on Typescript type guard | Abitrarily Idiosyncratic Randomness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="source: Ad: hisuitei
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rant on Typescript type guard">
+<meta property="og:url" content="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/index.html">
+<meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:description" content="source: Ad: hisuitei
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+<meta property="og:image" content="http://herringtondarkholme.github.io/images/hisuitei.jpg">
+<meta property="og:updated_time" content="2015-06-09T16:26:26.615Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rant on Typescript type guard">
+<meta name="twitter:description" content="source: Ad: hisuitei
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+  
+    <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Abitrarily Idiosyncratic Randomness</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Hchan&#39;s Note</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://herringtondarkholme.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-typescript-rant" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/01/17/typescript-rant/" class="article-date">
+  <time datetime="2015-01-16T16:00:00.000Z" itemprop="datePublished">2015-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Rant on Typescript type guard
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <img src="/images/hisuitei.jpg">
+<p>source: <a href="http://hisuitei.com" target="_blank" rel="external">Ad: hisuitei</a></p>
+<p>Recently Typescript team has released Typescript 1.4, adding a new feature called <code>Union Type</code> which is intended for better incorporation into native Javascript.<br>Type guard, as a natural dyad of union type, also comes into Typescript world. But sadly, Microsoft choose a bizzare way to introduce type guard as they said in the <a href="https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript%3F#typescript-14" target="_blank" rel="external">manual</a></p>
+<blockquote>
+<p>TypeScript now understands these conditions and will change type inference accordingly when used in an if block.</p>
+</blockquote>
+<p>It <em>accepts and only accepts</em> conditional statement like <code>if (typeof x === &#39;string&#39;)</code> as type guard.<br>Typescript now creates new type like <code>number | string</code> meaning a type of either number or string.<br>Users can further refine the type by comparing the value <code>typeof</code> gives, like the example below:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCustomer</span>(<span class="params">name: &#123; firstName: <span class="built_in">string</span>; lastName: <span class="built_in">string</span> &#125; | <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> name === <span class="string">"string"</span>) &#123;</span><br><span class="line">        <span class="comment">// Because of the typeof check in the if, we know name has type string</span></span><br><span class="line">        <span class="keyword">return</span> &#123; fullName: name &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Since it's not a string, we know name has</span></span><br><span class="line">        <span class="comment">// type &#123; firstName: string; lastName: string &#125;</span></span><br><span class="line">        <span class="keyword">return</span> &#123; fullName: name.firstName + <span class="string">" "</span> + name.lastName &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Both customers have type &#123; fullName: string &#125;</span></span><br><span class="line"><span class="keyword">var</span> customer = createCustomer(<span class="string">"John Smith"</span>);</span><br><span class="line"><span class="keyword">var</span> customer2 = createCustomer(&#123; firstName: <span class="string">"Samuel"</span>, lastName: <span class="string">"Jones"</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>I would rather say this is a bad idea because:</p>
+<ol>
+<li>it intermixes type level constucts with value level constructs.</li>
+<li>for complex and flexible language like javascript, microsoft’s approach is unable to handle various expressions regarding types.</li>
+</ol>
+<p>Value level contructs are expression or statements dealing with values, e.g. assignment, comparison. <code>typeof</code> and <code>instanceof</code> in Javascript are value level constructs because they generate boolean value, and their values can be passed to other variable or compared with other variable. Value type constucts do imply types, say, creating a new object of specific type, but they do not explicitly manipulate the types of expressions. There is no type casting Javascript can do. On the other hand, type level constructs deals with types, for example, type annotation and generics.</p>
+<p>Doubling <code>typeof</code> as type guard blurs the demarcation between type level and value level, and naturally reduces program’s readability(somewhat subjective claim though). A variable can, without distinct syntax, change its type in a conditional block. <code>if</code> branching is ubiquitous typescript programs, from hello-world toys to cathedral-like projects. It’s quite hard to find the “type switch” for union type among other irrelevant <code>if</code>s. Also, one has to pay attention to call correct method of a same variable in different branches. So Typescript’s type guard introduces a new <code>type scope</code> different from both lexical scope and function scope. It also cripples the compiler because now compiler has to check whether the condition in a <code>if</code> parentheses is type guard.</p>
+<p>What’s worse? Type guard is a value level constructs so it can interact with all other language constucts. But microsoft does not intend to support that. None of the following code compiles in Typescript 1.4.1, but they ought to run correctly in plain javascript, if they can be compiled.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">function testNot(x: string|number|Function) &#123;</span><br><span class="line">  var isNonNum = typeof x !== 'number'</span><br><span class="line">  if (isNonNum) return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testReturn(x: string|number) &#123;</span><br><span class="line">  if (typeof x === 'number') return;</span><br><span class="line">  return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testReturn(x: string|number) &#123;</span><br><span class="line">  if (typeof x === 'number') throw new Error('error type')</span><br><span class="line">  return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testFor(xs: (string|number)[]) &#123;</span><br><span class="line"> for(var i = 0, x = xs[i]; typeof x === 'string'; i++) &#123;</span><br><span class="line">   console.log(x.length)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testWhile(xs: [](string|number)) &#123;</span><br><span class="line">  var i = 0;</span><br><span class="line">  while (typeof xs[i] === 'string') &#123;</span><br><span class="line">    console.log(xs[i].length)</span><br><span class="line">    i++</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testFilter(xs: (string|number)[]) &#123;</span><br><span class="line">  xs.filter((x) =&gt; typeof x === 'string').map((x) =&gt; x.length)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Indeed, Typescript is not the first to mix type level and value level. Language constructs like <code>Pattern Match</code> also do that(and usually introduce bugs related to type inference, see scala bug track). But at least Pattern Match is a specialized syntax that does not interact much with other syntax. But Type guard is, well, too ubiquitous to be good.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/" data-id="ciapj6zlk000bo2ej98qedejg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/01/24/scala-sam/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Explaining Scala SAM type
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/12/28/yagami/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">大雅雅于俗</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/06/09/paamayim-nekudota/">Paamayim Nekudota Operator in ES7</a>
+          </li>
+        
+          <li>
+            <a href="/2015/01/24/scala-sam/">Explaining Scala SAM type</a>
+          </li>
+        
+          <li>
+            <a href="/2015/01/17/typescript-rant/">Rant on Typescript type guard</a>
+          </li>
+        
+          <li>
+            <a href="/2014/12/28/yagami/">大雅雅于俗</a>
+          </li>
+        
+          <li>
+            <a href="/2014/11/01/typelevel-html/">typelevel-html</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Herrington Darkholme<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

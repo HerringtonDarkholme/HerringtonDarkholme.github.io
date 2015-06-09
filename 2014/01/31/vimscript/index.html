@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vimscript the terrible way | Abitrarily Idiosyncratic Randomness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="source: pixiv
+
+Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.                                               — Steve Losh, Learning Vimscript the hard way
+
+Vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vimscript the terrible way">
+<meta property="og:url" content="http://herringtondarkholme.github.io/2014/01/31/vimscript/index.html">
+<meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:description" content="source: pixiv
+
+Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.                                               — Steve Losh, Learning Vimscript the hard way
+
+Vim">
+<meta property="og:image" content="http://herringtondarkholme.github.io/images/Photo.jpg">
+<meta property="og:updated_time" content="2015-06-09T16:26:20.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vimscript the terrible way">
+<meta name="twitter:description" content="source: pixiv
+
+Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.                                               — Steve Losh, Learning Vimscript the hard way
+
+Vim">
+  
+    <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Abitrarily Idiosyncratic Randomness</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Hchan&#39;s Note</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://herringtondarkholme.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-vimscript" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/01/31/vimscript/" class="article-date">
+  <time datetime="2014-01-30T16:00:00.000Z" itemprop="datePublished">2014-01-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vimscript the terrible way
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <img src="/images/Photo.jpg">
+<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=41290048" target="_blank" rel="external">pixiv</a></p>
+<blockquote>
+<p>Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.<br>                                               — Steve Losh, Learning Vimscript the hard way</p>
+</blockquote>
+<p>Vim is a superb and classy text-editor, but VimScript, well, is far from a usable scripting language.</p>
+<p>Vimscript is extremely powerful, but has grown organically over the years into a twisty maze ready to ensnare the unwary who enter it.<br>Options and commands are often terse and hard to read</p>
+<p>On the surface, VimL looks like an agglomeration of Lua, Perl and primitive Vim configuration language. A litany of reserved words and special operators, along with Regex line-noises, gives rise to yet another write-only language. VimL supports both function call and primitive command, which seasons VimL with one more layer of complexity and inconsistency.</p>
+<p>This is culpable, but is not the most irremediable obfuscation of VimL. The tittle should belong to event system. Vim executes one and only one handler for an event once a time. To bind multiple handlers to one event, users have to write their own <a href="http://vim.wikia.com/wiki/Overload_a_key_with_multiple_handlers" target="_blank" rel="external">custom function</a>.</p>
+<p>It seems very easy for anyone, but at field, handling Vim plugin conflicts is a Herculean task. Vim comes out with many plugins loaded, and users’ .vimrc are liable to frequent editing. Maintaining a list of event handlers requires a user to face with plugins’ source code(verbose namespace, illegible syntax, Byzantine structure, or line noises fraught with all the aforementioned three). And this will be users’ chronic concern since Vim’s configuration are constantly changing. What’s more, VimL’s events are not sufficient. Until recent that  Vim 7.3 adds InsertPre event, there is no event for pressing arbitrary key. Users have to write recursive function to capture <a href="http://vim.wikia.com/wiki/Capture_all_keys" target="_blank" rel="external">all keys</a></p>
+<p>Lastly, there is little VimL material users can find. Vim’s help doc is the only comprehensive and up-to-date document, but it is awkwardly organized. Vim community also favors Python over VimL, indicating that VImL will have <a href="http://www.vim.org/sponsor/vote_results.php" target="_blank" rel="external">less chance</a> to get enhancement. Over the internet, few complaints and swearings about VimL are heard. It shall be interpreted as few VimL developers instead of few VimL defects.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="ciapj6zlh0008o2ej0w06648p" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/02/02/python-request/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Request is a good lib
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/06/09/paamayim-nekudota/">Paamayim Nekudota Operator in ES7</a>
+          </li>
+        
+          <li>
+            <a href="/2015/01/24/scala-sam/">Explaining Scala SAM type</a>
+          </li>
+        
+          <li>
+            <a href="/2015/01/17/typescript-rant/">Rant on Typescript type guard</a>
+          </li>
+        
+          <li>
+            <a href="/2014/12/28/yagami/">大雅雅于俗</a>
+          </li>
+        
+          <li>
+            <a href="/2014/11/01/typelevel-html/">typelevel-html</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Herrington Darkholme<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
