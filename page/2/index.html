@@ -65,6 +65,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-html" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/05/17/html/" class="article-date">
+  <time datetime="2014-05-16T16:00:00.000Z" itemprop="datePublished">2014-05-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/05/17/html/">magic HTML.js</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <img src="/images/html.jpg">
+<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=43531055" target="_blank" rel="external">pixiv</a></p>
+<p>HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 utilizes chain methods to mirror the structure of dom.</p>
+<p>ES5 <code>Object.defineProperty</code> and <code>mutationObserver</code> conjure up the magic. HTML.js provides an eponymous HTML api object initialized by an internal <code>node</code> method, which add all <em>tag</em> methods to its argument object. All <em>tag</em> methods are defined by <code>Object.defineProperty</code> with <code>get</code> option. So tag methods behave like getter methods: every time user access these attributes, tag methods return <em>HTMLifyed</em> elements that are ready to be chained (HTMLifyed elements are normal HTMLElements that have been extended by the internal node method mentioned above).</p>
+<p>Enable tag methods responsive to dom manipulation, HTML opts for mutationObserver to keep an eye on the root element. Once elements have been changed, mutationObserver detects the change and notifies HTML to refresh methods of the corresponding elements.</p>
+<p>However, syntactic sweetheart fails to belie some design deficits and practical problems in this library. <code>Getter</code> methods abstain legacy browsers that still occupy about 10% market share. MutationObserver itself is not that horribly slow, but registering a watchdog on <html> is almost certainly a performance killer for massive dom manipulations.</html></p>
+<p>But the most notorious code smell comes from yet another place, a pure design decision that functions returning either element or array. It is certainly one of the most sloppy practice in dynamic language. In static typed language those function can only have return type <code>Any</code>. Surely this is not informative and bothers user to take the risk of casting results. Indeed, the author mentioned this on the <a href="http://nbubna.github.io/HTML/" target="_blank" rel="external">homepage</a> and tried defend this api design by the excuse of conditional context where users can avoid quandary. But a good library shall be as much care-free as possible. Providing api that returns one single element is probably better than  leaving the users to guarantee element’s uniqueness. Ad-hoc polymorphism is determined by function arguments, not return type.</p>
+<p>HTML’s api reminds me of the keyword <code>null</code>.  Admittedly it is theoretically feasible to entrust programmers with the role of checking uniqueness/existence. But why ぬるぽ is still one of the most prominent haunting apparition in our code?</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cifl28juz000yi0ejo7nmjee1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-yuki" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/05/11/yuki/" class="article-date">
@@ -104,7 +150,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="ciapj6zl80003o2ejujub5pr8" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cifl28jtw0003i0ej2npzna6r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
@@ -155,7 +201,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="ciapj6zlu000jo2ej1x3d5z09" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cifl28juf000mi0ejr5rgrjft" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -219,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="ciapj6zkm0000o2ejq4dbu44y" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cifl28jtf0000i0ej52btipy2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -357,7 +403,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="ciapj6zmy0010o2ej2dqox54r" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cifl28jv30012i0ej53teh1yy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -412,7 +458,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="ciapj6zmh000po2ej3omw4rbv" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cifl28juq000si0ej32zh1uxz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -461,7 +507,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="ciapj6zlh0008o2ej0w06648p" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cifl28ju20008i0ej3724szqu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -488,7 +534,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -497,7 +543,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
     </div>
   </div>
 
@@ -506,7 +552,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -516,6 +562,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/10/10/typescript-ctags/">Updated Ctags for TypeScript</a>
+          </li>
         
           <li>
             <a href="/2015/06/09/paamayim-nekudota/">Paamayim Nekudota Operator in ES7</a>
@@ -531,10 +581,6 @@
         
           <li>
             <a href="/2014/12/28/yagami/">大雅雅于俗</a>
-          </li>
-        
-          <li>
-            <a href="/2014/11/01/typelevel-html/">typelevel-html</a>
           </li>
         
       </ul>

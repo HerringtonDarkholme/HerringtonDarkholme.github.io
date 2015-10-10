@@ -3,30 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>QuickNote Descriptor in Python | Abitrarily Idiosyncratic Randomness</title>
+  <title>Archives: 2015/10 | Abitrarily Idiosyncratic Randomness</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="TL;DR: Descriptor in Python is just getter/setter
-Three ways to implement descriptor:
-
-Use a class that implement magic method __get__, __set__, __delete__
-Use builtin function property(fget=None, fse">
-<meta property="og:type" content="article">
-<meta property="og:title" content="QuickNote Descriptor in Python">
-<meta property="og:url" content="http://herringtondarkholme.github.io/2014/04/12/descriptor/index.html">
+  <meta name="description" content="あくまでも紳士です">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:url" content="http://herringtondarkholme.github.io/archives/2015/10/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
-<meta property="og:description" content="TL;DR: Descriptor in Python is just getter/setter
-Three ways to implement descriptor:
-
-Use a class that implement magic method __get__, __set__, __delete__
-Use builtin function property(fget=None, fse">
-<meta property="og:updated_time" content="2015-06-09T16:27:15.239Z">
+<meta property="og:description" content="あくまでも紳士です">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="QuickNote Descriptor in Python">
-<meta name="twitter:description" content="TL;DR: Descriptor in Python is just getter/setter
-Three ways to implement descriptor:
-
-Use a class that implement magic method __get__, __set__, __delete__
-Use builtin function property(fget=None, fse">
+<meta name="twitter:title" content="Abitrarily Idiosyncratic Randomness">
+<meta name="twitter:description" content="あくまでも紳士です">
   
     <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
   
@@ -76,89 +63,39 @@ Use builtin function property(fget=None, fse">
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-descriptor" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/04/12/descriptor/" class="article-date">
-  <time datetime="2014-04-11T16:00:00.000Z" itemprop="datePublished">2014-04-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="article-title" itemprop="name">
-      QuickNote Descriptor in Python
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2015" class="archive-year">2015</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2015/10/10/typescript-ctags/" class="archive-article-date">
+  <time datetime="2015-10-10T10:26:14.000Z" itemprop="datePublished">Oct 10</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2015/10/10/typescript-ctags/">Updated Ctags for TypeScript</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>TL;DR: Descriptor in Python is just getter/setter</p>
-<p>Three ways to implement descriptor:</p>
-<ol>
-<li>Use a class that implement magic method <code>__get__</code>, <code>__set__</code>, <code>__delete__</code></li>
-<li>Use builtin function <code>property(fget=None, fset=None, fdel=None, doc=None)</code></li>
-<li>Use decorator form of <code>property</code>, like <code>@property def attr(): ...</code>, <code>@attr.setter</code>, <code>@attr.deleter</code></li>
-</ol>
-<p>Make sure all three methods are done at class level rather than at instance level.<br>(That is, write <code>my_attr = property(...)</code> under <code>class MyClass(object):</code> statement,<br>but not <code>self.my_attr = property(..)</code> in <code>__init__</code>)</p>
-<p>Because Python’s MRO is:</p>
-<ol>
-<li>find <code>attr</code> in <code>instance.__dict__</code> (instance level)</li>
-<li>if not found, find <code>attr</code> in <code>instance.__class__.__dict__</code>. If found, try return <code>attr.__get__</code>, otherwise return <code>attr</code> (class level)</li>
-<li>if not found, repeat step 2 on <code>instance.__class__.__base__</code> until <code>attr</code> found or no base class found</li>
-<li>if not found, try returning computed <code>attr</code> if <code>__getattr__</code> is defined</li>
-</ol>
-<p>So the descriptor magic is done at class level</p>
-<p>Pitfall:</p>
-<p>Because descriptor dwells at class level, if one uses descriptor class implementation, all instances may share one common variable.</p>
-<p>To fix that:</p>
-<ol>
-<li>Hoard one hidden variable in the instance</li>
-<li>Use a dictionary in descriptor class to store info of different instances.</li>
-</ol>
-<p>The second solution needs the class hashable. (So a meta class is needed to guarantee hashability)</p>
-<p>Personal view: To maintain Python’s <code>one simple way to work</code> Pythonists just introduced much more <code>complexity</code>.</p>
-<p>Reference:<br><a href="http://www.ibm.com/developerworks/library/os-pythondescriptors/" target="_blank" rel="external">http://www.ibm.com/developerworks/library/os-pythondescriptors/</a><br><a href="http://nbviewer.ipython.org/urls/gist.github.com/ChrisBeaumont/5758381/raw/descriptor_writeup.ipynb" target="_blank" rel="external">http://nbviewer.ipython.org/urls/gist.github.com/ChrisBeaumont/5758381/raw/descriptor_writeup.ipynb</a><br><a href="http://docs.python.org/2/howto/descriptor.html" target="_blank" rel="external">http://docs.python.org/2/howto/descriptor.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cifl28jtf0000i0ej52btipy2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2014/04/15/scala/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Scala Symbol Soup Salvage
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2014/02/17/generator/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Breadth First Search without Queue</div>
-    </a>
-  
-</nav>
-
-  
 </article>
-
+  
+  
+    </div></section>
+  
 </section>
         
           <aside id="sidebar">
