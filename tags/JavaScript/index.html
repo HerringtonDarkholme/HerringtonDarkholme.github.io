@@ -3,22 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Request is a good lib | Abitrarily Idiosyncratic Randomness</title>
+  <title>Tag: JavaScript | Abitrarily Idiosyncratic Randomness</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="source: pixiv
-Web scrapping is a common task for script languages like python.Yet Python standard libraries provide twisted utility to couple with this simple task. urllib[23$] ruins my python newbie">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Request is a good lib">
-<meta property="og:url" content="http://herringtondarkholme.github.io/2014/02/02/python-request/index.html">
+  <meta name="description" content="あくまでも紳士です">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:url" content="http://herringtondarkholme.github.io/tags/JavaScript/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
-<meta property="og:description" content="source: pixiv
-Web scrapping is a common task for script languages like python.Yet Python standard libraries provide twisted utility to couple with this simple task. urllib[23$] ruins my python newbie">
-<meta property="og:image" content="http://herringtondarkholme.github.io/images/python-request.jpg">
-<meta property="og:updated_time" content="2015-06-09T16:26:53.095Z">
+<meta property="og:description" content="あくまでも紳士です">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Request is a good lib">
-<meta name="twitter:description" content="source: pixiv
-Web scrapping is a common task for script languages like python.Yet Python standard libraries provide twisted utility to couple with this simple task. urllib[23$] ruins my python newbie">
+<meta name="twitter:title" content="Abitrarily Idiosyncratic Randomness">
+<meta name="twitter:description" content="あくまでも紳士です">
   
     <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
   
@@ -68,80 +63,39 @@ Web scrapping is a common task for script languages like python.Yet Python stand
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-python-request" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/02/02/python-request/" class="article-date">
-  <time datetime="2014-02-01T16:00:00.000Z" itemprop="datePublished">2014-02-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="article-title" itemprop="name">
-      Request is a good lib
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2015" class="archive-year">2015</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2015/11/17/js-tracker/" class="archive-article-date">
+  <time datetime="2015-11-16T16:00:00.000Z" itemprop="datePublished">Nov 17</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2015/11/17/js-tracker/">JavaScript Error tracking in browsers</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <img src="/images/python-request.jpg">
-<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=big&amp;illust_id=41320823" target="_blank" rel="external">pixiv</a></p>
-<p>Web scrapping is a common task for script languages like python.<br>Yet Python standard libraries provide twisted utility to couple with this simple task. <code>urllib[23$]</code> ruins my python newbie days.<br>To achieve cookie support, you have to import cookielib, create a new cookie jar via the factory method, subclass a opener from the urllib, and finally use the forged opener to make a request.</p>
-<p>Bloated boilerplate code does not seem pythonic at all. We want a simple scrapping utility that provides concise API like http verbs and, preferably, automatic session management. <strong>Request</strong> is the library comes to rescue.</p>
-<p>The structure of Request:</p>
-<ul>
-<li>model</li>
-<li>session</li>
-<li>adapter</li>
-<li>api</li>
-<li>etc…</li>
-</ul>
-<p><code>model</code> irons response and request parameters into unified objects. Both <code>Request</code> and <code>Response</code> supports generator style and file style. Magic methods empowers <code>Request</code> pythonic syntax. The most dirty works(say, encoding stuffs) lies here.</p>
-<p><code>session</code> acts as controller in  MVC design. It combines adapter, which sends request, authentication and cookie session. Request’s streamlined API stems from an interface mocking real browsers.</p>
-<p><code>adapter</code> is a wrapper of urllib3, supporting connection pool management, <code>keep-alive</code> request and proxies.</p>
-<p><code>api</code> is just an alias for <code>1. open session 2. prepare request 3. send request</code>. And all other modules are helpers that do stuffs like encoding and making auth token.</p>
-<p>The design philosophy under Request is : <code>Simple is better than functionality</code>, however, it still grants users plenty of features.<br>Specific as the library aims to be, the philosophy underlying it applies much wider. jQuery’s almighty $, Chrome’s omnipotent omnibox, Google’s preeminent search engine and etc. Simplicity rocks, Usability counts.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cih3jzoam000rhkejzbzs1w4q" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2014/02/17/generator/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Breadth First Search without Queue
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2014/01/31/vimscript/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Vimscript the terrible way</div>
-    </a>
-  
-</nav>
-
-  
 </article>
-
+  
+  
+    </div></section>
+  
 </section>
         
           <aside id="sidebar">
