@@ -65,6 +65,72 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-play-scala" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/08/18/play-scala/" class="article-date">
+  <time datetime="2014-08-18T14:04:58.000Z" itemprop="datePublished">2014-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/08/18/play-scala/">play framework with scalate and activerecord</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>WRYYYYYYYYYYYYYYYY</p>
+<p>— <cite>Dio Brando on Scala crazy dependencies</cite></p>
+</blockquote>
+<p>Scala works like CSS selectors in that every successor overrides its predecessor.</p>
+<p>You will have to work as a detective to figure out the correct recipe to manage a huge casserole of hodgepodge.</p>
+<p>To achieve a working <em>Play</em> configuration with <code>scalate</code> and <code>activerecord</code> needs:</p>
+<p>In <code>build.sbt</code>:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scalaVersion :=  <span class="string">"2.10.3"</span></span><br><span class="line"></span><br><span class="line">libraryDenpendencies ++= <span class="type">Seq</span>(</span><br><span class="line">  jdbc,</span><br><span class="line">  <span class="string">"org.scalatra.scalate"</span> %% <span class="string">"scalate-core"</span> % <span class="string">"1.7.0"</span>,</span><br><span class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord"</span> % <span class="string">"0.2.3"</span>,</span><br><span class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord-play2"</span> % <span class="string">"0.2.3"</span>,</span><br><span class="line">  <span class="string">"com.h2database"</span> % <span class="string">"h2"</span> % <span class="string">"1.3.170"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Several notes:</p>
+<ol>
+<li>Currently <code>scala-activerecord</code> only supports 2.10.3</li>
+<li><code>scalate</code> must be <code>1.7.0</code>+ for better support on scala 2.10 but the current stable version is <code>1.6.0</code></li>
+</ol>
+<p>Then in the root path of play project, create a new file located at <code>app/lib/ScalateIntegration.scala</code><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> controllers</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> play.api._</span><br><span class="line"><span class="keyword">import</span> http.&#123;<span class="type">Writeable</span>, <span class="type">ContentTypeOf</span>, <span class="type">ContentTypes</span>&#125;</span><br><span class="line"><span class="keyword">import</span> mvc.<span class="type">Codec</span></span><br><span class="line"><span class="keyword">import</span> play.api.<span class="type">Play</span>.current</span><br><span class="line"><span class="keyword">import</span> org.fusesource.scalate.layout.<span class="type">DefaultLayoutStrategy</span></span><br><span class="line"><span class="keyword">import</span> collection.<span class="type">JavaConversions</span>._</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Scalate</span> &#123;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> org.fusesource.scalate._</span><br><span class="line">  <span class="keyword">import</span> org.fusesource.scalate.util._</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> format = <span class="type">Play</span>.configuration.getString(<span class="string">"scalate.format"</span>) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(configuredFormat) =&gt; configuredFormat</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="string">"scaml"</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">lazy</span> <span class="function"><span class="keyword">val</span> <span class="title">scalateEngine</span> =</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">engine</span> =</span> <span class="keyword">new</span> <span class="type">TemplateEngine</span></span><br><span class="line">    engine.resourceLoader = <span class="keyword">new</span> <span class="type">FileResourceLoader</span>(<span class="type">Some</span>(<span class="type">Play</span>.getFile(<span class="string">"app/views"</span>)))</span><br><span class="line">    engine.layoutStrategy = <span class="keyword">new</span> <span class="type">DefaultLayoutStrategy</span>(engine, <span class="string">"app/views/layouts/default."</span> + format)</span><br><span class="line">    engine.classpath = <span class="string">"tmp/classes"</span></span><br><span class="line">    engine.workingDirectory = <span class="type">Play</span>.getFile(<span class="string">"tmp"</span>)</span><br><span class="line">    engine.combinedClassPath = <span class="literal">true</span></span><br><span class="line">    engine.classLoader = <span class="type">Play</span>.classloader</span><br><span class="line">    engine</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span>(</span>template: <span class="type">String</span>) = <span class="type">Template</span>(template)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Template</span>(</span>name: <span class="type">String</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">render</span>(</span>args: java.util.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">Any</span>]) = &#123;</span><br><span class="line">      <span class="type">ScalateContent</span>&#123;</span><br><span class="line">        scalateEngine.layout(name, args.map &#123;</span><br><span class="line">          <span class="keyword">case</span> (k, v) =&gt; k -&gt; v</span><br><span class="line">        &#125; toMap)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ScalateContent</span>(</span><span class="function"><span class="keyword">val</span> <span class="title">cont</span>:</span> <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">writeableOf_ScalateContent</span>(</span><span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">Writeable</span>[<span class="type">ScalateContent</span>] = &#123;</span><br><span class="line">    <span class="type">Writeable</span>[<span class="type">ScalateContent</span>]((scalate:<span class="type">ScalateContent</span>) =&gt; codec.encode(scalate.cont))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">contentTypeOf_ScalateContent</span>(</span><span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>] = &#123;</span><br><span class="line">    <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>](<span class="type">Some</span>(<span class="type">ContentTypes</span>.<span class="type">HTML</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Again only works on scalate 1.6.</p>
+<p>Finally, according to <code>activerecord</code>‘s doc.<br>To load the plugin, in <code>conf/play.plugin</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9999:com.github.aselab.activerecord.ActiveRecordPlugin</span><br></pre></td></tr></table></figure>
+<p>To configure database, in <code>conf/application.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Database configuration&#10;# ~~~~~&#10;#&#10;&#10;# Scala ActiveRecord configurations&#10;db.activerecord.driver=org.h2.Driver&#10;db.activerecord.url=&#34;jdbc:h2:mem:play&#34;&#10;db.activerecord.user=&#34;sa&#34;&#10;db.activerecord.password=&#34;&#34;&#10;&#10;# Schema definition class&#10;activerecord.schema=models.Tables</span><br></pre></td></tr></table></figure>
+<p>And in <code>app/models/person.scala</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package models&#10;&#10;import com.github.aselab.activerecord._&#10;import com.github.aselab.activerecord.dsl._&#10;&#10;case class Person(@Required name: String) extends ActiveRecord&#10;object Person extends ActiveRecordCompanion[Person] with PlayFormSupport[Person]</span><br></pre></td></tr></table></figure>
+<p>In <code>app/models/tabels.scala</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package models&#10;&#10;import com.github.aselab.activerecord._&#10;import com.github.aselab.activerecord.dsl._&#10;&#10;object Tables extends ActiveRecordTables with PlaySupport &#123;&#10;  val models = table[Person]&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>And finally you can try this in console</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">activator console&#10;&#10;import models._&#10;import play.core.StaticApplication&#10;&#10;new StaticApplication(new java.io.File(&#34;.&#34;))&#10;&#10;Person(&#34;f@ck&#34;).save&#10;Person.findBy(&#34;name&#34;, &#34;f@ck&#34;)</span><br></pre></td></tr></table></figure>
+<p>WTF have I done? I just typed mechanically what I have ferreted on Google and StackOverflow.<br>WTF is <code>play.core.StaticApplication</code> that is just one confusing <a href="https://www.playframework.com/documentation/2.2.x/api/scala/index.html#play.core.StaticApplication" target="_blank" rel="external">page</a> on the doc?<br>Speciously tantializing is the magical code under which lurk complicated dependencies.</p>
+<p>Reference: <a href="http://www.javacodegeeks.com/2012/04/play-framework-2-quicktip-scala-console.html" target="_blank" rel="external">PlayframeWork Quick Tip</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/08/18/play-scala/" data-id="cihufssyi000wvzejg1o7hg0l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/08/17/hm/" class="article-date">
@@ -97,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cihbv2j9m00132qej8mxdk6mw" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cihufssyq0015vzejenw14pz3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -157,7 +223,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cihbv2j8k000j2qejuheu2ef9" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cihufssxy000jvzej119ch7fq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -203,7 +269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cihbv2j9i00112qejqjqr8783" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cihufssyp0013vzejkzukcg7g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -254,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cihbv2j8300032qej6mkgtumf" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cihufssxj0003vzejkykplt9o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
@@ -305,7 +371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cihbv2j8n000l2qejesmgxpkl" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cihufssy2000lvzejbil3jsli" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -369,7 +435,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cihbv2j9q00172qejz4jrj973" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cihufssyt0019vzejna9xxk9x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -507,7 +573,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cihbv2j9o00152qej1znxujfn" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cihufssys0017vzejk5t3em9c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -562,7 +628,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cihbv2j94000r2qejlwliyxyo" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cihufssyb000tvzejujz9sfen" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -611,7 +677,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cihbv2j8800082qejmvrvbh0m" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cihufssxo0008vzejhrto8oe7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -638,7 +704,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -647,7 +713,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 13.33px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 13.33px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 13.33px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
     </div>
   </div>
 
@@ -656,7 +722,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -666,6 +732,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/12/06/rplugin-notfound/">Trouble Shooting NeoVim&#39;s rplugin not found</a>
+          </li>
         
           <li>
             <a href="/2015/11/17/js-tracker/">JavaScript Error tracking in browsers</a>
@@ -681,10 +751,6 @@
         
           <li>
             <a href="/2015/06/09/paamayim-nekudota/">Paamayim Nekudota Operator in ES7</a>
-          </li>
-        
-          <li>
-            <a href="/2015/01/24/scala-sam/">Explaining Scala SAM type</a>
           </li>
         
       </ul>

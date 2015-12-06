@@ -3,17 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: Scala | Abitrarily Idiosyncratic Randomness</title>
+  <title>Trouble Shooting NeoVim&#39;s rplugin not found | Abitrarily Idiosyncratic Randomness</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="あくまでも紳士です">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Abitrarily Idiosyncratic Randomness">
-<meta property="og:url" content="http://herringtondarkholme.github.io/tags/Scala/index.html">
+  <meta name="description" content="NeoVim is awesome. But after its 0.1 release, neovim is not that awesome, after all, in a old vimmer’s eye.
+To support XDG configuration, NeoVim changed default config paths. After that patch, neovim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Trouble Shooting NeoVim's rplugin not found">
+<meta property="og:url" content="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
-<meta property="og:description" content="あくまでも紳士です">
+<meta property="og:description" content="NeoVim is awesome. But after its 0.1 release, neovim is not that awesome, after all, in a old vimmer’s eye.
+To support XDG configuration, NeoVim changed default config paths. After that patch, neovim">
+<meta property="og:updated_time" content="2015-12-06T11:18:42.671Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Abitrarily Idiosyncratic Randomness">
-<meta name="twitter:description" content="あくまでも紳士です">
+<meta name="twitter:title" content="Trouble Shooting NeoVim's rplugin not found">
+<meta name="twitter:description" content="NeoVim is awesome. But after its 0.1 release, neovim is not that awesome, after all, in a old vimmer’s eye.
+To support XDG configuration, NeoVim changed default config paths. After that patch, neovim">
   
     <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
   
@@ -63,163 +67,67 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/01/24/scala-sam/" class="archive-article-date">
-  <time datetime="2015-01-24T08:21:47.000Z" itemprop="datePublished">Jan 24</time>
+        <section id="main"><article id="post-rplugin-notfound" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/06/rplugin-notfound/" class="article-date">
+  <time datetime="2015-12-05T16:00:00.000Z" itemprop="datePublished">2015-12-06</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/01/24/scala-sam/">Explaining Scala SAM type</a>
+    <h1 class="article-title" itemprop="name">
+      Trouble Shooting NeoVim&#39;s rplugin not found
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2014" class="archive-year">2014</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/11/01/typelevel-html/" class="archive-article-date">
-  <time datetime="2014-11-01T10:26:14.000Z" itemprop="datePublished">Nov 1</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/11/01/typelevel-html/">typelevel-html</a>
-    </h1>
-  
+        <p><a href="http://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/" target="_blank" rel="external">NeoVim</a> is awesome. But after its 0.1 release, neovim is not that awesome, after all, in a old vimmer’s eye.</p>
+<p>To support <a href="https://wiki.archlinux.org/index.php/Xdg-open" target="_blank" rel="external">XDG</a> configuration, NeoVim <a href="https://github.com/neovim/neovim/wiki/Following-HEAD#20151026" target="_blank" rel="external">changed default config paths</a>. After that patch, neovim search <code>~/.config/nvim/init.vim</code> rather than our old friend <code>~/.nvimrc</code>. So I changed my zshrc to alias <code>v</code> to <code>nvim -u ~/.nvimrc</code>. So I can use old configuration without relocating files.</p>
+<p>It works fine, except <a href="https://github.com/Shougo/deoplete.nvim" target="_blank" rel="external">Deoplete</a> always complain about its remote plugin is not registered. When I execute <code>UpdateRemotePlugins</code> as Deoplete’s doc said, a new <code>.-rplugin-</code> file always spawn in my working directory. Without that weird file, Deoplete will never work.</p>
+<p>I think this is configuration problem. But how can I figure out what happened? I start to resolving this by guess.</p>
+<p><code>.-rplugin</code> is the critical file on which Deoplete depends. So NeoVim should search for it when booting. I searched for NeoVim’s repository for its usage. Yes, it does appear in neovim’s source, in <code>neovim/runtime/autoload/remote/host.vim</code>.</p>
+<p>It reads:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let s:remote_plugins_manifest = fnamemodify(expand($MYVIMRC, 1), &#39;:h&#39;)&#10;      \.&#39;/.&#39;.fnamemodify($MYVIMRC, &#39;:t&#39;).&#39;-rplugin~&#39;</span><br></pre></td></tr></table></figure>
+<p>Hmmm, NeoVim will find <code>.-rplugin</code> in the same directory of <code>$MYVIMRC</code>. But where does <code>$MYVIMRC</code> come from?</p>
+<p>Searching neovim’s doc gives me the answer. In <a href="https://github.com/neovim/neovim/blob/84a5709a86cc8d2d90cc29eea26f254b9b5d85fa/runtime/doc/starting.txt#L394" target="_blank" rel="external"><code>:h starting</code></a>, it writes:</p>
+<blockquote>
+<p>If Vim was started with “-u filename”, the file “filename” is used.<br>  All following initializations until 4. are skipped. $MYVIMRC is not<br>  set.</p>
+</blockquote>
+<p>Oh, so I have to relocate my <code>vimrc</code> file. After that, every thing works :).</p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/09/30/scala-operator/" class="archive-article-date">
-  <time datetime="2014-09-30T12:23:16.000Z" itemprop="datePublished">Sep 30</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/09/30/scala-operator/">Scala Generalized Type constraints</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/08/18/play-scala/" class="archive-article-date">
-  <time datetime="2014-08-18T14:04:58.000Z" itemprop="datePublished">Aug 18</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cihufssy9000rvzejixz3t2lm" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/08/18/play-scala/">play framework with scalate and activerecord</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/08/17/hm/" class="archive-article-date">
-  <time datetime="2014-08-17T12:36:12.000Z" itemprop="datePublished">Aug 17</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/08/17/hm/">Hindley Milner reference crafting Algorithm W from scratch</a>
-    </h1>
-  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
 
-    </header>
+    </footer>
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/07/07/scaloid/" class="archive-article-date">
-  <time datetime="2014-07-06T17:14:13.000Z" itemprop="datePublished">Jul 7</time>
-</a>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/07/07/scaloid/">How to set up a scaloid project from scratch</a>
-    </h1>
   
+    <a href="/2015/11/17/js-tracker/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JavaScript Error tracking in browsers</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/04/15/scala/" class="archive-article-date">
-  <time datetime="2014-04-14T16:00:00.000Z" itemprop="datePublished">Apr 15</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/04/15/scala/">Scala Symbol Soup Salvage</a>
-    </h1>
-  
 
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 </section>
         
           <aside id="sidebar">
