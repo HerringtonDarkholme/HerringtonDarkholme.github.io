@@ -65,6 +65,76 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-scala-operator" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/30/scala-operator/" class="article-date">
+  <time datetime="2014-09-30T12:23:16.000Z" itemprop="datePublished">2014-09-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/09/30/scala-operator/">Scala Generalized Type constraints</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Generalized Type Constraints, also known as <code>&lt;:&lt;</code>, <code>&lt;%&lt;</code>(deprecated though) and <code>=:=</code>, also known as type relation operator, or call <a href="http://stackoverflow.com/questions/2603003/operator-in-scala/" target="_blank" rel="external">whatever</a> you want, are not operators but identifiers. It’s quite confusing for new comers to distinguish them from operators, well…, identifiers which are not that esoteric.</p>
+<p>This is just plain Scala feature that non-alphanum symbols can act as legal identifiers, just like <code>+</code> method.<br>More specifically, they are type-constructors. But before we inspect their implementations, let’s first consider their usage.</p>
+<h1 id="Usage">Usage</h1><p>You want to implement a generic container for every type, however, you also want to add a special method that only applies to <code>Special</code> type. (notice: this is different from the annotation <code>@specialized</code> which deals with JVM’s primitive type. Here <code>Special</code> is just a plain old scala type)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span>[</span><span class="type">A</span>](value: <span class="type">A</span>) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">diff</span>[</span><span class="type">A</span> &lt;: <span class="type">Int</span>](b: <span class="type">Int</span>) = value - b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BOOM</span></span><br><span class="line"><span class="comment">// error: value - is not a member of type parameter A</span></span><br><span class="line"><span class="comment">//    def diff[A &lt;: Int](b: A) = value - b</span></span><br></pre></td></tr></table></figure>
+<p>Why? The type bound <code>A &lt;: Int</code> does not work. <code>A</code> has been defined at the class declaration, in the class body Scala compiler requries every type bound is consistent with A’s definition. Here, <code>A</code> has no bound so it is bounded by <code>Any</code>, not <code>Int</code>.</p>
+<p>Instead of setting type bound, methods may ask for some kinds of specific <em>ad-hoc</em> “evidence” for a type.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Container</span>[</span><span class="type">A</span>](value: <span class="type">A</span>) &#123;</span><br><span class="line">  <span class="comment">// other generic methods for A</span></span><br><span class="line">  <span class="comment">/* blah blah */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// specialized method for Int</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addIt</span>(</span><span class="keyword">implicit</span> evidence: <span class="type">A</span> =:= <span class="type">Int</span>) = <span class="number">123</span> + value</span><br><span class="line">&#125;</span><br><span class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Container</span></span><br><span class="line"></span></span><br><span class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="number">123</span>)).addIt</span><br><span class="line">res11: <span class="type">Int</span> = <span class="number">246</span></span><br><span class="line"></span><br><span class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="string">"123"</span>)).addIt</span><br><span class="line">&lt;console&gt;:<span class="number">10</span>: error: could not find <span class="keyword">implicit</span> value <span class="keyword">for</span> parameter evidence: =:=[java.lang.<span class="type">String</span>,<span class="type">Int</span>]</span><br></pre></td></tr></table></figure>
+<p>Cool, <code>evidence</code> is an implicit provided by scala predef. And <code>A =:= Int</code> is just a type like <code>Map[Int, String]</code>, but is infixed due to scala’s syntactic sugar.</p>
+<p>Scala does not impose type constraints until the specific method is called, so <code>addIt</code> does not violate <code>A</code>‘s definition. Still, given the implicit <code>evidence</code>, compiler can still infer that value in <code>addIt</code> is an sub-instance of <code>Int</code>.</p>
+<p>As stated before, type constraints are <em>ad-hoc</em>. So it can achieve type inference more specific than type bound. (Fairly, this is the power of implicit).</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def foo[A, B &#60;: A](a: A, b: B) = (a,b)&#10;&#10;scala&#62; foo(1, List(1,2,3))&#10;res1: (Any, List[Int]) = (1,List(1, 2, 3))</span><br></pre></td></tr></table></figure>
+<p>1 is clearly <code>Int</code> but why does compiler infer it as <code>Any</code>? The <code>B &lt;: A</code> bound requires the first argument type is a super type of the second. <code>A</code> is inferred as the most general type between <code>Int</code> and <code>List[Int]</code>, <code>Any</code>.</p>
+<p><code>&lt;:&lt;</code> comes to help.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def bar[A,B](a: A, b: B)(implicit ev: B &#60;:&#60; A) = (a,b)&#10;&#10;scala&#62; bar(1,List(1,2,3))&#10;&#60;console&#62;:9: error: Cannot prove that List[Int] &#60;:&#60; Int.</span><br></pre></td></tr></table></figure>
+<p>Because generalized type constraints does not interfere with inference, <code>A</code> is <code>Int</code> here. Only then does the compiler find evidence for <code>&lt;:&lt;[Int, List[Int]]</code> and then fails.<br>(Actually, implicit can feedback type information back to inference, see <a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">typelevel programming’s</a> <code>HList</code> and scala collection library’s <code>CanBuildFrom</code>)</p>
+<p>Also implicit conversion does not impact <code>&lt;:&lt;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scala&#62; def foo[B, A&#60;:B] (a:A,b:B) = print(&#34;OK&#34;)&#10;&#10;scala&#62; class A; class B;&#10;&#10;scala&#62; implicit def a2b(a:A) = new B&#10;&#10;scala&#62; foo(new A, new B)  // implicit conversion!&#10;OK&#10;&#10;scala&#62; def bar[A,B](a:A,b:B)(implicit ev: A&#60;:&#60;B) = print(&#34;OK&#34;)&#10;&#10;scala&#62; bar(new A, new B)  // does not work&#10;&#60;console&#62;:17: error: Cannot prove that A &#60;:&#60; B.</span><br></pre></td></tr></table></figure>
+<h1 id="Implementation">Implementation</h1><p>Actually <code>=:=</code> is just a type constructor in scala.<br>It is somewhat like <code>Map[A, B]</code>, that is,<br><code>=:=</code> is defined like</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class =:=[A, B]</span><br></pre></td></tr></table></figure>
+<p>so in the implictly’s bracket, <code>Int =:= Int</code> is just a type<br><code>A =:= B</code> is the infix form of type parameterization for<br>non-alphanumeric identifier. It is equivalent to <code>=:=[A, B]</code></p>
+<p>so one can define implicts for <code>=:=</code>, so that compiler can find</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implicit def EqualTypeEvidence[A]: =:=[A, A] = new =:=[A, A]</span><br></pre></td></tr></table></figure>
+<p>So, when <code>implictly[A =:= B]</code> is compiled,<br>compiler tries to find the correct implicit evidence.</p>
+<p>If and only If A and B are the same, say Int, the compiler can find<br><code>=:=[Int, Int]</code>, by the result of <code>implicit function EqualTypeEvidence[Int]</code></p>
+<p>More compelling is &lt;:&lt;, the conformance evidence,<br>it leverages variance annotation in scala</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class &#60;:&#60;[-A, +B]&#10;implict def Conformance[A]: &#60;:&#60;[A, A] = new &#60;:&#60;[A, A]</span><br></pre></td></tr></table></figure>
+<p>Consider, when <code>String &lt;:&lt; java.io.Serializable</code> is needed,<br>compiler tries to find an instance of <code>&lt;:&lt;[String, j.i.Serializable]</code><br>It can only find instance of the type <code>&lt;:&lt;[String, String]</code><br>(or another alternative <code>&lt;:&lt;[Serializable, Serializable]</code>)<br>But given the variance annotation of &lt;:&lt;,<br>since String is the very type String<br>and String is a subtype of Serializable and B is in a covariant position<br>, or, in another direction<br>snice Serializable is a supertype of String and A is in a contravariant position<br>and Serializable is the very type Serializable</p>
+<p><code>&lt;:&lt;[String, String]</code> is a subtype of <code>&lt;:&lt;[String, Serializable]</code><br>So compiler finds the correct implicit instance as the evidence that<br>String is a subtype of Serializable. By the principle of subtype subsititution.<br>(Liskov)</p>
+<p>Similarly we can define</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Conversion evidence&#10;&#10;class &#60;%&#60;[A &#60;% B, B]&#10;implicit def Conversion[A, B] = new &#60;%&#60;[A, B]&#10;&#10;Contra-conformance&#10;class &#62;:&#62;[+A, -B]&#10;implicit def Contra[A] = new &#62;:&#62;[A, A]</span><br></pre></td></tr></table></figure>
+<p>Magic, Right?<br>The actual implementations uses singleton pattern so it is more efficient. For this illustration post, sloppy implementation is just fine :).</p>
+<p>Reference:<br><a href="http://hongjiang.info/scala-type-contraints-and-specialized-methods/" target="_blank" rel="external">http://hongjiang.info/scala-type-contraints-and-specialized-methods/</a><br><a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/09/30/scala-operator/" data-id="cik3x53mw000r2pejbojnu0n6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-play-scala" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/08/18/play-scala/" class="article-date">
@@ -119,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/08/18/play-scala/" data-id="cihufssyi000wvzejg1o7hg0l" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/08/18/play-scala/" data-id="cik3x53n6000y2pej2edrys88" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -163,7 +233,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cihufssyq0015vzejenw14pz3" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cik3x53nf00172pej91nehpaf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -223,7 +293,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cihufssxy000jvzej119ch7fq" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cik3x53mk000l2pejxrh0h3iy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -269,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cihufssyp0013vzejkzukcg7g" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cik3x53nd00152pejo3a4j1yc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -320,7 +390,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cihufssxj0003vzejkykplt9o" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cik3x53lw00032pej6yvb3tlo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
@@ -371,7 +441,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cihufssy2000lvzejbil3jsli" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cik3x53mq000n2pejtvyr24wa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -435,7 +505,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cihufssyt0019vzejna9xxk9x" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cik3x53nk001b2pejg67vw3nk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -573,7 +643,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cihufssys0017vzejk5t3em9c" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cik3x53ni00192pej77g9fc39" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -628,7 +698,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cihufssyb000tvzejujz9sfen" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cik3x53n3000v2pej9a4ognfj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -640,58 +710,9 @@
 
 
   
-    <article id="post-vimscript" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/01/31/vimscript/" class="article-date">
-  <time datetime="2014-01-30T16:00:00.000Z" itemprop="datePublished">2014-01-31</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/01/31/vimscript/">Vimscript the terrible way</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <img src="/images/Photo.jpg">
-<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=41290048" target="_blank" rel="external">pixiv</a></p>
-<blockquote>
-<p>Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.<br>                                               — Steve Losh, Learning Vimscript the hard way</p>
-</blockquote>
-<p>Vim is a superb and classy text-editor, but VimScript, well, is far from a usable scripting language.</p>
-<p>Vimscript is extremely powerful, but has grown organically over the years into a twisty maze ready to ensnare the unwary who enter it.<br>Options and commands are often terse and hard to read</p>
-<p>On the surface, VimL looks like an agglomeration of Lua, Perl and primitive Vim configuration language. A litany of reserved words and special operators, along with Regex line-noises, gives rise to yet another write-only language. VimL supports both function call and primitive command, which seasons VimL with one more layer of complexity and inconsistency.</p>
-<p>This is culpable, but is not the most irremediable obfuscation of VimL. The tittle should belong to event system. Vim executes one and only one handler for an event once a time. To bind multiple handlers to one event, users have to write their own <a href="http://vim.wikia.com/wiki/Overload_a_key_with_multiple_handlers" target="_blank" rel="external">custom function</a>.</p>
-<p>It seems very easy for anyone, but at field, handling Vim plugin conflicts is a Herculean task. Vim comes out with many plugins loaded, and users’ .vimrc are liable to frequent editing. Maintaining a list of event handlers requires a user to face with plugins’ source code(verbose namespace, illegible syntax, Byzantine structure, or line noises fraught with all the aforementioned three). And this will be users’ chronic concern since Vim’s configuration are constantly changing. What’s more, VimL’s events are not sufficient. Until recent that  Vim 7.3 adds InsertPre event, there is no event for pressing arbitrary key. Users have to write recursive function to capture <a href="http://vim.wikia.com/wiki/Capture_all_keys" target="_blank" rel="external">all keys</a></p>
-<p>Lastly, there is little VimL material users can find. Vim’s help doc is the only comprehensive and up-to-date document, but it is awkwardly organized. Vim community also favors Python over VimL, indicating that VImL will have <a href="http://www.vim.org/sponsor/vote_results.php" target="_blank" rel="external">less chance</a> to get enhancement. Over the internet, few complaints and swearings about VimL are heard. It shall be interpreted as few VimL developers instead of few VimL defects.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cihufssxo0008vzejhrto8oe7" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 </section>
@@ -704,7 +725,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -713,7 +734,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 13.33px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 13.33px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 13.33px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
     </div>
   </div>
 
@@ -722,7 +743,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -732,6 +753,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/02/01/typesafe-di/">TypeSafe DI in TypeScript</a>
+          </li>
         
           <li>
             <a href="/2015/12/06/rplugin-notfound/">Trouble Shooting NeoVim&#39;s rplugin not found</a>
@@ -749,10 +774,6 @@
             <a href="/2015/10/10/typescript-ctags/">Updated Ctags for TypeScript</a>
           </li>
         
-          <li>
-            <a href="/2015/06/09/paamayim-nekudota/">Paamayim Nekudota Operator in ES7</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -765,7 +786,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Herrington Darkholme<br>
+      &copy; 2016 Herrington Darkholme<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

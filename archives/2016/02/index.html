@@ -3,22 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>magic HTML.js | Abitrarily Idiosyncratic Randomness</title>
+  <title>Archives: 2016/2 | Abitrarily Idiosyncratic Randomness</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="source: pixiv
-HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 util">
-<meta property="og:type" content="article">
-<meta property="og:title" content="magic HTML.js">
-<meta property="og:url" content="http://herringtondarkholme.github.io/2014/05/17/html/index.html">
+  <meta name="description" content="あくまでも紳士です">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:url" content="http://herringtondarkholme.github.io/archives/2016/02/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
-<meta property="og:description" content="source: pixiv
-HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 util">
-<meta property="og:image" content="http://herringtondarkholme.github.io/images/html.jpg">
-<meta property="og:updated_time" content="2015-06-09T16:27:00.915Z">
+<meta property="og:description" content="あくまでも紳士です">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="magic HTML.js">
-<meta name="twitter:description" content="source: pixiv
-HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 util">
+<meta name="twitter:title" content="Abitrarily Idiosyncratic Randomness">
+<meta name="twitter:description" content="あくまでも紳士です">
   
     <link rel="alternative" href="/atom.xml" title="Abitrarily Idiosyncratic Randomness" type="application/atom+xml">
   
@@ -68,71 +63,39 @@ HTML.js is a library full of syntactic sugar. It changes html elements dynamical
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-html" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/05/17/html/" class="article-date">
-  <time datetime="2014-05-16T16:00:00.000Z" itemprop="datePublished">2014-05-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="article-title" itemprop="name">
-      magic HTML.js
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2016" class="archive-year">2016</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2016/02/01/typesafe-di/" class="archive-article-date">
+  <time datetime="2016-02-01T11:26:14.000Z" itemprop="datePublished">Feb 1</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2016/02/01/typesafe-di/">TypeSafe DI in TypeScript</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <img src="/images/html.jpg">
-<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=43531055" target="_blank" rel="external">pixiv</a></p>
-<p>HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 utilizes chain methods to mirror the structure of dom.</p>
-<p>ES5 <code>Object.defineProperty</code> and <code>mutationObserver</code> conjure up the magic. HTML.js provides an eponymous HTML api object initialized by an internal <code>node</code> method, which add all <em>tag</em> methods to its argument object. All <em>tag</em> methods are defined by <code>Object.defineProperty</code> with <code>get</code> option. So tag methods behave like getter methods: every time user access these attributes, tag methods return <em>HTMLifyed</em> elements that are ready to be chained (HTMLifyed elements are normal HTMLElements that have been extended by the internal node method mentioned above).</p>
-<p>Enable tag methods responsive to dom manipulation, HTML opts for mutationObserver to keep an eye on the root element. Once elements have been changed, mutationObserver detects the change and notifies HTML to refresh methods of the corresponding elements.</p>
-<p>However, syntactic sweetheart fails to belie some design deficits and practical problems in this library. <code>Getter</code> methods abstain legacy browsers that still occupy about 10% market share. MutationObserver itself is not that horribly slow, but registering a watchdog on <html> is almost certainly a performance killer for massive dom manipulations.</html></p>
-<p>But the most notorious code smell comes from yet another place, a pure design decision that functions returning either element or array. It is certainly one of the most sloppy practice in dynamic language. In static typed language those function can only have return type <code>Any</code>. Surely this is not informative and bothers user to take the risk of casting results. Indeed, the author mentioned this on the <a href="http://nbubna.github.io/HTML/" target="_blank" rel="external">homepage</a> and tried defend this api design by the excuse of conditional context where users can avoid quandary. But a good library shall be as much care-free as possible. Providing api that returns one single element is probably better than  leaving the users to guarantee element’s uniqueness. Ad-hoc polymorphism is determined by function arguments, not return type.</p>
-<p>HTML’s api reminds me of the keyword <code>null</code>.  Admittedly it is theoretically feasible to entrust programmers with the role of checking uniqueness/existence. But why ぬるぽ is still one of the most prominent haunting apparition in our code?</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cik3x53nd00152pejo3a4j1yc" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2014/07/07/scaloid/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          How to set up a scaloid project from scratch
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2014/05/11/yuki/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">至少、像那老坛酸菜牛肉面一样</div>
-    </a>
-  
-</nav>
-
-  
 </article>
-
+  
+  
+    </div></section>
+  
 </section>
         
           <aside id="sidebar">
