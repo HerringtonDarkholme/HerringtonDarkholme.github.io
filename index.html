@@ -65,6 +65,87 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-dein" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/26/dein/" class="article-date">
+  <time datetime="2016-02-25T16:00:00.000Z" itemprop="datePublished">2016-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/26/dein/">Trying out dein.vim -- a dark powered plugin manager</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Dark_Powered_Plugin">Dark Powered Plugin</h2><p><a href="http://qiita.com/yoza/items/2f8bd33a18225754f346" target="_blank" rel="external">Original Japanese post here</a></p>
+<p>Vim already has a lot of plugin managers.<br>But our <a href="https://twitter.com/ShougoMatsu" target="_blank" rel="external">Dark Vim Master</a> has released neobundle’s successor, a brand-new plugin manger called <a href="https://github.com/Shougo/dein.vim" target="_blank" rel="external">dein.vim</a>.</p>
+<blockquote>
+<p>Dein.vim is a dark powered Vim/NeoVim plugin manager.</p>
+</blockquote>
+<p>To put it in plain English, dein.vim is a plugin manager focusing on both <strong>installation performance</strong> and <strong>startup performance</strong>.<br>It looks like a neobunle with vim-plug’s speed, or a vim-plug with neobunle’s feature. The best of both worlds.</p>
+<p>In this blog post I will first show minimal configuration for dein.vim, and then try to explain the dark power of dein, if you are interested in what makes dein.vim so fast.</p>
+<h2 id="Minimal_Configuration">Minimal Configuration</h2><blockquote>
+<p>Though dark powered, dein.vim supports vim and neovim.</p>
+</blockquote>
+<p>Sadly, there is no installation script for dein.vim for now.<br>So let’s manually install it.</p>
+<p>First, clone dein.vim’s source.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.vim/dein/repos/github.com/Shougo/dein.vim <span class="comment">#recommended path</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/Shougo/dein.vim.git \</span><br><span class="line">    ~/.vim/dein/repos/github.com/Shougo/dein.vim</span><br></pre></td></tr></table></figure>
+<p>If you are familiar with neobundle/vundle, you will find dein.vim’s path so different. It is because dein uses a new approach to manage plugin’s source.</p>
+<p>Optionally, you can backup your vimrc for profiling, as I will show later.</p>
+<p>Then, in your <code>init.vim</code> or <code>.vimrc</code>.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">set nocompatible</span><br><span class="line">set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim " path to dein.vim</span><br><span class="line"></span><br><span class="line">call dein#begin(expand('~/.vim/dein')) " plugins' root path</span><br><span class="line">call dein#add('Shougo/dein.vim')</span><br><span class="line">call dein#add('Shougo/vimproc.vim', &#123;</span><br><span class="line">    \ 'build': &#123;</span><br><span class="line">    \     'windows': 'tools\\update-dll-mingw',</span><br><span class="line">    \     'cygwin': 'make -f make_cygwin.mak',</span><br><span class="line">    \     'mac': 'make -f make_mac.mak',</span><br><span class="line">    \     'linux': 'make',</span><br><span class="line">    \     'unix': 'gmake',</span><br><span class="line">    \    &#125;,</span><br><span class="line">    \ &#125;)</span><br><span class="line"></span><br><span class="line">call dein#add('Shougo/unite.vim')</span><br><span class="line"></span><br><span class="line">" and a lot more plugins.....</span><br><span class="line"></span><br><span class="line">call dein#end()</span><br></pre></td></tr></table></figure></p>
+<p>Fire up your neovim/vim, call dein.vim’s installation function</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:call dein#install()</span><br></pre></td></tr></table></figure>
+<p>Wait and brew yourself a cup of (instant) coffee.<br>Then you can confirm your installation, for example call <code>:Unite dein</code></p>
+<h2 id="More_features">More features</h2><p>The most important feature of dein.vim is lazy load. Here are some typical usages worth mentioning.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">" lazy load on filetype</span><br><span class="line">call dein#add('justmao945/vim-clang',</span><br><span class="line">      \&#123;'on_ft': ['c', 'cpp']&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on command executed</span><br><span class="line">call dein#add('scrooloose/nerdtree',</span><br><span class="line">      \&#123;'on_cmd': 'NERDTreeToggle'&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on insert mode</span><br><span class="line">call dein#add('Shougo/deoplete.nvim',</span><br><span class="line">      \&#123;'on_i': 1&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on function call</span><br><span class="line">call dein#add('othree/eregex.vim',</span><br><span class="line">      \&#123;'on_func': 'eregex#toggle'&#125;)</span><br></pre></td></tr></table></figure>
+<p>The last two lazy loading conditions are not available in Vimplug. While lazy loading according to mode change is very convenient.</p>
+<h2 id="Two_Tales_of_Plugin_Manager">Two Tales of Plugin Manager</h2><p>From here on I will talk about dein’s internal feature. It’s my personal observation, please pardon my mistake and misunderstanding.</p>
+<p>Vim’s plugin managers have to take two aspects into consideration: installation time and startup time.<br>You can read <a href="https://github.com/junegunn/" target="_blank" rel="external">junegunn</a>‘s blogs article, <a href="http://junegunn.kr/2013/09/writing-my-own-vim-plugin-manager/" target="_blank" rel="external">this</a> and <a href="http://junegunn.kr/2014/07/vim-plugins-and-startup-time/" target="_blank" rel="external">this</a>, for more details on plugin manager.</p>
+<blockquote>
+<p>dein.vim is fast because it uses dark power</p>
+</blockquote>
+<p><a href="http://www.urbandictionary.com/define.php?term=jkjk" target="_blank" rel="external">JK</a><a href="https://en.wikipedia.org/wiki/JK" target="_blank" rel="external">JK</a>. Actually, dein.vim optimizes both two performance, by following measures:</p>
+<ol>
+<li><p><strong>parallel installation</strong> dein.vim uses either <a href="http://exhentai.org/s/56aedaf7ad/908231-9" target="_blank" rel="external">vimproc</a> or neovim’s <a href="https://neovim.io/doc/user/job_control.html" target="_blank" rel="external">async job</a> to download plugins concurrently.</p>
+</li>
+<li><p><strong>precomputed runtimepath</strong> dein.vim will copy all plugins’ subdirectory into a cache directory. This merges all runtime VimScript files into one directory. So dein doesn’t need to compute runtimepath on startup.</p>
+</li>
+</ol>
+<p>Dein.vim also ditches command usage in favor of function calling, which may also contribute to performance(I’m not sure, though).</p>
+<h2 id="Troubleshooting">Troubleshooting</h2><p>Because dein.vim uses parallel processing, when errors occur in installation it may be hard to figure out which plugin went wrong. Usually you can see the error messages by <code>:message</code> after all plugin finished fetching (regardless of success or not). Or you can use <code>dein#check_install</code> function.</p>
+<p>Also, precomputed cache makes modifying plugin harder. You will need to call <code>dein#recache_runtimepath()</code> after modification. This also applies to disabling plugins.</p>
+<p>Lastly, if you happen to live in a country with stupid censorship which prevents github access. You will need a proxy and set <code>g:dein$install_process_timeout</code> to a larger value.</p>
+<p>For more info please refer to <a href="https://github.com/Shougo/dein.vim/blob/master/doc/dein.txt" target="_blank" rel="external">doc</a>.</p>
+<h2 id="Profiling_dein’s_power">Profiling dein’s power</h2><p>Profiling vim’s startup time has a rather <a href="http://usevim.com/2012/04/18/startuptime/" target="_blank" rel="external">standard method</a>. You can try it by backup old vimrc and compare it to dein.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvim -u old-init.vim --startuptime neobundle.log <span class="comment"># or change nvim to vim</span></span><br><span class="line">nvim -u new-init.vim --startuptime dein.log</span><br></pre></td></tr></table></figure>
+<p>From the log, I can see dein.vim gives me 20ms startup boost! Mainly from boosting <code>sourcing vimrc</code>. Amazing!</p>
+<p>If you use a lot of plugins, dein is definitely a must-try!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2016/02/26/dein/" data-id="cil3zsbkh001d8fejprauoshx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-typesafe-di" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/02/01/typesafe-di/" class="article-date">
@@ -121,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="cik3xhmpr000gf8ejztmo8sq1" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="cil3zsbj6000g8fej9yv4os6n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -172,7 +253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cik3xhmqc000tf8ejrmi1kofr" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cil3zsbjw000t8fejgvs7fgad" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -241,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="cik3xhmqq0012f8ej4u5x7xuy" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="cil3zsbk800128fejpegf2r0h" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
@@ -298,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="cik3xhmox0000f8ejagelqfib" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="cil3zsbic00008fej9scdxwkf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -340,7 +421,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="cik3xhmpo000ef8ejs6z2jlgx" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="cil3zsbj2000e8fej425370yl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -386,7 +467,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="cik3xhmqn0010f8ej3h7mz26a" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="cil3zsbk600108fejt6v9plqz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -444,7 +525,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/01/24/scala-sam/" data-id="cik3xhmq6000pf8ejoes3pz0p" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/01/24/scala-sam/" data-id="cil3zsbjn000p8fejnolg3knt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -500,7 +581,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/" data-id="cik3xhmpl000bf8ejupji54j3" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/" data-id="cil3zsbj0000b8fej4520occq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -549,65 +630,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/12/28/yagami/" data-id="cik3xhmpg0006f8ejs2sd5m6c" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/12/28/yagami/" data-id="cil3zsbiv00068fej727robbi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-typelevel-html" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/11/01/typelevel-html/" class="article-date">
-  <time datetime="2014-11-01T10:26:14.000Z" itemprop="datePublished">2014-11-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/01/typelevel-html/">typelevel-html</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Type level programming is a technique that exploits type system to represents information and logic, to the extent of language’s limit.</p>
-<p>Since values are encoded by variable’s type, type level drives compiler to validate logic or even determine program’s output.<br>All validation and computation are conducted statically at compiling phase, so the greatest benefit of type-level programming is its safety and reliability.</p>
-<p>As a rule of thumb, the more dynamic code is, the more flexible it can computes. Type level programming require all logic encoded into the source code. It is to hard to cram all logic into type system, as handling whimsical input from external source is either impossible or reduce source code to unwieldy state machine. So the niche of type level programming is usually encoding, pickling or parsing.</p>
-<p>But there is field where code is statically written: GUI. HTML template is hard coded in source. Type level can be used as linting and validation in html edition, especially in authoring web components. A piece of HTML fragment can be encoded in ordinary object, with type denoting its structure. Once the structure of HTMl is fixed, the output of JavaScript and css can be determined as well.<br>This is more helpful when one wants to make component. A tab-container must have tab-pane as child, and a tab-pane must live within a tab-container. Current approach of constraining HTML structure is encoding requirements in JavaScript and checking it in runtime. For example, angular uses <code>require: &#39;^parentDirective&#39;</code> to express the constraints and enable directive communication. If the component is programmatically constructed, using type annotation is a natural way to express the constraints. (As in Angular 2.0, <code>query&lt;ChildDirective&gt;</code>). We can go further in a language with full-bloomed type system.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trait Tag&#10;class Concat[A &#60;: Tag, B &#60;: Tag](a: A, b: B) extends Tag&#10;trait NestTag[A &#60;: Tag] extends Tag &#123;&#10;  type Child = A&#10;&#125;&#10;trait Inline extends Tag&#10;trait Block extends Tag&#10;case class div[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class p[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class a[T &#60;: Inline](t :T = null) extends NestTag[T] with Inline&#10;&#10;implicit class PlusTag[A &#60;: Tag](a: A) &#123;&#10;  def +[B &#60;: Tag](b: B) = new Concat(a, b)&#10;&#125;&#10;&#10;class Contains[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;&#10;case class jQ[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_]](c: C[A]) &#123;&#10;  def has[T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: Contains[A, C, T]) = true&#10;&#125;&#10;&#10;implicit def htmlEq[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: C[A] =:= T[A]) =&#10;  new Contains[A, C, T]&#10;implicit def recurEq[A &#60;: Tag, B[_ &#60;: Tag] &#60;: NestTag[_], C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;  (implicit ev: Contains[A, B, T]) = new Contains[B[A], C, T]&#10;&#10;val ele = div(&#10;  p(&#10;    a()&#10;  )&#10;)&#10;val r = jQ(ele).has[p]&#10;println(r)</span><br></pre></td></tr></table></figure>
-<p>The code above is just a demo. All html elements has type that denotes its structure. And one can tell whether a tag is in a html elemnt by calling <code>jQ(ele).has[Tag]</code>. (Note: ele is value level variable and Tag is a type level constructor.) And inline element cannot contains block element, because inline element’s child must be a subtype of <code>inline</code>.</p>
-<p>Programmatical markup has several benefits:</p>
-<ol>
-<li>no switching between script and template</li>
-<li>static type checking</li>
-<li>component dependency requirements</li>
-<li>component communication</li>
-<li>subtyping, inheritance… Classical OOP features</li>
-<li>relatively clean layout (though not as concise as Jade/Slim)</li>
-</ol>
-<p>The biggest problem is, well, type level templates is strongly constrained by host language. Dynamic languages simply cannot have it. Users of classical static typed language without type inference cannot afford the verbosity of deeply nested type. And languages capable of type level have different approaches and implementation towards Type Level Programming.</p>
-<p>After all, type level is too crazy…, at least for daily business logic.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/11/01/typelevel-html/" data-id="cik3xhmpu000if8ejokc41j5h" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
 
     </footer>
   </div>
@@ -631,7 +657,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -640,7 +666,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 13.33px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
     </div>
   </div>
 
@@ -649,7 +675,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -659,6 +685,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/02/26/dein/">Trying out dein.vim -- a dark powered plugin manager</a>
+          </li>
         
           <li>
             <a href="/2016/02/01/typesafe-di/">TypeSafe DI in TypeScript</a>
@@ -674,10 +704,6 @@
         
           <li>
             <a href="/2015/10/25/angular2-quick-start/">The Real Angular2 quick start</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/10/typescript-ctags/">Updated Ctags for TypeScript</a>
           </li>
         
       </ul>

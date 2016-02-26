@@ -65,6 +65,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-typelevel-html" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/11/01/typelevel-html/" class="article-date">
+  <time datetime="2014-11-01T10:26:14.000Z" itemprop="datePublished">2014-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/11/01/typelevel-html/">typelevel-html</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Type level programming is a technique that exploits type system to represents information and logic, to the extent of language’s limit.</p>
+<p>Since values are encoded by variable’s type, type level drives compiler to validate logic or even determine program’s output.<br>All validation and computation are conducted statically at compiling phase, so the greatest benefit of type-level programming is its safety and reliability.</p>
+<p>As a rule of thumb, the more dynamic code is, the more flexible it can computes. Type level programming require all logic encoded into the source code. It is to hard to cram all logic into type system, as handling whimsical input from external source is either impossible or reduce source code to unwieldy state machine. So the niche of type level programming is usually encoding, pickling or parsing.</p>
+<p>But there is field where code is statically written: GUI. HTML template is hard coded in source. Type level can be used as linting and validation in html edition, especially in authoring web components. A piece of HTML fragment can be encoded in ordinary object, with type denoting its structure. Once the structure of HTMl is fixed, the output of JavaScript and css can be determined as well.<br>This is more helpful when one wants to make component. A tab-container must have tab-pane as child, and a tab-pane must live within a tab-container. Current approach of constraining HTML structure is encoding requirements in JavaScript and checking it in runtime. For example, angular uses <code>require: &#39;^parentDirective&#39;</code> to express the constraints and enable directive communication. If the component is programmatically constructed, using type annotation is a natural way to express the constraints. (As in Angular 2.0, <code>query&lt;ChildDirective&gt;</code>). We can go further in a language with full-bloomed type system.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trait Tag&#10;class Concat[A &#60;: Tag, B &#60;: Tag](a: A, b: B) extends Tag&#10;trait NestTag[A &#60;: Tag] extends Tag &#123;&#10;  type Child = A&#10;&#125;&#10;trait Inline extends Tag&#10;trait Block extends Tag&#10;case class div[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class p[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class a[T &#60;: Inline](t :T = null) extends NestTag[T] with Inline&#10;&#10;implicit class PlusTag[A &#60;: Tag](a: A) &#123;&#10;  def +[B &#60;: Tag](b: B) = new Concat(a, b)&#10;&#125;&#10;&#10;class Contains[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;&#10;case class jQ[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_]](c: C[A]) &#123;&#10;  def has[T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: Contains[A, C, T]) = true&#10;&#125;&#10;&#10;implicit def htmlEq[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: C[A] =:= T[A]) =&#10;  new Contains[A, C, T]&#10;implicit def recurEq[A &#60;: Tag, B[_ &#60;: Tag] &#60;: NestTag[_], C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;  (implicit ev: Contains[A, B, T]) = new Contains[B[A], C, T]&#10;&#10;val ele = div(&#10;  p(&#10;    a()&#10;  )&#10;)&#10;val r = jQ(ele).has[p]&#10;println(r)</span><br></pre></td></tr></table></figure>
+<p>The code above is just a demo. All html elements has type that denotes its structure. And one can tell whether a tag is in a html elemnt by calling <code>jQ(ele).has[Tag]</code>. (Note: ele is value level variable and Tag is a type level constructor.) And inline element cannot contains block element, because inline element’s child must be a subtype of <code>inline</code>.</p>
+<p>Programmatical markup has several benefits:</p>
+<ol>
+<li>no switching between script and template</li>
+<li>static type checking</li>
+<li>component dependency requirements</li>
+<li>component communication</li>
+<li>subtyping, inheritance… Classical OOP features</li>
+<li>relatively clean layout (though not as concise as Jade/Slim)</li>
+</ol>
+<p>The biggest problem is, well, type level templates is strongly constrained by host language. Dynamic languages simply cannot have it. Users of classical static typed language without type inference cannot afford the verbosity of deeply nested type. And languages capable of type level have different approaches and implementation towards Type Level Programming.</p>
+<p>After all, type level is too crazy…, at least for daily business logic.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/11/01/typelevel-html/" data-id="cil3zsbj9000i8fej92dzmrgs" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-scala-operator" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/09/30/scala-operator/" class="article-date">
@@ -123,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/09/30/scala-operator/" data-id="cik3xhmqa000rf8ej9rm9r6ks" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/09/30/scala-operator/" data-id="cil3zsbjr000r8fejr9qj4a4k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -189,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/08/18/play-scala/" data-id="cik3xhmqj000yf8ejxyrd40bz" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/08/18/play-scala/" data-id="cil3zsbk4000y8fejn4i5yob6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -233,7 +288,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cik3xhmqw0017f8ejv2xjnghd" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/08/17/hm/" data-id="cil3zsbkc00178fejbnyzou13" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -293,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cik3xhmpw000lf8ejnptnm5u0" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/07/07/scaloid/" data-id="cil3zsbjc000l8fej47xanwng" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -339,7 +394,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cik3xhmqu0015f8ejuwj4ipfc" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/17/html/" data-id="cil3zsbka00158fej6q1qem04" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -390,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cik3xhmpd0003f8ejbao7iat1" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/05/11/yuki/" data-id="cil3zsbit00038fej6q0x2xqk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
@@ -441,7 +496,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cik3xhmq2000nf8ejr99qe8rb" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/15/scala/" data-id="cil3zsbjk000n8fejmdc03imy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -505,7 +560,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cik3xhmr1001bf8ejbg6odipa" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cil3zsbkf001b8fej30j4uh5x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -643,62 +698,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cik3xhmqz0019f8ejg7aemihu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-python-request" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/02/02/python-request/" class="article-date">
-  <time datetime="2014-02-01T16:00:00.000Z" itemprop="datePublished">2014-02-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/02/02/python-request/">Request is a good lib</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <img src="/images/python-request.jpg">
-<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=big&amp;illust_id=41320823" target="_blank" rel="external">pixiv</a></p>
-<p>Web scrapping is a common task for script languages like python.<br>Yet Python standard libraries provide twisted utility to couple with this simple task. <code>urllib[23$]</code> ruins my python newbie days.<br>To achieve cookie support, you have to import cookielib, create a new cookie jar via the factory method, subclass a opener from the urllib, and finally use the forged opener to make a request.</p>
-<p>Bloated boilerplate code does not seem pythonic at all. We want a simple scrapping utility that provides concise API like http verbs and, preferably, automatic session management. <strong>Request</strong> is the library comes to rescue.</p>
-<p>The structure of Request:</p>
-<ul>
-<li>model</li>
-<li>session</li>
-<li>adapter</li>
-<li>api</li>
-<li>etc…</li>
-</ul>
-<p><code>model</code> irons response and request parameters into unified objects. Both <code>Request</code> and <code>Response</code> supports generator style and file style. Magic methods empowers <code>Request</code> pythonic syntax. The most dirty works(say, encoding stuffs) lies here.</p>
-<p><code>session</code> acts as controller in  MVC design. It combines adapter, which sends request, authentication and cookie session. Request’s streamlined API stems from an interface mocking real browsers.</p>
-<p><code>adapter</code> is a wrapper of urllib3, supporting connection pool management, <code>keep-alive</code> request and proxies.</p>
-<p><code>api</code> is just an alias for <code>1. open session 2. prepare request 3. send request</code>. And all other modules are helpers that do stuffs like encoding and making auth token.</p>
-<p>The design philosophy under Request is : <code>Simple is better than functionality</code>, however, it still grants users plenty of features.<br>Specific as the library aims to be, the philosophy underlying it applies much wider. jQuery’s almighty $, Chrome’s omnipotent omnibox, Google’s preeminent search engine and etc. Simplicity rocks, Usability counts.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cik3xhmqf000vf8ejmi7pn8nc" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cil3zsbke00198fejn7u451j6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -725,7 +725,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -734,7 +734,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 13.33px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
     </div>
   </div>
 
@@ -743,7 +743,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -753,6 +753,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/02/26/dein/">Trying out dein.vim -- a dark powered plugin manager</a>
+          </li>
         
           <li>
             <a href="/2016/02/01/typesafe-di/">TypeSafe DI in TypeScript</a>
@@ -768,10 +772,6 @@
         
           <li>
             <a href="/2015/10/25/angular2-quick-start/">The Real Angular2 quick start</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/10/typescript-ctags/">Updated Ctags for TypeScript</a>
           </li>
         
       </ul>
