@@ -65,6 +65,77 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-how-to-config-node-cdn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/07/how-to-config-node-cdn/" class="article-date">
+  <time datetime="2016-06-06T16:00:00.000Z" itemprop="datePublished">2016-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/07/how-to-config-node-cdn/">A collection of nodejs CDN for Celestial Imperial</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Living inside of the Great Fire Wall is a so onerous ordeal that survival guides can be compiled into an anthology.</p>
+<p>Here is how to configure various popular open source project to use their CDN in Ch<strong>**</strong>na.</p>
+<p>Plenty of nodejs project provide environment variable to configure mirror/CDN to download source code or binary.</p>
+<h2 id="nvm_/_nodejs">nvm / nodejs</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node nvm install <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h2 id="npm">npm</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm --registry=https://registry.npm.taobao.org install koa</span><br></pre></td></tr></table></figure>
+<p>Kudos to <a href="https://cnodejs.org/user/fengmk2" target="_blank" rel="external">fengmk2</a></p>
+<h2 id="PhantomJS">PhantomJS</h2><p><a href="https://cnodejs.org/topic/538ed941c3ee0b5820889f66" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHANTOMJS_CDNURL=https://npm.taobao.org/dist/phantomjs npm install phantomjs --registry=https://registry.npm.taobao.org --no-proxy</span><br></pre></td></tr></table></figure>
+<p>Kudos to <a href="https://cnodejs.org/user/fengmk2" target="_blank" rel="external">fengmk2</a>, again!</p>
+<h2 id="node-sass">node-sass</h2><p><a href="https://github.com/cnpm/cnpm/pull/76/files" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SASS_BINARY_SITE=https://registry.npmjs.org/node-sass npm install node-sass</span><br></pre></td></tr></table></figure>
+<p>Kudos, again and again, to fengmk2</p>
+<h2 id="Docker">Docker</h2><p><a href="http://www.imike.me/2016/04/20/Docker%E4%B8%8B%E4%BD%BF%E7%94%A8%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F/" target="_blank" rel="external">Ref</a></p>
+<p>Install Docker</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</span><br></pre></td></tr></table></figure>
+<p>Config accelerator</p>
+<p>You need to register an account in <a href="http://xxxxxx.m.daocloud.io" target="_blank" rel="external">daocloud.io</a>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"DOCKER_OPTS=\"--registry-mirror=http://xxxxxx.m.daocloud.io\""</span> | sudo tee <span class="operator">-a</span> /etc/default/docker</span><br><span class="line">sudo service docker restart</span><br></pre></td></tr></table></figure>
+<p>Kudos to daocloud.</p>
+<h2 id="Pypi">Pypi</h2><p><a href="http://www.cnblogs.com/meelo/p/4636340.html" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;~/.pip/pip.conf &lt;&lt;EOF</span><br><span class="line">[global]</span><br><span class="line">index-url = http://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>Kudos to aliyun</p>
+<h2 id="sbt">sbt</h2><p><a href="http://freewind.in/posts/2619-sbt-global-repo/" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ~/.sbt/repositories &lt;&lt;EOF</span><br><span class="line">[repositories]</span><br><span class="line"><span class="built_in">local</span></span><br><span class="line">osc: http://maven.oschina.net/content/groups/public/</span><br><span class="line">typesafe: http://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[<span class="built_in">type</span>]s/[artifact](-[classifier]).[ext], bootOnly</span><br><span class="line">sonatype-oss-releases</span><br><span class="line">maven-central</span><br><span class="line">sonatype-oss-snapshots</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>Kudos to <a href="http://freewind.in/" target="_blank" rel="external">freewind</a></p>
+<p>And these links is useful:<br><a href="https://segmentfault.com/a/1190000002474507" target="_blank" rel="external">加速 SBT 下载依赖库的速度</a><br><a href="http://afoo.me/posts/2014-11-05-how-make-sbt-jump-over-GFW.html" target="_blank" rel="external">how to make sbt jump over GFW</a></p>
+<h2 id="Gopm">Gopm</h2><p><a href="https://github.com/gpmgo/gopm" target="_blank" rel="external">Ref</a></p>
+<p>It is quite clear in the doc and help command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gopm get &lt;import path&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</span><br><span class="line">gopm get &lt;package name&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</span><br><span class="line"></span><br><span class="line">useful options:</span><br><span class="line">   --update, -u		update package(s) and dependencies <span class="keyword">if</span> any</span><br><span class="line">   --gopath, -g		download all packages to GOPATH</span><br></pre></td></tr></table></figure>
+<h2 id="Conclusion">Conclusion</h2><p>Hail Aliyun! Hail fengmk2!<br>For the unfortunate who live in a crappy ignorant country.</p>
+<img src="/images/Hatsune.Miku.full.2006986.jpg">
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2016/06/07/how-to-config-node-cdn/" data-id="cip6xnhqi0017rsej116yhdz1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-dein" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/02/26/dein/" class="article-date">
@@ -134,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/02/26/dein/" data-id="cil3zsbkh001d8fejprauoshx" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/02/26/dein/" data-id="cip6xnhqs001grsej7yujqjsw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -202,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="cil3zsbj6000g8fej9yv4os6n" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="cip6xnhpi000grsej7dftr067" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -253,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cil3zsbjw000t8fejgvs7fgad" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cip6xnhq1000trsej4xqpro0q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -322,7 +393,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="cil3zsbk800128fejpegf2r0h" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="cip6xnhqd0012rsejpn1cbub8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
@@ -379,7 +450,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="cil3zsbic00008fej9scdxwkf" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="cip6xnhoo0000rsejbyj8n4vk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -421,7 +492,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="cil3zsbj2000e8fej425370yl" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="cip6xnhpe000ersejx6vka5k0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -467,7 +538,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="cil3zsbk600108fejt6v9plqz" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="cip6xnhqc0010rsejs2h4uod6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
@@ -525,7 +596,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/01/24/scala-sam/" data-id="cil3zsbjn000p8fejnolg3knt" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/01/24/scala-sam/" data-id="cip6xnhpu000prsejszreo0el" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
@@ -581,59 +652,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/" data-id="cil3zsbj0000b8fej4520occq" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/" data-id="cip6xnhpa000brsejn4tsd2q4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-yagami" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/12/28/yagami/" class="article-date">
-  <time datetime="2014-12-27T16:00:00.000Z" itemprop="datePublished">2014-12-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/28/yagami/">大雅雅于俗</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>问君何能尔，心远地自偏。</p>
-</blockquote>
-<img src="/images/yagami.jpg">
-<p>  我跟你讲，八神老师的LL本才是横跨氪金手游和同人薄本两界的旗舰之作。</p>
-<p>  不要看每本本子只有薄薄三十几页，但每一页都体现了老师对氪金手游业的大见识：一切氪金的本质，与“恶女榨金”无二。老师的本子虽薄，却为ACG产业，乃至现代文化消费形式，描绘了一张鸟瞰图。</p>
-<p>如若看官仅仅以无鸟事为鸟找事的心态去看LL本， 看到的不过是人物单方面榨取主人公体液的画面。进入了贤者状态的上级读者，才能看到老师在本子中表达的良苦用心。八神老师的整个作品都是个隐喻，从注射器到温度计，无一不暗示了氪金手游的运营手段。它们都有一个简单明了的目的：尽一切奇技淫巧，榨出玩家钱包里最后一滴金。</p>
-<p>本子中的主人公被描写为一个被动的体液机器，这和免费增值(Freemium)的商业模式中将消费者定位成消费机器的思路实际是异曲同工的。偶像不断用各色工具刺激玩家产生快感，玩家在这个过程中形成了氪金与成就的关联概念，在老师本子中，就是以受虐与快感关联的受虐情节所体现出来的。</p>
-<p>运营在情节和宣传中构造出的“偶像”、“奋斗”等概念，实际上是对玩家消费欲望的一个“改装”(distortion)，让消费欲能被玩家自身和玩家所在的社会环境所接受。在本子中刺激腺体的桥段，影射了游戏对玩家消费欲的刺激（生理层次上，对腹侧被盖区的刺激）。然而八神老师的文笔隽永之处就在于，他的笔触白虚伪的改装一一清除，入目三分地刻画了氪金手游的榨金本色。这一点在老师SC60的作品《 soldier money game》中展现无余。</p>
-<p>称LL薄本为俗萌之物，恰恰是没有理解八神秋一老师的用心之处。视角从薄本本身放开，提升到一个“元薄本”(meta-usuihon)的高度，才能品读出LL本中的精妙之处。八神老师的作品看似大俗，但作品的旨味却是大雅。在大俗的故事中反思了现代人的消费行为，才是艺术家在当代社会中的应有作为。</p>
-<p>作为人民艺术家，如果一味追求艺术形式上的“雅”，只会和观众拉开远非“一步之遥”的距离。所谓小雅雅于形，中雅雅于意，大雅雅于俗，八神老师的作品，不可不谓大俗大雅、雅俗共赏之作。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/12/28/yagami/" data-id="cil3zsbiv00068fej727robbi" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/">misc</a></li></ul>
 
     </footer>
   </div>
@@ -657,7 +679,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -666,7 +688,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a>
     </div>
   </div>
 
@@ -675,7 +697,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -685,6 +707,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/06/07/how-to-config-node-cdn/">A collection of nodejs CDN for Celestial Imperial</a>
+          </li>
         
           <li>
             <a href="/2016/02/26/dein/">Trying out dein.vim -- a dark powered plugin manager</a>
@@ -700,10 +726,6 @@
         
           <li>
             <a href="/2015/11/17/js-tracker/">JavaScript Error tracking in browsers</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/25/angular2-quick-start/">The Real Angular2 quick start</a>
           </li>
         
       </ul>

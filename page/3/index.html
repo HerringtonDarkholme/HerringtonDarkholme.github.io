@@ -65,6 +65,144 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-generator" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/02/17/generator/" class="article-date">
+  <time datetime="2014-02-16T16:00:00.000Z" itemprop="datePublished">2014-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/02/17/generator/">Breadth First Search without Queue</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <img src="/images/generator.jpg">
+<p>source: <a href="http://www.pixiv.net/member_illust.php?id=1315311" target="_blank" rel="external">かみやまねき</a></p>
+<h3 id="TL;DR:_The_most_intuitive_implementation_of_BFS_is_using_Queue">TL;DR: The most intuitive implementation of  BFS is using Queue</h3><p>Just out of fun, I wonder whether BFS can be implemented without Queue.<br>While DFS can be easily done by recursion, naive BFS implementation just incurs loop mayhem.</p>
+<p>The first solution jumped into my mind is to add a depth parameter into BFS function.<br>The search function only visits nodes whose depth equals to the parameter and skips nodes whose depth does not.<br>I am <a href="http://stackoverflow.com/a/2549825/2198656" target="_blank" rel="external">not alone</a></p>
+<p><code>Generator</code> is <a href="http://koajs.com" target="_blank" rel="external">sweeping</a> <a href="https://github.com/petkaantonov/bluebird/blob/master/API.md#generators" target="_blank" rel="external">NodeJS</a> community (admittedly this is my exaggeration). I’m quite obsessed with generator’s suspension power. Here’s my try in Python.</p>
+<pre><code><span class="string">'''
+    implicit BFS, without queue or depth
+    incurs infinite circulation on loop graph
+    implement for fun (Really need a queue)
+'''</span>
+<span class="function"><span class="keyword">def</span> <span class="title">bfs_gen</span><span class="params">(node)</span>:</span>
+    <span class="string">'''
+    generator function on a node, yield an iterator of frontier nodes
+    the first call yield an iterator contains the node itself
+    each subsequent call yields an iterator that is composed of children's gen
+    try line chains children's yields, and thus accumulates frontier nodes
+    By recursion, the root node's bfs_gen yields all frontier nodes on the graph
+    frontier is maintained on callstack, by the suspension feature of generators
+    '''</span>
+    <span class="keyword">try</span>:
+        <span class="keyword">yield</span> iter((node.value, ))
+        <span class="comment"># :( still needs a list to maintain generators</span>
+        children = [bfs_gen(n) <span class="keyword">for</span> n <span class="keyword">in</span> node.children]
+    <span class="keyword">except</span> AttributeError:
+        <span class="keyword">raise</span> StopIteration
+
+    chain = <span class="number">0xDEADBABE</span>
+    <span class="keyword">while</span> chain != ():
+        chain = ()
+        <span class="keyword">for</span> child <span class="keyword">in</span> children:
+            <span class="keyword">try</span>:
+                chain = (e <span class="keyword">for</span> it <span class="keyword">in</span> (chain, next(child)) <span class="keyword">for</span> e <span class="keyword">in</span> it)
+            <span class="keyword">except</span> StopIteration:
+                <span class="keyword">continue</span>
+        <span class="keyword">yield</span> chain
+
+<span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(root, pred)</span>:</span>
+    <span class="string">'''
+    make generator on root node
+    call next method to yield frontier nodes
+    apply predicate function on it, if any matches, return True
+    else continues to yield more frontier
+    '''</span>
+    gens = bfs_gen(root)
+    <span class="keyword">try</span>:
+        <span class="keyword">while</span> <span class="keyword">not</span> any(pred(v) <span class="keyword">for</span> v <span class="keyword">in</span> next(gens)):
+            <span class="keyword">continue</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+    <span class="keyword">except</span> StopIteration:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span>
+    <span class="string">'''
+    3 4 5 6
+     1   2
+       0
+    '''</span>
+    <span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple
+
+    node = namedtuple(<span class="string">'Node'</span>, [<span class="string">'value'</span>, <span class="string">'children'</span>])
+    six   = node(<span class="number">6</span>, [<span class="keyword">None</span>])
+    five  = node(<span class="number">5</span>, [<span class="keyword">None</span>])
+    four  = node(<span class="number">4</span>, [<span class="keyword">None</span>])
+    three = node(<span class="number">3</span>, [<span class="keyword">None</span>])
+    two   = node(<span class="number">2</span>, [five, six])
+    one   = node(<span class="number">1</span>, [three, four])
+    zero  = node(<span class="number">0</span>, [one, two])
+
+    <span class="function"><span class="keyword">def</span> <span class="title">demo</span><span class="params">(value)</span>:</span>
+        <span class="string">'''dumb log'''</span>
+        print(value)
+        <span class="keyword">return</span> <span class="keyword">False</span>
+
+    <span class="comment"># bfs(zero, demo)</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> bfs_gen(zero):
+        demo(i.value)
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    main()
+</code></pre><p>Wow, much ugly, very obscure. But a old post on certain <a href="http://code.activestate.com/recipes/231503-breadth-first-traversal-of-tree/?in=user-218935" target="_blank" rel="external">unsung site</a> gives me an interesting solution.</p>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(root)</span>:</span>
+    <span class="keyword">yield</span> root
+    <span class="keyword">for</span> node <span class="keyword">in</span> bfs(root):
+        <span class="keyword">for</span> child <span class="keyword">in</span> node.children:
+            <span class="keyword">yield</span> label(child)
+</code></pre><p>Tada, done! Let’s peruse this piece of code.<br>We want a generator that yields a sequence of nodes, this can be done by induction.</p>
+<ol>
+<li>Given the root of a tree, clearly the first node of the sequence is the root</li>
+<li>Because the next level of frontier nodes in the sequence is the children of the current level frontier nodes, construct a new sequence that lags behind.</li>
+<li>yield each child given its parent.</li>
+</ol>
+<p>Doing this recursively makes a BFS generator.</p>
+<p>The trick part is the second step, for a normal function, this will make infinite loops. But <code>generator</code> is expanded dynamically, execution jumps out of BFS, eschewing looping condition. Suspension of code also implicitly stores searching states, where calling stacks morph into a Queue. Of course, visited nodes also need to be maintained in a list(not checked here). Termination check is absent, as well.</p>
+<p>Interestingly, adapting BFS into DFS only requires swapping two lines, just as substituting stack for queue in classical implementation.</p>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root)</span>:</span>
+    <span class="keyword">yield</span> root
+    <span class="keyword">for</span> node <span class="keyword">in</span> node.children:
+        <span class="keyword">for</span> child <span class="keyword">in</span> dfs(node):
+            <span class="keyword">yield</span> child
+</code></pre><p>Whatever fun generators have brought, BFS/DFS should probably never done like this. Storing information in stack does not save space. Static language like C/C++ lacks such generator feature. And, notably, <a href="http://www.python.org/doc/essays/list2str.html" target="_blank" rel="external">function overhead</a> and <a href="http://www.ruby-doc.org/stdlib-1.8.7/libdoc/generator/rdoc/Generator.html" target="_blank" rel="external">slow generator</a> in most script language make developers repugnant to such winding trick.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cip6xnhqm001crsejo7orva5j" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-python-request" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/02/02/python-request/" class="article-date">
@@ -108,7 +246,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cil3zsbk1000v8fejnkfrcy70" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cip6xnhq6000vrsejx2hyahu2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -157,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cil3zsbix00088fej5sb7wwh9" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cip6xnhp80008rsejfj5s5x9x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -184,7 +322,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -193,7 +331,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a>
     </div>
   </div>
 
@@ -202,7 +340,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -212,6 +350,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/06/07/how-to-config-node-cdn/">A collection of nodejs CDN for Celestial Imperial</a>
+          </li>
         
           <li>
             <a href="/2016/02/26/dein/">Trying out dein.vim -- a dark powered plugin manager</a>
@@ -227,10 +369,6 @@
         
           <li>
             <a href="/2015/11/17/js-tracker/">JavaScript Error tracking in browsers</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/25/angular2-quick-start/">The Real Angular2 quick start</a>
           </li>
         
       </ul>
