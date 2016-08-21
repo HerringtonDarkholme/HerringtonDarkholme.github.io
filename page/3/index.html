@@ -65,6 +65,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-descriptor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/04/12/descriptor/" class="article-date">
+  <time datetime="2014-04-11T16:00:00.000Z" itemprop="datePublished">2014-04-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/04/12/descriptor/">QuickNote Descriptor in Python</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>TL;DR: Descriptor in Python is just getter/setter</p>
+<p>Three ways to implement descriptor:</p>
+<ol>
+<li>Use a class that implement magic method <code>__get__</code>, <code>__set__</code>, <code>__delete__</code></li>
+<li>Use builtin function <code>property(fget=None, fset=None, fdel=None, doc=None)</code></li>
+<li>Use decorator form of <code>property</code>, like <code>@property def attr(): ...</code>, <code>@attr.setter</code>, <code>@attr.deleter</code></li>
+</ol>
+<p>Make sure all three methods are done at class level rather than at instance level.<br>(That is, write <code>my_attr = property(...)</code> under <code>class MyClass(object):</code> statement,<br>but not <code>self.my_attr = property(..)</code> in <code>__init__</code>)</p>
+<p>Because Python’s MRO is:</p>
+<ol>
+<li>find <code>attr</code> in <code>instance.__dict__</code> (instance level)</li>
+<li>if not found, find <code>attr</code> in <code>instance.__class__.__dict__</code>. If found, try return <code>attr.__get__</code>, otherwise return <code>attr</code> (class level)</li>
+<li>if not found, repeat step 2 on <code>instance.__class__.__base__</code> until <code>attr</code> found or no base class found</li>
+<li>if not found, try returning computed <code>attr</code> if <code>__getattr__</code> is defined</li>
+</ol>
+<p>So the descriptor magic is done at class level</p>
+<p>Pitfall:</p>
+<p>Because descriptor dwells at class level, if one uses descriptor class implementation, all instances may share one common variable.</p>
+<p>To fix that:</p>
+<ol>
+<li>Hoard one hidden variable in the instance</li>
+<li>Use a dictionary in descriptor class to store info of different instances.</li>
+</ol>
+<p>The second solution needs the class hashable. (So a meta class is needed to guarantee hashability)</p>
+<p>Personal view: To maintain Python’s <code>one simple way to work</code> Pythonists just introduced much more <code>complexity</code>.</p>
+<p>Reference:<br><a href="http://www.ibm.com/developerworks/library/os-pythondescriptors/" target="_blank" rel="external">http://www.ibm.com/developerworks/library/os-pythondescriptors/</a><br><a href="http://nbviewer.ipython.org/urls/gist.github.com/ChrisBeaumont/5758381/raw/descriptor_writeup.ipynb" target="_blank" rel="external">http://nbviewer.ipython.org/urls/gist.github.com/ChrisBeaumont/5758381/raw/descriptor_writeup.ipynb</a><br><a href="http://docs.python.org/2/howto/descriptor.html" target="_blank" rel="external">http://docs.python.org/2/howto/descriptor.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2014/04/12/descriptor/" data-id="cis4muoil001gp7ejneix5dxp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-generator" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/02/17/generator/" class="article-date">
@@ -191,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cip6xnhqm001crsejo7orva5j" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/17/generator/" data-id="cis4muoih001ep7ejtyk80c3e" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -246,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cip6xnhq6000vrsejx2hyahu2" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/02/02/python-request/" data-id="cis4muoi1000xp7ejmdaybi5k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
@@ -295,7 +359,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cip6xnhp80008rsejfj5s5x9x" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2014/01/31/vimscript/" data-id="cis4muogr000ap7ejkmkbfnze" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -322,7 +386,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -331,7 +395,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 16.67px;">Javascript</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 16.67px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 16.67px;">Vim</a> <a href="/tags/misc/" style="font-size: 13.33px;">misc</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a>
+      <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Javascript/" style="font-size: 15px;">Javascript</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Scala/" style="font-size: 20px;">Scala</a> <a href="/tags/TypeScript/" style="font-size: 17.5px;">TypeScript</a> <a href="/tags/Vim/" style="font-size: 15px;">Vim</a> <a href="/tags/misc/" style="font-size: 12.5px;">misc</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a>
     </div>
   </div>
 
@@ -340,7 +404,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -350,6 +414,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/08/21/vue-ts/">Type Safety in Vue.js</a>
+          </li>
         
           <li>
             <a href="/2016/06/07/how-to-config-node-cdn/">A collection of nodejs CDN for Celestial Imperial</a>
@@ -365,10 +433,6 @@
         
           <li>
             <a href="/2015/12/06/rplugin-notfound/">Trouble Shooting NeoVim&#39;s rplugin not found</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/17/js-tracker/">JavaScript Error tracking in browsers</a>
           </li>
         
       </ul>
