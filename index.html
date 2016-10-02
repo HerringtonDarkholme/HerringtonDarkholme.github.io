@@ -65,6 +65,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-router" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/02/vue-router/" class="article-date">
+  <time datetime="2016-10-01T16:00:00.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/vue-router/">Type Safe Routing for Vue.js</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Vue router is elegant and type safe enough for most use cases. But I want to experiment how far typescript can help us.</p>
+<p>Typesafe routing isn’t easy to do.</p>
+<p>The easiest way to declare multiple class and instantatiate their paramater type. For example, <a href="https://github.com/angryzor/typesafe-urls" target="_blank" rel="external">typed-url</a>. But this is too verbose.</p>
+<p>Another approach is to use functional <strong>combinator</strong>. To put it simple, combinator is high order function that can abstract various operation. Routing combinators usually are a bunch of functions that can accept strings as static url segment or a function as dynamic url parameter. Both <a href="https://github.com/slamdata/purescript-routing/blob/master/GUIDE.md" target="_blank" rel="external">purescript</a> and <a href="https://speakerdeck.com/inamiy/type-safe-url-routing-in-swift" target="_blank" rel="external">swift</a>. But monad is too monad-y. My head just explodes.</p>
+<p>One unique way to provide type routing is using reified generic! A demo <a href="https://vimeo.com/172310206" target="_blank" rel="external">video</a> has illustrted how to implment it.(Spoiler: for a function with type <code>A =&gt; Response</code>, one can access the class by  <code>A.type</code> and cast value by <code>guard let param: A = ....</code> in swift. Whoa, reification is powerful). Github repo is here: <a href="https://github.com/NougatFramework/Switchboard" target="_blank" rel="external">https://github.com/NougatFramework/Switchboard</a></p>
+<p>Compile time reflection is ideal for routing thing. Yesod uses template haskell to do this, <a href="https://github.com/AndrewRademacher/routing-comparison/blob/master/yesod-test/src/Main.hs" target="_blank" rel="external">Example</a>. Macro paradise!</p>
+<p>Scala has yet another unique construct called pattern match.  Tumblr’s <a href="https://tumblr.github.io/colossus/" target="_blank" rel="external">colossus</a> is a great example to use pattern match for type safe routing.</p>
+<p>And of course, haskell has many type safe routing library. Check out the <a href="https://github.com/scotty-web/scotty/issues/60" target="_blank" rel="external">review</a> for more info.</p>
+<p>JavaScript does not have powerful constructs like macro/pattern match. Combinator is the only way to achieve type safety but for client side component based routing, declaring more functions solely for routing doesn’t feel natural. And specifically TypeScript is still too feeble to describe routing. However, by combining tagged template, function overloading (or fun-dep), and intersection type (or row polymorphism), we can still do some interesting thing. If this were written in flow-type, more interesting thing could happen.</p>
+<p>Frankly type safety in router does not grant you much: it cannot check tempalte code, it can only help you to double check the shape of parameters in <code>$route</code>. It can help you to type <code>router</code> instance better, but requires all routes to have a <code>name</code> field.</p>
+<p>This is only a sketch for type safe routing design. Useful? No. Concise? Partly. Safety outweighs ease of use? No. Maybe it’s only suitable for type safe paranoid.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Route&lt;T&gt; </span>&#123;</span><br><span class="line">  &lt;K extends <span class="built_in">string</span>, C&gt;(c: StaticRouteConfig&lt;K, C&gt;): Routes&lt;StaticRouteAct&lt;K&gt; &amp; C &amp; T&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="title">K</span> <span class="attribute">extends</span> <span class="attribute">string</span>, <span class="attribute">R</span>, <span class="attribute">P</span> <span class="attribute">extends</span> <span class="attribute">R</span>, <span class="attribute">C</span>&gt;</span>(c: RouteConfig<span class="tag">&lt;<span class="title">K,</span> <span class="attribute">R</span>, <span class="attribute">P</span>, <span class="attribute">C</span>&gt;</span>): Routes<span class="tag">&lt;<span class="title">RouteAct</span>&lt;<span class="attribute">K</span>, <span class="attribute">P</span>&gt;</span> &amp; C &amp; T&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface StaticRouteAct<span class="tag">&lt;<span class="title">K</span>&gt;</span> &#123;</span><br><span class="line">  (location: &#123;name: K&#125;): void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface RouteAct<span class="tag">&lt;<span class="title">K,</span> <span class="attribute">T</span>&gt;</span> &#123;</span><br><span class="line">  (location: &#123;name: K, params: T&#125;): void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface Router<span class="tag">&lt;<span class="title">T</span>&gt;</span> &#123;</span><br><span class="line">  push: T</span><br><span class="line">  replace: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface Routes<span class="tag">&lt;<span class="title">T</span>&gt;</span> &#123;</span><br><span class="line">  route: Route<span class="tag">&lt;<span class="title">T</span>&gt;</span></span><br><span class="line">  done: () =&gt; Router<span class="tag">&lt;<span class="title">T</span>&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface StaticRouteConfig<span class="tag">&lt;<span class="title">K</span> <span class="attribute">extends</span> <span class="attribute">string</span>, <span class="attribute">C</span>&gt;</span> &#123;</span><br><span class="line">  name: K</span><br><span class="line">  path: StaticPath,</span><br><span class="line">  children?: (p: OriginPath) =&gt; Routes<span class="tag">&lt;<span class="title">C</span>&gt;</span></span><br><span class="line">  component?: &#123;$routes?: &#123;params?: &#123;&#125;&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface RouteConfig<span class="tag">&lt;<span class="title">K</span> <span class="attribute">extends</span> <span class="attribute">string</span>, <span class="attribute">R</span>, <span class="attribute">P</span> <span class="attribute">extends</span> <span class="attribute">R</span>, <span class="attribute">C</span>&gt;</span>&#123;</span><br><span class="line">  name: K</span><br><span class="line">  path: Path<span class="tag">&lt;<span class="title">P</span>&gt;</span>,</span><br><span class="line">  children?: (p: PathMaker<span class="tag">&lt;<span class="title">P</span>&gt;</span>) =&gt; Routes<span class="tag">&lt;<span class="title">C</span>&gt;</span></span><br><span class="line">  component?: &#123;$routes?: &#123;params?: R&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface Path<span class="tag">&lt;<span class="title">T</span>&gt;</span> &#123;</span><br><span class="line">  __pathBrand: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface StaticPath extends Path<span class="tag">&lt;<span class="title">&#123;&#125;</span>&gt;</span> &#123;</span><br><span class="line">  __staticPathBrand: never</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface PathMaker<span class="tag">&lt;<span class="title">Parent</span>&gt;</span> &#123;</span><br><span class="line">  <span class="tag">&lt;<span class="title">A,</span> <span class="attribute">B</span>&gt;</span>(t: TemplateStringsArray, n: A, n2: B): Path<span class="tag">&lt;<span class="title">A</span> &amp; <span class="attribute">B</span> &amp; <span class="attribute">Parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">A</span>&gt;</span>(t: TemplateStringsArray, n: A): Path<span class="tag">&lt;<span class="title">A</span> &amp; <span class="attribute">Parent</span>&gt;</span></span><br><span class="line">  (t: TemplateStringsArray): Path<span class="tag">&lt;<span class="title">Parent</span>&gt;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface OriginPath &#123;</span><br><span class="line">  __originPathBrand: never</span><br><span class="line">  <span class="tag">&lt;<span class="title">A,</span> <span class="attribute">B</span>&gt;</span>(t: TemplateStringsArray, n: A, n2: B): Path<span class="tag">&lt;<span class="title">A</span> &amp; <span class="attribute">B</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">A</span>&gt;</span>(t: TemplateStringsArray, n: A): Path<span class="tag">&lt;<span class="title">A</span>&gt;</span></span><br><span class="line">  (t: TemplateStringsArray): StaticPath</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var UserComponent =  &#123;$routes: &#123;params: &#123; uid: '333'&#125;&#125;&#125;</span><br><span class="line">const unimplement: never = null as never</span><br><span class="line">const route: Route<span class="tag">&lt;<span class="title">never</span>&gt;</span> = unimplement</span><br><span class="line">const p: OriginPath = unimplement</span><br><span class="line"></span><br><span class="line">const rs =</span><br><span class="line">route(&#123;</span><br><span class="line">  path: p`user/$&#123;&#123;uid: ''&#125;&#125;/profile/$&#123;&#123;pageType: ''&#125;&#125;`,</span><br><span class="line">  name: 'user',</span><br><span class="line">  component: UserComponent,</span><br><span class="line">  children: p =&gt; route(&#123;</span><br><span class="line">    name: 'tab',</span><br><span class="line">    path: p`tab/$&#123;&#123;tab: ''&#125;&#125;`,</span><br><span class="line">    component: &#123;$routes: &#123;params: &#123;uid: '123', tab: '333'&#125;&#125;&#125;,</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">.route(&#123;</span><br><span class="line">  path: p`post`,</span><br><span class="line">  name: 'post'</span><br><span class="line">&#125;)</span><br><span class="line">.done()</span><br><span class="line"></span><br><span class="line">rs.push(&#123;name: 'post'&#125;)</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://herringtondarkholme.github.io/2016/10/02/vue-router/" data-id="citsps5t0000a54ejq2tvwwst" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-ts" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/08/21/vue-ts/" class="article-date">
@@ -138,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/08/21/vue-ts/" data-id="cis4muogm0008p7ejxykpl1bf" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/08/21/vue-ts/" data-id="citsps5sw000854ejalc0a5v5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -209,7 +259,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/06/07/how-to-config-node-cdn/" data-id="cis4muoic0019p7ej8ev9inym" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/06/07/how-to-config-node-cdn/" data-id="citsps5u8001b54ejc5xnhd5n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li></ul>
@@ -290,7 +340,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/02/26/dein/" data-id="cis4muoio001ip7ej3zk75y79" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/02/26/dein/" data-id="citsps5un001k54eja9puhokf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -358,7 +408,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="cis4muoh7000ip7ejl24ayxf9" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2016/02/01/typesafe-di/" data-id="citsps5ta000k54ejz4eqh06m" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -409,7 +459,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="cis4muohw000vp7ejv4bg52zw" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/" data-id="citsps5tx000x54ej717esuup" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
@@ -478,7 +528,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="cis4muoi80014p7ej1x9ehoso" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/11/17/js-tracker/" data-id="citsps5u4001654ej7trhw9pf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
@@ -535,7 +585,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="cis4muoft0000p7ejhnrort3h" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/25/angular2-quick-start/" data-id="citsps5sd000054ej7mvh1rxp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -577,7 +627,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="cis4muoh4000gp7ejju4hq2lx" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/" data-id="citsps5t8000i54ej9tv2xgcj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
@@ -623,68 +673,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="cis4muoi60012p7ej6s3nro6w" class="article-share-link">Share</a>
+      <a data-url="http://herringtondarkholme.github.io/2015/06/09/paamayim-nekudota/" data-id="citsps5u2001454ejpio8k8f1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-scala-sam" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/01/24/scala-sam/" class="article-date">
-  <time datetime="2015-01-24T08:21:47.000Z" itemprop="datePublished">2015-01-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/24/scala-sam/">Explaining Scala SAM type</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <img src="/images/42665600.jpg">
-<p><a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=42665600" target="_blank" rel="external">source</a></p>
-<p>For better syntax and user friendliness (and a lot more), Java 8 introduces <a href="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-3.html" target="_blank" rel="external">SAM</a> type, Single Abstract Method type, starting to embrace the functional programming world.</p>
-<p>Previous to 1.8, Java already has somewhat a (bulky and leaky) type of closure: annonyous inner classes. For example, to start a working thread in Java usually requires following trivial but bloated statements, without a lexical <code>this</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// from android developer guide</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      Bitmap b = loadImageFromNetwork(<span class="string">"http://www.example.org/image.gif"</span>);</span><br><span class="line">      mImageView.setImage(b);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Two classes, one method. The introduction of SAM type greatly reduces the syntactical overhead of Java.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">new</span> Thread(#&#123; -&gt;</span><br><span class="line">    mImage.setImage(loadImageFromNetwork(<span class="string">"/image.gif"</span>));</span><br><span class="line">  &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>I’m not explaining Java8’s new features here, as a Scala user has already relished the conciseness and expressiveness of functional programming.</p>
-<p>So, why would scala user cares about SAM type in Java? I would say that interoperation with Java and performance are the main concerns here.</p>
-<p>Java8 introduces <code>Function</code> type, which is widely used in library like <code>stream</code>. Sadly, <code>Function</code> is not that of scala. Scala compiler just frowns at you using scala native function with Stream.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.<span class="type">Arrays</span></span><br><span class="line"><span class="type">Arrays</span>.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>).stream.map((i: <span class="type">Int</span>) =&gt; i * <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// &lt;console&gt;: error: type mismatch;</span></span><br><span class="line"><span class="comment">//  found   : Int =&gt; Int</span></span><br><span class="line"><span class="comment">//  required: java.util.function.Function[_ &gt;: Int, _]</span></span><br></pre></td></tr></table></figure>
-<p>Side notes: because function parameter is in a contravariant position,  <code>Function[_ &gt;: Int, _]</code> has a lower bound Int rather than a upper bound.<br>That is, the function passed as argument must accept types that are super types of <code>Int</code>.</p>
-<p>One can manually provide implicit conversion here to transform scala function types to java function types. However, <a href="http://www.tikalk.com/incubator/simulating-sam-closures-scala/" target="_blank" rel="external">implementing</a> such implicit conversion is of no fun. The implementation is either not generic enough, or requires mechanical code duplication(another alternative is advanced macro generation). Compiler support is more ideal, not only because it generates more efficient byte code, but also because this precludes incompatibility across different implementations.</p>
-<p><strong>SAM type is enabled by <code>-Xexperimental</code> flag in scala 2.11.x flags. Specifically, in scala 2.11.5, SAM type is better <a href="https://github.com/scala/scala/pull/4101" target="_blank" rel="external">supported</a>.</strong><br>SAM gets eta-expansion(one can use a method from another class as SAM), overloading(overloaded function/method can also accept functions as SAM) and existential type support in scala 2.11.5.</p>
-<p>Basic usage os SAM is quite simple, if a <code>trait/abstract class</code> with <em>exactly one</em> <code>abstract method</code>, then a <code>Function</code> of the <em>same parameter and return type</em> of the abstract method can be converted into the <code>trait/abstract class</code>.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Flyable</span> &#123;</span></span><br><span class="line">  <span class="comment">// exactly one abstracg method</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fly</span>(</span>miles: <span class="type">Int</span>): <span class="type">Unit</span></span><br><span class="line">  <span class="comment">// optional concrete object</span></span><br><span class="line">  <span class="function"><span class="keyword">val</span> <span class="title">name</span> =</span> <span class="string">"Unidentified Flyable Object"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// to reference SAM type itself</span></span><br><span class="line"><span class="comment">// create a named self-referencing lambda expression</span></span><br><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">ufo</span>:</span> <span class="type">Flyable</span> = (m: <span class="type">Int</span>) =&gt; println(s<span class="string">"$&#123;ufo.name&#125; flies $m miles!"</span>)</span><br><span class="line">ufo.fly(<span class="number">123</span>)</span><br><span class="line"><span class="comment">// Unidentified Flyable Object flies 123 miles!</span></span><br></pre></td></tr></table></figure>
-<p>Easy Peasy. So for the <code>stream</code> example, if compiler has the <code>-Xexperimental</code> flag, scala will automatically change the function to java’s function, which grant scala user a seamless experience with the library.</p>
-<p>Usually, you don’t need SAM in scala, as scala already has first class generic function type, eta-expansion and a lot more. SAM reduces the readability as implicit conversion does. One can always use type alias to give function a more understandable name, instead of using SAM. SAM type cannot be pattern matched, <a href="https://issues.scala-lang.org/browse/SI-8429" target="_blank" rel="external">at least for now</a>.</p>
-<p>However, interoperating with Java requires SAM. And self-referencing SAM gives you additional flexibity in designing API. SAM also generates more efficient byte code since SAM has a native byte code counterpart. Using annonymous class for event handler or callback can be more pleasant in Scala just as in Java.</p>
-<p>Anyway, adding a feature is <a href="https://github.com/scala/scala/pull/4101" target="_blank" rel="external">easy</a>, but adding a feature that couples with edge case is hard. Scala already has bunches of features(variance, higher kinded, type level, continuation), whether SAM will gain its popularity is still an open question.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://herringtondarkholme.github.io/2015/01/24/scala-sam/" data-id="cis4muohp000rp7ej4rf5w5yn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li></ul>
 
     </footer>
   </div>
@@ -708,7 +700,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/">misc</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -726,7 +718,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -736,6 +728,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/10/02/vue-router/">Type Safe Routing for Vue.js</a>
+          </li>
         
           <li>
             <a href="/2016/08/21/vue-ts/">Type Safety in Vue.js</a>
@@ -751,10 +747,6 @@
         
           <li>
             <a href="/2016/02/01/typesafe-di/">TypeSafe DI in TypeScript</a>
-          </li>
-        
-          <li>
-            <a href="/2015/12/06/rplugin-notfound/">Trouble Shooting NeoVim&#39;s rplugin not found</a>
           </li>
         
       </ul>
