@@ -238,6 +238,107 @@
             
               
                 
+                <a class="post-title-link" href="/2014/05/17/html/" itemprop="url">
+                  magic HTML.js
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-05-17T00:00:00+08:00" content="2014-05-17">
+              2014-05-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <img src="/images/html.jpg">
+<p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=43531055" target="_blank" rel="external">pixiv</a></p>
+<p>HTML.js is a library full of syntactic sugar. It changes html elements dynamically so that the methods reflect their children node. For example, code like HTML.body.header.hgroup.h1 utilizes chain methods to mirror the structure of dom.</p>
+<p>ES5 <code>Object.defineProperty</code> and <code>mutationObserver</code> conjure up the magic. HTML.js provides an eponymous HTML api object initialized by an internal <code>node</code> method, which add all <em>tag</em> methods to its argument object. All <em>tag</em> methods are defined by <code>Object.defineProperty</code> with <code>get</code> option. So tag methods behave like getter methods: every time user access these attributes, tag methods return <em>HTMLifyed</em> elements that are ready to be chained (HTMLifyed elements are normal HTMLElements that have been extended by the internal node method mentioned above).</p>
+<p>Enable tag methods responsive to dom manipulation, HTML opts for mutationObserver to keep an eye on the root element. Once elements have been changed, mutationObserver detects the change and notifies HTML to refresh methods of the corresponding elements.</p>
+<p>However, syntactic sweetheart fails to belie some design deficits and practical problems in this library. <code>Getter</code> methods abstain legacy browsers that still occupy about 10% market share. MutationObserver itself is not that horribly slow, but registering a watchdog on <html> is almost certainly a performance killer for massive dom manipulations.</html></p>
+<p>But the most notorious code smell comes from yet another place, a pure design decision that functions returning either element or array. It is certainly one of the most sloppy practice in dynamic language. In static typed language those function can only have return type <code>Any</code>. Surely this is not informative and bothers user to take the risk of casting results. Indeed, the author mentioned this on the <a href="http://nbubna.github.io/HTML/" target="_blank" rel="external">homepage</a> and tried defend this api design by the excuse of conditional context where users can avoid quandary. But a good library shall be as much care-free as possible. Providing api that returns one single element is probably better than  leaving the users to guarantee element’s uniqueness. Ad-hoc polymorphism is determined by function arguments, not return type.</p>
+<p>HTML’s api reminds me of the keyword <code>null</code>.  Admittedly it is theoretically feasible to entrust programmers with the role of checking uniqueness/existence. But why ぬるぽ is still one of the most prominent haunting apparition in our code?</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2014/05/11/yuki/" itemprop="url">
                   至少、像那老坛酸菜牛肉面一样
                 </a>
@@ -1000,7 +1101,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">27</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
