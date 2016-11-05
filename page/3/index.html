@@ -238,6 +238,121 @@
             
               
                 
+                <a class="post-title-link" href="/2014/07/07/scaloid/" itemprop="url">
+                  How to set up a scaloid project from scratch
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-07-07T01:14:13+08:00" content="2014-07-07">
+              2014-07-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>TL;DR; It’s hard to set up android development environment without the aid of IDE. And it’s harder for scaloid.</p>
+<ol>
+<li><p>Download standalone SDK</p>
+</li>
+<li><p>Download Android SDK tools/ SDK platform tools/ SDK build tools<br>NB&gt; f@ck GFW, I got around that bastard by modifying <code>/etc/hosts</code>.</p>
+</li>
+<li><p>Install sbt, reference for GFW: <a href="http://freewind.me/blog/20140509/2619.html" target="_blank" rel="external">here</a></p>
+</li>
+<li><p><code>android create project --target &lt;target-id&gt; --name scaloidApp --path &lt;path&gt;/scaloidApp --activity MainActivity --package com.example.scaloidapp</code></p>
+</li>
+<li><p>Create a directory named project within your project and add the file project/plugins.sbt, in it, add the following line:<br> addSbtPlugin(“com.hanhuy.sbt” % “android-sdk-plugin” % “1.2.20”)</p>
+</li>
+<li><p>Create project/build.properties and add the following line:</p>
+<p>sbt.version=0.12.4 # newer versions may be used instead</p>
+</li>
+<li><p>Create <code>build.sbt</code> in root directory(<a href="https://gist.github.com/pfn/5872691" target="_blank" rel="external">example</a>). Remember to import <code>android.Keys._</code></p>
+</li>
+</ol>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.<span class="type">Keys</span>._</span><br><span class="line"></span><br><span class="line">android.<span class="type">Plugin</span>.androidBuild</span><br><span class="line"></span><br><span class="line">name := <span class="string">"scaloidApp"</span></span><br><span class="line"></span><br><span class="line">scalaVersion := <span class="string">"2.11.0"</span></span><br><span class="line"></span><br><span class="line">platformTarget in <span class="type">Android</span> := <span class="string">"android-20"</span></span><br><span class="line"></span><br><span class="line">libraryDependencies += <span class="string">"org.scaloid"</span> %% <span class="string">"scaloid"</span> % <span class="string">"3.4-10"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>UPDATE: <code>scaloid-android-plugin</code> fixed the building =.=</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2014/05/17/html/" itemprop="url">
                   magic HTML.js
                 </a>
@@ -1101,7 +1216,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

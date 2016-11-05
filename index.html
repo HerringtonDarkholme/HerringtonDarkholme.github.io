@@ -238,6 +238,115 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/05/how-to-write-copy-paste-friendly-code/" itemprop="url">
+                  How to write copy-paste friendly code -- An introductory parody
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-11-05T00:00:00+08:00" content="2016-11-05">
+              2016-11-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>With the growing population of SOA (<a href="https://www.reddit.com/r/shittyprogramming/comments/4jstef/how_long_does_it_takes_to_master_stack_overflow/" target="_blank" rel="external">StackOverflow</a> <a href="https://twitter.com/divineomega/status/695744177557106688" target="_blank" rel="external">Oriented</a> <a href="https://github.com/drathier/stack-overflow-import" target="_blank" rel="external">Architecture</a>), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.</p>
+<p>You want your answer to be available instantly, free of fussy debugging. So copy-paste friendliness is a key property of your code robust enough to be ubiquitously runnable and, eventually, help you gain more reputation.</p>
+<p>Adopting copy-paste style is amazing. Copy-paste boosts your productivity by freeing you from rumination on architecture complexity. Your boss will be happy with all the <a href="http://www.itestra.de/fileadmin/Redaktion/Documents/07_itestra_measuring_productivity_using_lines_of_code.pdf" target="_blank" rel="external">SLOC</a> you commit. Your colleagues will respect your absolute ownership of the magnificent, enigmatic, labyrinthine code artifact built by the blob gleaned from everywhere.</p>
+<h1 id="1-_Always_prefer_“==”_to_strict_equality-">1. Always prefer “==” to strict equality.</h1><p>Implicit conversion grants you additional robustness. Your code will never complain about ill input. Copy-paste without worry. Yeah</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">'10'</span></span><br><span class="line"><span class="keyword">if</span> (x == <span class="number">10</span>) x += <span class="number">5</span></span><br><span class="line">y = x / <span class="number">5</span> <span class="comment">// wow, it works!</span></span><br></pre></td></tr></table></figure>
+<p>And you can enjoy this artistic <a href="https://dorey.github.io/JavaScript-Equality-Table/" target="_blank" rel="external">equality table</a> when debugging. Cool.<br><img src="/images/comparison.png"></p>
+<h2 id="2-_Always_prefer_positive_condition-">2. Always prefer positive condition.</h2><p>Never return early on invalid case. You can copy-paste it any where in your control flow. Yeah.</p>
+<p>If <code>return</code> is added, you have to remove the unnecessary control flow abrupting keyword when you need to copy paste these code into a deeply nested code block, which is quite common in CPS(copy-paste-style) programming.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">someFunction</span>(<span class="params">someCondition</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (someCondition) &#123;</span><br><span class="line">    <span class="comment">// Do whatever you want</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-_Always_prefer_tautological_check-">3. Always prefer tautological check.</h2><p>Repetition here is for genericity. Every conditional path can be copy-pasted free of reading. They are very safe compile time constructs that preclude the very possibility of runtime <code>undefined</code> panic.</p>
+<p><code>else</code> on individual line is a bonus. You can copy-and paste code without looking at <code>else</code> keyword! What a profit!</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">// never worried about a.b.c is not undefined</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">2</span>) &#123;</span><br><span class="line">  <span class="comment">// repition is one aesthetic rule</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="comment">// very safe even programmer inadvertedly paste it to elsewhere</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-_Always_prefer_fully_qualified_name">4. Always prefer fully qualified name</h2><p>Never cache common subexpression. Declaring new variable name will force you read code and find declaration before copy-pasting.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topVariable.someProperty.nestedProp.anotherProp = <span class="number">123</span></span><br><span class="line"><span class="built_in">console</span>.log(topVariable.someProperty.nestedProp.anotherProp)</span><br><span class="line">topVariable.someProperty.nestedProp.anotherProp += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-_Always_prefer_inlining_statements_in_function">5. Always prefer inlining statements in function</h2><p>Never factor out functions. Helpers require nonlocal function name lookup when copy-pasting. Dev experience terminator.</p>
+<h2 id="Conclusion">Conclusion</h2><p>Oh, GG. I forgot GitHub Gists!</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/01/how-to-choose-vue-library/" itemprop="url">
                   Compare TypeScript libraries for Vue -- a review
                 </a>
@@ -1374,118 +1483,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/25/angular2-quick-start/" itemprop="url">
-                  The Real Angular2 quick start
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2015-10-25T00:00:00+08:00" content="2015-10-25">
-              2015-10-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Angular2 <a href="https://angular.io/docs/ts/latest/quickstart.html" target="_blank" rel="external">official page</a> wants you to make some dirty hack to get the fastest  <code>hellow world</code> in Angular2. But it immediately requires to correct your first sin in the same 5-min quickstart page. Maybe it is possible for a newcomert to set up Angular2 properly in 5 minutes, but reverting previous dirty hack and then setting the correct thing up are annoying. So here is the REAL Angular2 quickstart that does not piss you off.</p>
-<p><strong>DISCLAIMER</strong>: Knowledge about <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a>, <a href="https://github.com/Microsoft/TypeScript/wiki/tsconfig.json" target="_blank" rel="external">TypeScript</a> and <a href="https://github.com/systemjs/systemjs/blob/master/docs/config-api.md" target="_blank" rel="external">SystemJS</a> is recommended.<br>This quickstart deliberately skips explanation on the config and shell code for real real speed.</p>
-<h1 id="Step_1:_Create_a_new_folder_for_our_application_project-">Step 1: Create a new folder for our application project.</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir angular2-quickstart</span><br><span class="line"><span class="built_in">cd</span> angular2-quickstart</span><br><span class="line">mkdir -p src/app</span><br></pre></td></tr></table></figure>
-<h1 id="Step_2:_Install_npm_packages">Step 2: Install npm packages</h1><p>First step towards front end project as usual…<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br><span class="line">npm i angular2@<span class="number">2.0</span>.<span class="number">0</span>-alpha.<span class="number">44</span> systemjs@<span class="number">0.19</span>.<span class="number">2</span> --save --save-exact</span><br><span class="line">npm i typescript live-server --save-dev</span><br></pre></td></tr></table></figure></p>
-<p>Version number sucks, but it will be removed after Angular2’s public stable release.<br>We need to install angular2 and TypeScript as dependency, of course. SystemJS is used to load our app(alternatively one can use webpack or browserify).<br>Live-server gives us live-reloading in developement.</p>
-<h1 id="Step_4:_Set_up_npm_script_tasks">Step 4: Set up npm script tasks</h1><p>Let’s define some useful command.<br><strong>Find and replace</strong> the <code>script</code> section in <code>package.json</code><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">  "scripts": &#123;</span><br><span class="line">    "tsc": "tsc -p src -w",</span><br><span class="line">    "start": "live-server --open=src"</span><br><span class="line">  &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p><code>npm run tsc</code> compiles and watches file changes. <code>npm start</code> runs the live-reload server.</p>
-<h1 id="Step_5:_Create_our_first_Angular2_component">Step 5: Create our first Angular2 component</h1><p><strong>Add a new file</strong> called <code>app.ts</code> in <code>src/app</code><br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Component, bootstrap&#125; from <span class="string">'angular2/angular2'</span>;</span><br><span class="line">@Component(&#123;</span><br><span class="line">    selector: <span class="string">'my-app'</span>,</span><br><span class="line">    template: <span class="string">'&lt;h1&gt;My First Angular 2 App&lt;/h1&gt;'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">class</span> AppComponent &#123; &#125;</span><br><span class="line">bootstrap(AppComponent);</span><br></pre></td></tr></table></figure></p>
-<h1 id="Step_6:_Create_our_entrance_html">Step 6: Create our entrance html</h1><p><strong>Create</strong> an index.html in <code>src</code> foler.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Angular 2 QuickStart<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"../node_modules/systemjs/dist/system.src.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"../node_modules/angular2/bundles/angular2.dev.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="groovy"></span><br><span class="line">      System.config(&#123;</span><br><span class="line"><span class="label">        packages:</span> &#123;</span><br><span class="line">          <span class="string">'app'</span>: &#123;<span class="string">defaultExtension:</span> <span class="string">'js'</span>&#125; <span class="comment">// defaultExtension makes require `app/app` works without `.js`</span></span><br><span class="line">          <span class="comment">// more packages config goes here</span></span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      System.<span class="keyword">import</span>(<span class="string">'app/app'</span>);</span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">my-app</span>&gt;</span>loading...<span class="tag">&lt;/<span class="title">my-app</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="Step_7:_Compile_TypeScript">Step 7: Compile TypeScript</h1><p><strong>Create tsconfig.json</strong> in the <code>src</code> folder.</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">compilerOptions</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">target</span>": <span class="value"><span class="string">"ES5"</span></span>,</span><br><span class="line">    "<span class="attribute">module</span>": <span class="value"><span class="string">"commonjs"</span></span>,</span><br><span class="line">    "<span class="attribute">sourceMap</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">    "<span class="attribute">emitDecoratorMetadata</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">    "<span class="attribute">experimentalDecorators</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">    "<span class="attribute">removeComments</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">    "<span class="attribute">noImplicitAny</span>": <span class="value"><span class="literal">false</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
-<p>And then, in a <strong>new terminal window</strong>.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run tsc</span><br></pre></td></tr></table></figure></p>
-<h1 id="Step_8:_Run_the_app!">Step 8: Run the app!</h1><p>And in <strong>yet another new terminal window</strong>.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure></p>
-<p>You should see <code>My First Angular2  App</code> in your browser.</p>
-<h1 id="Hooray!">Hooray!</h1><p>Now you can make some changes to your source file. <code>tsc</code> compiles file on the fly and <code>live-server</code> automatically refreshes the browser!</p>
-<p>Hope you are not pissed off by this quickstart.</p>
-<p><em>P.S. Final structure</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">angular2-quickstart&#10;&#9500;&#9472;&#9472; node_modules&#10;&#9500;&#9472;&#9472; src&#10;&#9474;    &#9500;&#9472;&#9472; app&#10;|    &#9474;    &#9492;&#9472;&#9472; app.ts&#10;&#9474;    &#9500;&#9472;&#9472; index.html&#10;&#9474;    &#9492;&#9472;&#9472; tsconfig.json&#10;&#9492;&#9472;&#9472; package.json</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1531,7 +1528,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

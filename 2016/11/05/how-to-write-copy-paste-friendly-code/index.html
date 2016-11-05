@@ -1,0 +1,571 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="With the growing population of SOA (StackOverflow Oriented Architecture), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to write copy-paste friendly code -- An introductory parody">
+<meta property="og:url" content="http://herringtondarkholme.github.io/2016/11/05/how-to-write-copy-paste-friendly-code/index.html">
+<meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:description" content="With the growing population of SOA (StackOverflow Oriented Architecture), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.">
+<meta property="og:image" content="http://herringtondarkholme.github.io/images/comparison.png">
+<meta property="og:updated_time" content="2016-11-05T12:50:36.427Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to write copy-paste friendly code -- An introductory parody">
+<meta name="twitter:description" content="With the growing population of SOA (StackOverflow Oriented Architecture), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://herringtondarkholme.github.io/2016/11/05/how-to-write-copy-paste-friendly-code/"/>
+
+  <title> How to write copy-paste friendly code -- An introductory parody | Abitrarily Idiosyncratic Randomness </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Abitrarily Idiosyncratic Randomness</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Hchan's Note</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                How to write copy-paste friendly code -- An introductory parody
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-11-05T00:00:00+08:00" content="2016-11-05">
+              2016-11-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>With the growing population of SOA (<a href="https://www.reddit.com/r/shittyprogramming/comments/4jstef/how_long_does_it_takes_to_master_stack_overflow/" target="_blank" rel="external">StackOverflow</a> <a href="https://twitter.com/divineomega/status/695744177557106688" target="_blank" rel="external">Oriented</a> <a href="https://github.com/drathier/stack-overflow-import" target="_blank" rel="external">Architecture</a>), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.</p>
+<p>You want your answer to be available instantly, free of fussy debugging. So copy-paste friendliness is a key property of your code robust enough to be ubiquitously runnable and, eventually, help you gain more reputation.</p>
+<p>Adopting copy-paste style is amazing. Copy-paste boosts your productivity by freeing you from rumination on architecture complexity. Your boss will be happy with all the <a href="http://www.itestra.de/fileadmin/Redaktion/Documents/07_itestra_measuring_productivity_using_lines_of_code.pdf" target="_blank" rel="external">SLOC</a> you commit. Your colleagues will respect your absolute ownership of the magnificent, enigmatic, labyrinthine code artifact built by the blob gleaned from everywhere.</p>
+<h1 id="1-_Always_prefer_“==”_to_strict_equality-">1. Always prefer “==” to strict equality.</h1><p>Implicit conversion grants you additional robustness. Your code will never complain about ill input. Copy-paste without worry. Yeah</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">'10'</span></span><br><span class="line"><span class="keyword">if</span> (x == <span class="number">10</span>) x += <span class="number">5</span></span><br><span class="line">y = x / <span class="number">5</span> <span class="comment">// wow, it works!</span></span><br></pre></td></tr></table></figure>
+<p>And you can enjoy this artistic <a href="https://dorey.github.io/JavaScript-Equality-Table/" target="_blank" rel="external">equality table</a> when debugging. Cool.<br><img src="/images/comparison.png"></p>
+<h2 id="2-_Always_prefer_positive_condition-">2. Always prefer positive condition.</h2><p>Never return early on invalid case. You can copy-paste it any where in your control flow. Yeah.</p>
+<p>If <code>return</code> is added, you have to remove the unnecessary control flow abrupting keyword when you need to copy paste these code into a deeply nested code block, which is quite common in CPS(copy-paste-style) programming.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">someFunction</span>(<span class="params">someCondition</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (someCondition) &#123;</span><br><span class="line">    <span class="comment">// Do whatever you want</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-_Always_prefer_tautological_check-">3. Always prefer tautological check.</h2><p>Repetition here is for genericity. Every conditional path can be copy-pasted free of reading. They are very safe compile time constructs that preclude the very possibility of runtime <code>undefined</code> panic.</p>
+<p><code>else</code> on individual line is a bonus. You can copy-and paste code without looking at <code>else</code> keyword! What a profit!</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">// never worried about a.b.c is not undefined</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">2</span>) &#123;</span><br><span class="line">  <span class="comment">// repition is one aesthetic rule</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="comment">// very safe even programmer inadvertedly paste it to elsewhere</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-_Always_prefer_fully_qualified_name">4. Always prefer fully qualified name</h2><p>Never cache common subexpression. Declaring new variable name will force you read code and find declaration before copy-pasting.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topVariable.someProperty.nestedProp.anotherProp = <span class="number">123</span></span><br><span class="line"><span class="built_in">console</span>.log(topVariable.someProperty.nestedProp.anotherProp)</span><br><span class="line">topVariable.someProperty.nestedProp.anotherProp += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-_Always_prefer_inlining_statements_in_function">5. Always prefer inlining statements in function</h2><p>Never factor out functions. Helpers require nonlocal function name lookup when copy-pasting. Dev experience terminator.</p>
+<h2 id="Conclusion">Conclusion</h2><p>Oh, GG. I forgot GitHub Gists!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/01/how-to-choose-vue-library/" rel="next" title="Compare TypeScript libraries for Vue -- a review">
+                <i class="fa fa-chevron-left"></i> Compare TypeScript libraries for Vue -- a review
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Herrington Darkholme" />
+          <p class="site-author-name" itemprop="name">Herrington Darkholme</p>
+          <p class="site-description motion-element" itemprop="description">あくまでも紳士です</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-_Always_prefer_“==”_to_strict_equality-"><span class="nav-number">1.</span> <span class="nav-text">1. Always prefer “==” to strict equality.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_Always_prefer_positive_condition-"><span class="nav-number">1.1.</span> <span class="nav-text">2. Always prefer positive condition.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-_Always_prefer_tautological_check-"><span class="nav-number">1.2.</span> <span class="nav-text">3. Always prefer tautological check.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-_Always_prefer_fully_qualified_name"><span class="nav-number">1.3.</span> <span class="nav-text">4. Always prefer fully qualified name</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-_Always_prefer_inlining_statements_in_function"><span class="nav-number">1.4.</span> <span class="nav-text">5. Always prefer inlining statements in function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.5.</span> <span class="nav-text">Conclusion</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Herrington Darkholme</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
