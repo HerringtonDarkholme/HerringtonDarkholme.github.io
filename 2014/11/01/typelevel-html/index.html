@@ -260,6 +260,13 @@ Since values are encoded by variable’s type, type level drives c">
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/11/01/typelevel-html/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/01/typelevel-html/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -283,7 +290,7 @@ Since values are encoded by variable’s type, type level drives c">
 <p>Since values are encoded by variable’s type, type level drives compiler to validate logic or even determine program’s output.<br>All validation and computation are conducted statically at compiling phase, so the greatest benefit of type-level programming is its safety and reliability.</p>
 <p>As a rule of thumb, the more dynamic code is, the more flexible it can computes. Type level programming require all logic encoded into the source code. It is to hard to cram all logic into type system, as handling whimsical input from external source is either impossible or reduce source code to unwieldy state machine. So the niche of type level programming is usually encoding, pickling or parsing.</p>
 <p>But there is field where code is statically written: GUI. HTML template is hard coded in source. Type level can be used as linting and validation in html edition, especially in authoring web components. A piece of HTML fragment can be encoded in ordinary object, with type denoting its structure. Once the structure of HTMl is fixed, the output of JavaScript and css can be determined as well.<br>This is more helpful when one wants to make component. A tab-container must have tab-pane as child, and a tab-pane must live within a tab-container. Current approach of constraining HTML structure is encoding requirements in JavaScript and checking it in runtime. For example, angular uses <code>require: &#39;^parentDirective&#39;</code> to express the constraints and enable directive communication. If the component is programmatically constructed, using type annotation is a natural way to express the constraints. (As in Angular 2.0, <code>query&lt;ChildDirective&gt;</code>). We can go further in a language with full-bloomed type system.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trait Tag&#10;class Concat[A &#60;: Tag, B &#60;: Tag](a: A, b: B) extends Tag&#10;trait NestTag[A &#60;: Tag] extends Tag &#123;&#10;  type Child = A&#10;&#125;&#10;trait Inline extends Tag&#10;trait Block extends Tag&#10;case class div[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class p[T &#60;: Tag](t :T = null) extends NestTag[T] with Block&#10;case class a[T &#60;: Inline](t :T = null) extends NestTag[T] with Inline&#10;&#10;implicit class PlusTag[A &#60;: Tag](a: A) &#123;&#10;  def +[B &#60;: Tag](b: B) = new Concat(a, b)&#10;&#125;&#10;&#10;class Contains[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;&#10;case class jQ[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_]](c: C[A]) &#123;&#10;  def has[T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: Contains[A, C, T]) = true&#10;&#125;&#10;&#10;implicit def htmlEq[A &#60;: Tag, C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]](implicit ev: C[A] =:= T[A]) =&#10;  new Contains[A, C, T]&#10;implicit def recurEq[A &#60;: Tag, B[_ &#60;: Tag] &#60;: NestTag[_], C[_ &#60;: Tag] &#60;: NestTag[_], T[_ &#60;: Tag] &#60;: NestTag[_]]&#10;  (implicit ev: Contains[A, B, T]) = new Contains[B[A], C, T]&#10;&#10;val ele = div(&#10;  p(&#10;    a()&#10;  )&#10;)&#10;val r = jQ(ele).has[p]&#10;println(r)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">trait Tag</div><div class="line">class Concat[A &lt;: Tag, B &lt;: Tag](a: A, b: B) extends Tag</div><div class="line">trait NestTag[A &lt;: Tag] extends Tag &#123;</div><div class="line">  type Child = A</div><div class="line">&#125;</div><div class="line">trait Inline extends Tag</div><div class="line">trait Block extends Tag</div><div class="line">case class div[T &lt;: Tag](t :T = null) extends NestTag[T] with Block</div><div class="line">case class p[T &lt;: Tag](t :T = null) extends NestTag[T] with Block</div><div class="line">case class a[T &lt;: Inline](t :T = null) extends NestTag[T] with Inline</div><div class="line"></div><div class="line">implicit class PlusTag[A &lt;: Tag](a: A) &#123;</div><div class="line">  def +[B &lt;: Tag](b: B) = new Concat(a, b)</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Contains[A &lt;: Tag, C[_ &lt;: Tag] &lt;: NestTag[_], T[_ &lt;: Tag] &lt;: NestTag[_]]</div><div class="line"></div><div class="line">case class jQ[A &lt;: Tag, C[_ &lt;: Tag] &lt;: NestTag[_]](c: C[A]) &#123;</div><div class="line">  def has[T[_ &lt;: Tag] &lt;: NestTag[_]](implicit ev: Contains[A, C, T]) = true</div><div class="line">&#125;</div><div class="line"></div><div class="line">implicit def htmlEq[A &lt;: Tag, C[_ &lt;: Tag] &lt;: NestTag[_], T[_ &lt;: Tag] &lt;: NestTag[_]](implicit ev: C[A] =:= T[A]) =</div><div class="line">  new Contains[A, C, T]</div><div class="line">implicit def recurEq[A &lt;: Tag, B[_ &lt;: Tag] &lt;: NestTag[_], C[_ &lt;: Tag] &lt;: NestTag[_], T[_ &lt;: Tag] &lt;: NestTag[_]]</div><div class="line">  (implicit ev: Contains[A, B, T]) = new Contains[B[A], C, T]</div><div class="line"></div><div class="line">val ele = div(</div><div class="line">  p(</div><div class="line">    a()</div><div class="line">  )</div><div class="line">)</div><div class="line">val r = jQ(ele).has[p]</div><div class="line">println(r)</div></pre></td></tr></table></figure>
 <p>The code above is just a demo. All html elements has type that denotes its structure. And one can tell whether a tag is in a html elemnt by calling <code>jQ(ele).has[Tag]</code>. (Note: ele is value level variable and Tag is a type level constructor.) And inline element cannot contains block element, because inline element’s child must be a subtype of <code>inline</code>.</p>
 <p>Programmatical markup has several benefits:</p>
 <ol>
@@ -363,6 +370,13 @@ Since values are encoded by variable’s type, type level drives c">
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -405,7 +419,7 @@ Since values are encoded by variable’s type, type level drives c">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -463,7 +477,7 @@ Since values are encoded by variable’s type, type level drives c">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -560,6 +574,27 @@ Since values are encoded by variable’s type, type level drives c">
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2014/11/01/typelevel-html/';
+      var disqus_title = "typelevel-html";
+      var disqus_url = 'http://herringtondarkholme.github.io/2014/11/01/typelevel-html/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

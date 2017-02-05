@@ -95,6 +95,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to write copy-paste friendly code -- An introductory parody">
 <meta name="twitter:description" content="With the growing population of SOA (StackOverflow Oriented Architecture), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.">
+<meta name="twitter:image" content="http://herringtondarkholme.github.io/images/comparison.png">
 
 
 
@@ -258,6 +259,13 @@
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/05/how-to-write-copy-paste-friendly-code/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/05/how-to-write-copy-paste-friendly-code/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -280,19 +288,19 @@
         <p>With the growing population of SOA (<a href="https://www.reddit.com/r/shittyprogramming/comments/4jstef/how_long_does_it_takes_to_master_stack_overflow/" target="_blank" rel="external">StackOverflow</a> <a href="https://twitter.com/divineomega/status/695744177557106688" target="_blank" rel="external">Oriented</a> <a href="https://github.com/drathier/stack-overflow-import" target="_blank" rel="external">Architecture</a>), keeping your code copy-paste friendly is becoming more and more important in demonstrating, developing and question answering.</p>
 <p>You want your answer to be available instantly, free of fussy debugging. So copy-paste friendliness is a key property of your code robust enough to be ubiquitously runnable and, eventually, help you gain more reputation.</p>
 <p>Adopting copy-paste style is amazing. Copy-paste boosts your productivity by freeing you from rumination on architecture complexity. Your boss will be happy with all the <a href="http://www.itestra.de/fileadmin/Redaktion/Documents/07_itestra_measuring_productivity_using_lines_of_code.pdf" target="_blank" rel="external">SLOC</a> you commit. Your colleagues will respect your absolute ownership of the magnificent, enigmatic, labyrinthine code artifact built by the blob gleaned from everywhere.</p>
-<h1 id="1-_Always_prefer_“==”_to_strict_equality-">1. Always prefer “==” to strict equality.</h1><p>Implicit conversion grants you additional robustness. Your code will never complain about ill input. Copy-paste without worry. Yeah</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">'10'</span></span><br><span class="line"><span class="keyword">if</span> (x == <span class="number">10</span>) x += <span class="number">5</span></span><br><span class="line">y = x / <span class="number">5</span> <span class="comment">// wow, it works!</span></span><br></pre></td></tr></table></figure>
+<h1 id="1-Always-prefer-“-”-to-strict-equality"><a href="#1-Always-prefer-“-”-to-strict-equality" class="headerlink" title="1. Always prefer “==” to strict equality."></a>1. Always prefer “==” to strict equality.</h1><p>Implicit conversion grants you additional robustness. Your code will never complain about ill input. Copy-paste without worry. Yeah</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="string">'10'</span></div><div class="line"><span class="keyword">if</span> (x == <span class="number">10</span>) x += <span class="number">5</span></div><div class="line">y = x / <span class="number">5</span> <span class="comment">// wow, it works!</span></div></pre></td></tr></table></figure>
 <p>And you can enjoy this artistic <a href="https://dorey.github.io/JavaScript-Equality-Table/" target="_blank" rel="external">equality table</a> when debugging. Cool.<br><img src="/images/comparison.png"></p>
-<h2 id="2-_Always_prefer_positive_condition-">2. Always prefer positive condition.</h2><p>Never return early on invalid case. You can copy-paste it any where in your control flow. Yeah.</p>
+<h2 id="2-Always-prefer-positive-condition"><a href="#2-Always-prefer-positive-condition" class="headerlink" title="2. Always prefer positive condition."></a>2. Always prefer positive condition.</h2><p>Never return early on invalid case. You can copy-paste it any where in your control flow. Yeah.</p>
 <p>If <code>return</code> is added, you have to remove the unnecessary control flow abrupting keyword when you need to copy paste these code into a deeply nested code block, which is quite common in CPS(copy-paste-style) programming.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">someFunction</span>(<span class="params">someCondition</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (someCondition) &#123;</span><br><span class="line">    <span class="comment">// Do whatever you want</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-_Always_prefer_tautological_check-">3. Always prefer tautological check.</h2><p>Repetition here is for genericity. Every conditional path can be copy-pasted free of reading. They are very safe compile time constructs that preclude the very possibility of runtime <code>undefined</code> panic.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">someFunction</span>(<span class="params">someCondition</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (someCondition) &#123;</div><div class="line">    <span class="comment">// Do whatever you want</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3-Always-prefer-tautological-check"><a href="#3-Always-prefer-tautological-check" class="headerlink" title="3. Always prefer tautological check."></a>3. Always prefer tautological check.</h2><p>Repetition here is for genericity. Every conditional path can be copy-pasted free of reading. They are very safe compile time constructs that preclude the very possibility of runtime <code>undefined</code> panic.</p>
 <p><code>else</code> on individual line is a bonus. You can copy-and paste code without looking at <code>else</code> keyword! What a profit!</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">// never worried about a.b.c is not undefined</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">2</span>) &#123;</span><br><span class="line">  <span class="comment">// repition is one aesthetic rule</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="comment">// very safe even programmer inadvertedly paste it to elsewhere</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="4-_Always_prefer_fully_qualified_name">4. Always prefer fully qualified name</h2><p>Never cache common subexpression. Declaring new variable name will force you read code and find declaration before copy-pasting.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topVariable.someProperty.nestedProp.anotherProp = <span class="number">123</span></span><br><span class="line"><span class="built_in">console</span>.log(topVariable.someProperty.nestedProp.anotherProp)</span><br><span class="line">topVariable.someProperty.nestedProp.anotherProp += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h2 id="5-_Always_prefer_inlining_statements_in_function">5. Always prefer inlining statements in function</h2><p>Never factor out functions. Helpers require nonlocal function name lookup when copy-pasting. Dev experience terminator.</p>
-<h2 id="Conclusion">Conclusion</h2><p>Oh, GG. I forgot GitHub Gists!</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">1</span>) &#123;</div><div class="line">  <span class="comment">// never worried about a.b.c is not undefined</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">2</span>) &#123;</div><div class="line">  <span class="comment">// repition is one aesthetic rule</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="keyword">if</span> (a &amp;&amp; a.b &amp;&amp; a.b.c == <span class="number">3</span>) &#123;</div><div class="line">  <span class="comment">// very safe even programmer inadvertedly paste it to elsewhere</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4-Always-prefer-fully-qualified-name"><a href="#4-Always-prefer-fully-qualified-name" class="headerlink" title="4. Always prefer fully qualified name"></a>4. Always prefer fully qualified name</h2><p>Never cache common subexpression. Declaring new variable name will force you read code and find declaration before copy-pasting.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">topVariable.someProperty.nestedProp.anotherProp = <span class="number">123</span></div><div class="line"><span class="built_in">console</span>.log(topVariable.someProperty.nestedProp.anotherProp)</div><div class="line">topVariable.someProperty.nestedProp.anotherProp += <span class="number">1</span></div></pre></td></tr></table></figure>
+<h2 id="5-Always-prefer-inlining-statements-in-function"><a href="#5-Always-prefer-inlining-statements-in-function" class="headerlink" title="5. Always prefer inlining statements in function"></a>5. Always prefer inlining statements in function</h2><p>Never factor out functions. Helpers require nonlocal function name lookup when copy-pasting. Dev experience terminator.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Oh, GG. I forgot GitHub Gists!</p>
 
       
     </div>
@@ -332,6 +340,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/02/04/flow-sensitive/" rel="prev" title="Grok control flow based analysis in TypeScript.">
+                Grok control flow based analysis in TypeScript. <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -355,6 +367,13 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -398,7 +417,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -437,7 +456,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-_Always_prefer_“==”_to_strict_equality-"><span class="nav-number">1.</span> <span class="nav-text">1. Always prefer “==” to strict equality.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_Always_prefer_positive_condition-"><span class="nav-number">1.1.</span> <span class="nav-text">2. Always prefer positive condition.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-_Always_prefer_tautological_check-"><span class="nav-number">1.2.</span> <span class="nav-text">3. Always prefer tautological check.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-_Always_prefer_fully_qualified_name"><span class="nav-number">1.3.</span> <span class="nav-text">4. Always prefer fully qualified name</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-_Always_prefer_inlining_statements_in_function"><span class="nav-number">1.4.</span> <span class="nav-text">5. Always prefer inlining statements in function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.5.</span> <span class="nav-text">Conclusion</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Always-prefer-“-”-to-strict-equality"><span class="nav-number">1.</span> <span class="nav-text">1. Always prefer “==” to strict equality.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Always-prefer-positive-condition"><span class="nav-number">1.1.</span> <span class="nav-text">2. Always prefer positive condition.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Always-prefer-tautological-check"><span class="nav-number">1.2.</span> <span class="nav-text">3. Always prefer tautological check.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Always-prefer-fully-qualified-name"><span class="nav-number">1.3.</span> <span class="nav-text">4. Always prefer fully qualified name</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Always-prefer-inlining-statements-in-function"><span class="nav-number">1.4.</span> <span class="nav-text">5. Always prefer inlining statements in function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.5.</span> <span class="nav-text">Conclusion</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -456,7 +475,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -553,6 +572,27 @@
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2016/11/05/how-to-write-copy-paste-friendly-code/';
+      var disqus_title = "How to write copy-paste friendly code -- An introductory parody";
+      var disqus_url = 'http://herringtondarkholme.github.io/2016/11/05/how-to-write-copy-paste-friendly-code/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

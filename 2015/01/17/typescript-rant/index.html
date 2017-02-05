@@ -85,19 +85,20 @@
 
 
 <meta name="description" content="source: Ad: hisuitei
-Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a na">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rant on Typescript type guard">
 <meta property="og:url" content="http://herringtondarkholme.github.io/2015/01/17/typescript-rant/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
 <meta property="og:description" content="source: Ad: hisuitei
-Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a na">
 <meta property="og:image" content="http://herringtondarkholme.github.io/images/hisuitei.jpg">
 <meta property="og:updated_time" content="2015-06-09T16:26:26.615Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rant on Typescript type guard">
 <meta name="twitter:description" content="source: Ad: hisuitei
-Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a nat">
+Recently Typescript team has released Typescript 1.4, adding a new feature called Union Type which is intended for better incorporation into native Javascript.Type guard, as a na">
+<meta name="twitter:image" content="http://herringtondarkholme.github.io/images/hisuitei.jpg">
 
 
 
@@ -261,6 +262,13 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/01/17/typescript-rant/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/17/typescript-rant/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -287,7 +295,7 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
 <p>TypeScript now understands these conditions and will change type inference accordingly when used in an if block.</p>
 </blockquote>
 <p>It <em>accepts and only accepts</em> conditional statement like <code>if (typeof x === &#39;string&#39;)</code> as type guard.<br>Typescript now creates new type like <code>number | string</code> meaning a type of either number or string.<br>Users can further refine the type by comparing the value <code>typeof</code> gives, like the example below:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCustomer</span>(<span class="params">name: &#123; firstName: <span class="built_in">string</span>; lastName: <span class="built_in">string</span> &#125; | <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> name === <span class="string">"string"</span>) &#123;</span><br><span class="line">        <span class="comment">// Because of the typeof check in the if, we know name has type string</span></span><br><span class="line">        <span class="keyword">return</span> &#123; fullName: name &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Since it's not a string, we know name has</span></span><br><span class="line">        <span class="comment">// type &#123; firstName: string; lastName: string &#125;</span></span><br><span class="line">        <span class="keyword">return</span> &#123; fullName: name.firstName + <span class="string">" "</span> + name.lastName &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Both customers have type &#123; fullName: string &#125;</span></span><br><span class="line"><span class="keyword">var</span> customer = createCustomer(<span class="string">"John Smith"</span>);</span><br><span class="line"><span class="keyword">var</span> customer2 = createCustomer(&#123; firstName: <span class="string">"Samuel"</span>, lastName: <span class="string">"Jones"</span> &#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCustomer</span>(<span class="params">name: &#123; firstName: <span class="built_in">string</span>; lastName: <span class="built_in">string</span> &#125; | <span class="built_in">string</span></span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> name === <span class="string">"string"</span>) &#123;</div><div class="line">        <span class="comment">// Because of the typeof check in the if, we know name has type string</span></div><div class="line">        <span class="keyword">return</span> &#123; fullName: name &#125;;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// Since it's not a string, we know name has</span></div><div class="line">        <span class="comment">// type &#123; firstName: string; lastName: string &#125;</span></div><div class="line">        <span class="keyword">return</span> &#123; fullName: name.firstName + <span class="string">" "</span> + name.lastName &#125;;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Both customers have type &#123; fullName: string &#125;</span></div><div class="line"><span class="keyword">var</span> customer = createCustomer(<span class="string">"John Smith"</span>);</div><div class="line"><span class="keyword">var</span> customer2 = createCustomer(&#123; firstName: <span class="string">"Samuel"</span>, lastName: <span class="string">"Jones"</span> &#125;);</div></pre></td></tr></table></figure>
 <p>I would rather say this is a bad idea because:</p>
 <ol>
 <li>it intermixes type level constucts with value level constructs.</li>
@@ -296,7 +304,7 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
 <p>Value level contructs are expression or statements dealing with values, e.g. assignment, comparison. <code>typeof</code> and <code>instanceof</code> in Javascript are value level constructs because they generate boolean value, and their values can be passed to other variable or compared with other variable. Value type constucts do imply types, say, creating a new object of specific type, but they do not explicitly manipulate the types of expressions. There is no type casting Javascript can do. On the other hand, type level constructs deals with types, for example, type annotation and generics.</p>
 <p>Doubling <code>typeof</code> as type guard blurs the demarcation between type level and value level, and naturally reduces program’s readability(somewhat subjective claim though). A variable can, without distinct syntax, change its type in a conditional block. <code>if</code> branching is ubiquitous typescript programs, from hello-world toys to cathedral-like projects. It’s quite hard to find the “type switch” for union type among other irrelevant <code>if</code>s. Also, one has to pay attention to call correct method of a same variable in different branches. So Typescript’s type guard introduces a new <code>type scope</code> different from both lexical scope and function scope. It also cripples the compiler because now compiler has to check whether the condition in a <code>if</code> parentheses is type guard.</p>
 <p>What’s worse? Type guard is a value level constructs so it can interact with all other language constucts. But microsoft does not intend to support that. None of the following code compiles in Typescript 1.4.1, but they ought to run correctly in plain javascript, if they can be compiled.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">function testNot(x: string|number|Function) &#123;</span><br><span class="line">  var isNonNum = typeof x !== 'number'</span><br><span class="line">  if (isNonNum) return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testReturn(x: string|number) &#123;</span><br><span class="line">  if (typeof x === 'number') return;</span><br><span class="line">  return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testReturn(x: string|number) &#123;</span><br><span class="line">  if (typeof x === 'number') throw new Error('error type')</span><br><span class="line">  return x.length</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testFor(xs: (string|number)[]) &#123;</span><br><span class="line"> for(var i = 0, x = xs[i]; typeof x === 'string'; i++) &#123;</span><br><span class="line">   console.log(x.length)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testWhile(xs: [](string|number)) &#123;</span><br><span class="line">  var i = 0;</span><br><span class="line">  while (typeof xs[i] === 'string') &#123;</span><br><span class="line">    console.log(xs[i].length)</span><br><span class="line">    i++</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function testFilter(xs: (string|number)[]) &#123;</span><br><span class="line">  xs.filter((x) =&gt; typeof x === 'string').map((x) =&gt; x.length)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">function testNot(x: string|number|Function) &#123;</div><div class="line">  var isNonNum = typeof x !== 'number'</div><div class="line">  if (isNonNum) return x.length</div><div class="line">&#125;</div><div class="line"></div><div class="line">function testReturn(x: string|number) &#123;</div><div class="line">  if (typeof x === 'number') return;</div><div class="line">  return x.length</div><div class="line">&#125;</div><div class="line"></div><div class="line">function testReturn(x: string|number) &#123;</div><div class="line">  if (typeof x === 'number') throw new Error('error type')</div><div class="line">  return x.length</div><div class="line">&#125;</div><div class="line"></div><div class="line">function testFor(xs: (string|number)[]) &#123;</div><div class="line"> for(var i = 0, x = xs[i]; typeof x === 'string'; i++) &#123;</div><div class="line">   console.log(x.length)</div><div class="line"> &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function testWhile(xs: [](string|number)) &#123;</div><div class="line">  var i = 0;</div><div class="line">  while (typeof xs[i] === 'string') &#123;</div><div class="line">    console.log(xs[i].length)</div><div class="line">    i++</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function testFilter(xs: (string|number)[]) &#123;</div><div class="line">  xs.filter((x) =&gt; typeof x === 'string').map((x) =&gt; x.length)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Indeed, Typescript is not the first to mix type level and value level. Language constructs like <code>Pattern Match</code> also do that(and usually introduce bugs related to type inference, see scala bug track). But at least Pattern Match is a specialized syntax that does not interact much with other syntax. But Type guard is, well, too ubiquitous to be good.</p>
 
       
@@ -365,6 +373,13 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -407,7 +422,7 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -465,7 +480,7 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -562,6 +577,27 @@ Recently Typescript team has released Typescript 1.4, adding a new feature calle
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2015/01/17/typescript-rant/';
+      var disqus_title = "Rant on Typescript type guard";
+      var disqus_url = 'http://herringtondarkholme.github.io/2015/01/17/typescript-rant/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

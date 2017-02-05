@@ -86,21 +86,22 @@
 
 <meta name="description" content="source
 For better syntax and user friendliness (and a lot more), Java 8 introduces SAM type, Single Abstract Method type, starting to embrace the functional programming world.
-Previous to 1.8, Java al">
+Previous to 1.8, Java a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Explaining Scala SAM type">
 <meta property="og:url" content="http://herringtondarkholme.github.io/2015/01/24/scala-sam/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
 <meta property="og:description" content="source
 For better syntax and user friendliness (and a lot more), Java 8 introduces SAM type, Single Abstract Method type, starting to embrace the functional programming world.
-Previous to 1.8, Java al">
+Previous to 1.8, Java a">
 <meta property="og:image" content="http://herringtondarkholme.github.io/images/42665600.jpg">
 <meta property="og:updated_time" content="2015-06-09T16:26:45.135Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Explaining Scala SAM type">
 <meta name="twitter:description" content="source
 For better syntax and user friendliness (and a lot more), Java 8 introduces SAM type, Single Abstract Method type, starting to embrace the functional programming world.
-Previous to 1.8, Java al">
+Previous to 1.8, Java a">
+<meta name="twitter:image" content="http://herringtondarkholme.github.io/images/42665600.jpg">
 
 
 
@@ -264,6 +265,13 @@ Previous to 1.8, Java al">
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/01/24/scala-sam/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/24/scala-sam/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -287,18 +295,18 @@ Previous to 1.8, Java al">
 <p><a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=42665600" target="_blank" rel="external">source</a></p>
 <p>For better syntax and user friendliness (and a lot more), Java 8 introduces <a href="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-3.html" target="_blank" rel="external">SAM</a> type, Single Abstract Method type, starting to embrace the functional programming world.</p>
 <p>Previous to 1.8, Java already has somewhat a (bulky and leaky) type of closure: annonyous inner classes. For example, to start a working thread in Java usually requires following trivial but bloated statements, without a lexical <code>this</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// from android developer guide</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      Bitmap b = loadImageFromNetwork(<span class="string">"http://www.example.org/image.gif"</span>);</span><br><span class="line">      mImageView.setImage(b);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// from android developer guide</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">  <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      Bitmap b = loadImageFromNetwork(<span class="string">"http://www.example.org/image.gif"</span>);</div><div class="line">      mImageView.setImage(b);</div><div class="line">    &#125;</div><div class="line">  &#125;).start()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Two classes, one method. The introduction of SAM type greatly reduces the syntactical overhead of Java.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">new</span> Thread(#&#123; -&gt;</span><br><span class="line">    mImage.setImage(loadImageFromNetwork(<span class="string">"/image.gif"</span>));</span><br><span class="line">  &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public void onClick(View v) &#123;</div><div class="line">  new Thread(#&#123; -&gt;</div><div class="line">    mImage.setImage(loadImageFromNetwork("/image.gif"));</div><div class="line">  &#125;).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>I’m not explaining Java8’s new features here, as a Scala user has already relished the conciseness and expressiveness of functional programming.</p>
 <p>So, why would scala user cares about SAM type in Java? I would say that interoperation with Java and performance are the main concerns here.</p>
 <p>Java8 introduces <code>Function</code> type, which is widely used in library like <code>stream</code>. Sadly, <code>Function</code> is not that of scala. Scala compiler just frowns at you using scala native function with Stream.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.<span class="type">Arrays</span></span><br><span class="line"><span class="type">Arrays</span>.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>).stream.map((i: <span class="type">Int</span>) =&gt; i * <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// &lt;console&gt;: error: type mismatch;</span></span><br><span class="line"><span class="comment">//  found   : Int =&gt; Int</span></span><br><span class="line"><span class="comment">//  required: java.util.function.Function[_ &gt;: Int, _]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.<span class="type">Arrays</span></div><div class="line"><span class="type">Arrays</span>.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>).stream.map((i: <span class="type">Int</span>) =&gt; i * <span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="comment">// &lt;console&gt;: error: type mismatch;</span></div><div class="line"><span class="comment">//  found   : Int =&gt; Int</span></div><div class="line"><span class="comment">//  required: java.util.function.Function[_ &gt;: Int, _]</span></div></pre></td></tr></table></figure>
 <p>Side notes: because function parameter is in a contravariant position,  <code>Function[_ &gt;: Int, _]</code> has a lower bound Int rather than a upper bound.<br>That is, the function passed as argument must accept types that are super types of <code>Int</code>.</p>
 <p>One can manually provide implicit conversion here to transform scala function types to java function types. However, <a href="http://www.tikalk.com/incubator/simulating-sam-closures-scala/" target="_blank" rel="external">implementing</a> such implicit conversion is of no fun. The implementation is either not generic enough, or requires mechanical code duplication(another alternative is advanced macro generation). Compiler support is more ideal, not only because it generates more efficient byte code, but also because this precludes incompatibility across different implementations.</p>
 <p><strong>SAM type is enabled by <code>-Xexperimental</code> flag in scala 2.11.x flags. Specifically, in scala 2.11.5, SAM type is better <a href="https://github.com/scala/scala/pull/4101" target="_blank" rel="external">supported</a>.</strong><br>SAM gets eta-expansion(one can use a method from another class as SAM), overloading(overloaded function/method can also accept functions as SAM) and existential type support in scala 2.11.5.</p>
 <p>Basic usage os SAM is quite simple, if a <code>trait/abstract class</code> with <em>exactly one</em> <code>abstract method</code>, then a <code>Function</code> of the <em>same parameter and return type</em> of the abstract method can be converted into the <code>trait/abstract class</code>.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Flyable</span> &#123;</span></span><br><span class="line">  <span class="comment">// exactly one abstracg method</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fly</span>(</span>miles: <span class="type">Int</span>): <span class="type">Unit</span></span><br><span class="line">  <span class="comment">// optional concrete object</span></span><br><span class="line">  <span class="function"><span class="keyword">val</span> <span class="title">name</span> =</span> <span class="string">"Unidentified Flyable Object"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// to reference SAM type itself</span></span><br><span class="line"><span class="comment">// create a named self-referencing lambda expression</span></span><br><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">ufo</span>:</span> <span class="type">Flyable</span> = (m: <span class="type">Int</span>) =&gt; println(s<span class="string">"$&#123;ufo.name&#125; flies $m miles!"</span>)</span><br><span class="line">ufo.fly(<span class="number">123</span>)</span><br><span class="line"><span class="comment">// Unidentified Flyable Object flies 123 miles!</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Flyable</span> </span>&#123;</div><div class="line">  <span class="comment">// exactly one abstracg method</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fly</span></span>(miles: <span class="type">Int</span>): <span class="type">Unit</span></div><div class="line">  <span class="comment">// optional concrete object</span></div><div class="line">  <span class="keyword">val</span> name = <span class="string">"Unidentified Flyable Object"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// to reference SAM type itself</span></div><div class="line"><span class="comment">// create a named self-referencing lambda expression</span></div><div class="line"><span class="keyword">val</span> ufo: <span class="type">Flyable</span> = (m: <span class="type">Int</span>) =&gt; println(<span class="string">s"<span class="subst">$&#123;ufo.name&#125;</span> flies <span class="subst">$m</span> miles!"</span>)</div><div class="line">ufo.fly(<span class="number">123</span>)</div><div class="line"><span class="comment">// Unidentified Flyable Object flies 123 miles!</span></div></pre></td></tr></table></figure>
 <p>Easy Peasy. So for the <code>stream</code> example, if compiler has the <code>-Xexperimental</code> flag, scala will automatically change the function to java’s function, which grant scala user a seamless experience with the library.</p>
 <p>Usually, you don’t need SAM in scala, as scala already has first class generic function type, eta-expansion and a lot more. SAM reduces the readability as implicit conversion does. One can always use type alias to give function a more understandable name, instead of using SAM. SAM type cannot be pattern matched, <a href="https://issues.scala-lang.org/browse/SI-8429" target="_blank" rel="external">at least for now</a>.</p>
 <p>However, interoperating with Java requires SAM. And self-referencing SAM gives you additional flexibity in designing API. SAM also generates more efficient byte code since SAM has a native byte code counterpart. Using annonymous class for event handler or callback can be more pleasant in Scala just as in Java.</p>
@@ -370,6 +378,13 @@ Previous to 1.8, Java al">
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -412,7 +427,7 @@ Previous to 1.8, Java al">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -470,7 +485,7 @@ Previous to 1.8, Java al">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -567,6 +582,27 @@ Previous to 1.8, Java al">
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2015/01/24/scala-sam/';
+      var disqus_title = "Explaining Scala SAM type";
+      var disqus_url = 'http://herringtondarkholme.github.io/2015/01/24/scala-sam/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

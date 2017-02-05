@@ -257,6 +257,13 @@
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/09/30/scala-operator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/09/30/scala-operator/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -278,34 +285,34 @@
       
         <p>Generalized Type Constraints, also known as <code>&lt;:&lt;</code>, <code>&lt;%&lt;</code>(deprecated though) and <code>=:=</code>, also known as type relation operator, or call <a href="http://stackoverflow.com/questions/2603003/operator-in-scala/" target="_blank" rel="external">whatever</a> you want, are not operators but identifiers. It’s quite confusing for new comers to distinguish them from operators, well…, identifiers which are not that esoteric.</p>
 <p>This is just plain Scala feature that non-alphanum symbols can act as legal identifiers, just like <code>+</code> method.<br>More specifically, they are type-constructors. But before we inspect their implementations, let’s first consider their usage.</p>
-<h1 id="Usage">Usage</h1><p>You want to implement a generic container for every type, however, you also want to add a special method that only applies to <code>Special</code> type. (notice: this is different from the annotation <code>@specialized</code> which deals with JVM’s primitive type. Here <code>Special</code> is just a plain old scala type)</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span>[</span><span class="type">A</span>](value: <span class="type">A</span>) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">diff</span>[</span><span class="type">A</span> &lt;: <span class="type">Int</span>](b: <span class="type">Int</span>) = value - b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BOOM</span></span><br><span class="line"><span class="comment">// error: value - is not a member of type parameter A</span></span><br><span class="line"><span class="comment">//    def diff[A &lt;: Int](b: A) = value - b</span></span><br></pre></td></tr></table></figure>
+<h1 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h1><p>You want to implement a generic container for every type, however, you also want to add a special method that only applies to <code>Special</code> type. (notice: this is different from the annotation <code>@specialized</code> which deals with JVM’s primitive type. Here <code>Special</code> is just a plain old scala type)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span>[<span class="type">A</span>](<span class="params">value: <span class="type">A</span></span>) </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">diff</span></span>[<span class="type">A</span> &lt;: <span class="type">Int</span>](b: <span class="type">Int</span>) = value - b</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// BOOM</span></div><div class="line"><span class="comment">// error: value - is not a member of type parameter A</span></div><div class="line"><span class="comment">//    def diff[A &lt;: Int](b: A) = value - b</span></div></pre></td></tr></table></figure>
 <p>Why? The type bound <code>A &lt;: Int</code> does not work. <code>A</code> has been defined at the class declaration, in the class body Scala compiler requries every type bound is consistent with A’s definition. Here, <code>A</code> has no bound so it is bounded by <code>Any</code>, not <code>Int</code>.</p>
 <p>Instead of setting type bound, methods may ask for some kinds of specific <em>ad-hoc</em> “evidence” for a type.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Container</span>[</span><span class="type">A</span>](value: <span class="type">A</span>) &#123;</span><br><span class="line">  <span class="comment">// other generic methods for A</span></span><br><span class="line">  <span class="comment">/* blah blah */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// specialized method for Int</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addIt</span>(</span><span class="keyword">implicit</span> evidence: <span class="type">A</span> =:= <span class="type">Int</span>) = <span class="number">123</span> + value</span><br><span class="line">&#125;</span><br><span class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Container</span></span><br><span class="line"></span></span><br><span class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="number">123</span>)).addIt</span><br><span class="line">res11: <span class="type">Int</span> = <span class="number">246</span></span><br><span class="line"></span><br><span class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="string">"123"</span>)).addIt</span><br><span class="line">&lt;console&gt;:<span class="number">10</span>: error: could not find <span class="keyword">implicit</span> value <span class="keyword">for</span> parameter evidence: =:=[java.lang.<span class="type">String</span>,<span class="type">Int</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Container</span>[<span class="type">A</span>](<span class="params">value: <span class="type">A</span></span>) </span>&#123;</div><div class="line">  <span class="comment">// other generic methods for A</span></div><div class="line">  <span class="comment">/* blah blah */</span></div><div class="line"></div><div class="line">  <span class="comment">// specialized method for Int</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addIt</span></span>(<span class="keyword">implicit</span> evidence: <span class="type">A</span> =:= <span class="type">Int</span>) = <span class="number">123</span> + value</div><div class="line">&#125;</div><div class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Container</span></span></div><div class="line"></div><div class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="number">123</span>)).addIt</div><div class="line">res11: <span class="type">Int</span> = <span class="number">246</span></div><div class="line"></div><div class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="string">"123"</span>)).addIt</div><div class="line">&lt;console&gt;:<span class="number">10</span>: error: could not find <span class="keyword">implicit</span> value <span class="keyword">for</span> parameter evidence: =:=[java.lang.<span class="type">String</span>,<span class="type">Int</span>]</div></pre></td></tr></table></figure>
 <p>Cool, <code>evidence</code> is an implicit provided by scala predef. And <code>A =:= Int</code> is just a type like <code>Map[Int, String]</code>, but is infixed due to scala’s syntactic sugar.</p>
 <p>Scala does not impose type constraints until the specific method is called, so <code>addIt</code> does not violate <code>A</code>‘s definition. Still, given the implicit <code>evidence</code>, compiler can still infer that value in <code>addIt</code> is an sub-instance of <code>Int</code>.</p>
 <p>As stated before, type constraints are <em>ad-hoc</em>. So it can achieve type inference more specific than type bound. (Fairly, this is the power of implicit).</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def foo[A, B &#60;: A](a: A, b: B) = (a,b)&#10;&#10;scala&#62; foo(1, List(1,2,3))&#10;res1: (Any, List[Int]) = (1,List(1, 2, 3))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def foo[A, B &lt;: A](a: A, b: B) = (a,b)</div><div class="line"></div><div class="line">scala&gt; foo(1, List(1,2,3))</div><div class="line">res1: (Any, List[Int]) = (1,List(1, 2, 3))</div></pre></td></tr></table></figure>
 <p>1 is clearly <code>Int</code> but why does compiler infer it as <code>Any</code>? The <code>B &lt;: A</code> bound requires the first argument type is a super type of the second. <code>A</code> is inferred as the most general type between <code>Int</code> and <code>List[Int]</code>, <code>Any</code>.</p>
 <p><code>&lt;:&lt;</code> comes to help.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def bar[A,B](a: A, b: B)(implicit ev: B &#60;:&#60; A) = (a,b)&#10;&#10;scala&#62; bar(1,List(1,2,3))&#10;&#60;console&#62;:9: error: Cannot prove that List[Int] &#60;:&#60; Int.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def bar[A,B](a: A, b: B)(implicit ev: B &lt;:&lt; A) = (a,b)</div><div class="line"></div><div class="line">scala&gt; bar(1,List(1,2,3))</div><div class="line">&lt;console&gt;:9: error: Cannot prove that List[Int] &lt;:&lt; Int.</div></pre></td></tr></table></figure>
 <p>Because generalized type constraints does not interfere with inference, <code>A</code> is <code>Int</code> here. Only then does the compiler find evidence for <code>&lt;:&lt;[Int, List[Int]]</code> and then fails.<br>(Actually, implicit can feedback type information back to inference, see <a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">typelevel programming’s</a> <code>HList</code> and scala collection library’s <code>CanBuildFrom</code>)</p>
 <p>Also implicit conversion does not impact <code>&lt;:&lt;</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scala&#62; def foo[B, A&#60;:B] (a:A,b:B) = print(&#34;OK&#34;)&#10;&#10;scala&#62; class A; class B;&#10;&#10;scala&#62; implicit def a2b(a:A) = new B&#10;&#10;scala&#62; foo(new A, new B)  // implicit conversion!&#10;OK&#10;&#10;scala&#62; def bar[A,B](a:A,b:B)(implicit ev: A&#60;:&#60;B) = print(&#34;OK&#34;)&#10;&#10;scala&#62; bar(new A, new B)  // does not work&#10;&#60;console&#62;:17: error: Cannot prove that A &#60;:&#60; B.</span><br></pre></td></tr></table></figure>
-<h1 id="Implementation">Implementation</h1><p>Actually <code>=:=</code> is just a type constructor in scala.<br>It is somewhat like <code>Map[A, B]</code>, that is,<br><code>=:=</code> is defined like</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class =:=[A, B]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">scala&gt; def foo[B, A&lt;:B] (a:A,b:B) = print(&quot;OK&quot;)</div><div class="line"></div><div class="line">scala&gt; class A; class B;</div><div class="line"></div><div class="line">scala&gt; implicit def a2b(a:A) = new B</div><div class="line"></div><div class="line">scala&gt; foo(new A, new B)  // implicit conversion!</div><div class="line">OK</div><div class="line"></div><div class="line">scala&gt; def bar[A,B](a:A,b:B)(implicit ev: A&lt;:&lt;B) = print(&quot;OK&quot;)</div><div class="line"></div><div class="line">scala&gt; bar(new A, new B)  // does not work</div><div class="line">&lt;console&gt;:17: error: Cannot prove that A &lt;:&lt; B.</div></pre></td></tr></table></figure>
+<h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><p>Actually <code>=:=</code> is just a type constructor in scala.<br>It is somewhat like <code>Map[A, B]</code>, that is,<br><code>=:=</code> is defined like</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class =:=[A, B]</div></pre></td></tr></table></figure>
 <p>so in the implictly’s bracket, <code>Int =:= Int</code> is just a type<br><code>A =:= B</code> is the infix form of type parameterization for<br>non-alphanumeric identifier. It is equivalent to <code>=:=[A, B]</code></p>
 <p>so one can define implicts for <code>=:=</code>, so that compiler can find</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implicit def EqualTypeEvidence[A]: =:=[A, A] = new =:=[A, A]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">implicit def EqualTypeEvidence[A]: =:=[A, A] = new =:=[A, A]</div></pre></td></tr></table></figure>
 <p>So, when <code>implictly[A =:= B]</code> is compiled,<br>compiler tries to find the correct implicit evidence.</p>
 <p>If and only If A and B are the same, say Int, the compiler can find<br><code>=:=[Int, Int]</code>, by the result of <code>implicit function EqualTypeEvidence[Int]</code></p>
 <p>More compelling is &lt;:&lt;, the conformance evidence,<br>it leverages variance annotation in scala</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class &#60;:&#60;[-A, +B]&#10;implict def Conformance[A]: &#60;:&#60;[A, A] = new &#60;:&#60;[A, A]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class &lt;:&lt;[-A, +B]</div><div class="line">implict def Conformance[A]: &lt;:&lt;[A, A] = new &lt;:&lt;[A, A]</div></pre></td></tr></table></figure>
 <p>Consider, when <code>String &lt;:&lt; java.io.Serializable</code> is needed,<br>compiler tries to find an instance of <code>&lt;:&lt;[String, j.i.Serializable]</code><br>It can only find instance of the type <code>&lt;:&lt;[String, String]</code><br>(or another alternative <code>&lt;:&lt;[Serializable, Serializable]</code>)<br>But given the variance annotation of &lt;:&lt;,<br>since String is the very type String<br>and String is a subtype of Serializable and B is in a covariant position<br>, or, in another direction<br>snice Serializable is a supertype of String and A is in a contravariant position<br>and Serializable is the very type Serializable</p>
 <p><code>&lt;:&lt;[String, String]</code> is a subtype of <code>&lt;:&lt;[String, Serializable]</code><br>So compiler finds the correct implicit instance as the evidence that<br>String is a subtype of Serializable. By the principle of subtype subsititution.<br>(Liskov)</p>
 <p>Similarly we can define</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Conversion evidence&#10;&#10;class &#60;%&#60;[A &#60;% B, B]&#10;implicit def Conversion[A, B] = new &#60;%&#60;[A, B]&#10;&#10;Contra-conformance&#10;class &#62;:&#62;[+A, -B]&#10;implicit def Contra[A] = new &#62;:&#62;[A, A]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Conversion evidence</div><div class="line"></div><div class="line">class &lt;%&lt;[A &lt;% B, B]</div><div class="line">implicit def Conversion[A, B] = new &lt;%&lt;[A, B]</div><div class="line"></div><div class="line">Contra-conformance</div><div class="line">class &gt;:&gt;[+A, -B]</div><div class="line">implicit def Contra[A] = new &gt;:&gt;[A, A]</div></pre></td></tr></table></figure>
 <p>Magic, Right?<br>The actual implementations uses singleton pattern so it is more efficient. For this illustration post, sloppy implementation is just fine :).</p>
 <p>Reference:<br><a href="http://hongjiang.info/scala-type-contraints-and-specialized-methods/" target="_blank" rel="external">http://hongjiang.info/scala-type-contraints-and-specialized-methods/</a><br><a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/</a></p>
 
@@ -375,6 +382,13 @@
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -417,7 +431,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -475,7 +489,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -572,6 +586,27 @@
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2014/09/30/scala-operator/';
+      var disqus_title = "Scala Generalized Type constraints";
+      var disqus_url = 'http://herringtondarkholme.github.io/2014/09/30/scala-operator/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

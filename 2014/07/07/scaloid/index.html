@@ -269,6 +269,13 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/07/07/scaloid/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/07/07/scaloid/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -306,7 +313,7 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
 <li><p>Create <code>build.sbt</code> in root directory(<a href="https://gist.github.com/pfn/5872691" target="_blank" rel="external">example</a>). Remember to import <code>android.Keys._</code></p>
 </li>
 </ol>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.<span class="type">Keys</span>._</span><br><span class="line"></span><br><span class="line">android.<span class="type">Plugin</span>.androidBuild</span><br><span class="line"></span><br><span class="line">name := <span class="string">"scaloidApp"</span></span><br><span class="line"></span><br><span class="line">scalaVersion := <span class="string">"2.11.0"</span></span><br><span class="line"></span><br><span class="line">platformTarget in <span class="type">Android</span> := <span class="string">"android-20"</span></span><br><span class="line"></span><br><span class="line">libraryDependencies += <span class="string">"org.scaloid"</span> %% <span class="string">"scaloid"</span> % <span class="string">"3.4-10"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> android.<span class="type">Keys</span>._</div><div class="line"></div><div class="line">android.<span class="type">Plugin</span>.androidBuild</div><div class="line"></div><div class="line">name := <span class="string">"scaloidApp"</span></div><div class="line"></div><div class="line">scalaVersion := <span class="string">"2.11.0"</span></div><div class="line"></div><div class="line">platformTarget in <span class="type">Android</span> := <span class="string">"android-20"</span></div><div class="line"></div><div class="line">libraryDependencies += <span class="string">"org.scaloid"</span> %% <span class="string">"scaloid"</span> % <span class="string">"3.4-10"</span></div></pre></td></tr></table></figure>
 <blockquote>
 <p>UPDATE: <code>scaloid-android-plugin</code> fixed the building =.=</p>
 </blockquote>
@@ -377,6 +384,13 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -419,7 +433,7 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -477,7 +491,7 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -574,6 +588,27 @@ Download Android SDK tools/ SDK platform tools/ SDK build tool">
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2014/07/07/scaloid/';
+      var disqus_title = "How to set up a scaloid project from scratch";
+      var disqus_url = 'http://herringtondarkholme.github.io/2014/07/07/scaloid/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

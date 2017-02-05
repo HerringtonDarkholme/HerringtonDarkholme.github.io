@@ -260,6 +260,13 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/06/rplugin-notfound/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/06/rplugin-notfound/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -285,7 +292,7 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
 <p>I think this is configuration problem. But how can I figure out what happened? I start to resolving this by guess.</p>
 <p><code>.-rplugin</code> is the critical file on which Deoplete depends. So NeoVim should search for it when booting. I searched for NeoVim’s repository for its usage. Yes, it does appear in neovim’s source, in <code>neovim/runtime/autoload/remote/host.vim</code>.</p>
 <p>It reads:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let s:remote_plugins_manifest = fnamemodify(expand($MYVIMRC, 1), &#39;:h&#39;)&#10;      \.&#39;/.&#39;.fnamemodify($MYVIMRC, &#39;:t&#39;).&#39;-rplugin~&#39;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">let s:remote_plugins_manifest = fnamemodify(expand($MYVIMRC, 1), &apos;:h&apos;)</div><div class="line">      \.&apos;/.&apos;.fnamemodify($MYVIMRC, &apos;:t&apos;).&apos;-rplugin~&apos;</div></pre></td></tr></table></figure>
 <p>Hmmm, NeoVim will find <code>.-rplugin</code> in the same directory of <code>$MYVIMRC</code>. But where does <code>$MYVIMRC</code> come from?</p>
 <p>Searching neovim’s doc gives me the answer. In <a href="https://github.com/neovim/neovim/blob/84a5709a86cc8d2d90cc29eea26f254b9b5d85fa/runtime/doc/starting.txt#L394" target="_blank" rel="external"><code>:h starting</code></a>, it writes:</p>
 <blockquote>
@@ -359,6 +366,13 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -401,7 +415,7 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -459,7 +473,7 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -556,6 +570,27 @@ To support XDG configuration, NeoVim changed default config paths. After that pa
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2015/12/06/rplugin-notfound/';
+      var disqus_title = "Trouble Shooting NeoVim\'s rplugin not found";
+      var disqus_url = 'http://herringtondarkholme.github.io/2015/12/06/rplugin-notfound/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

@@ -85,27 +85,27 @@
 
 
 <meta name="description" content="WRYYYYYYYYYYYYYYYY
-— Dio Brando on Scala crazy dependencies
+– Dio Brando on Scala crazy dependencies
 
 Scala works like CSS selectors in that every successor overrides its predecessor.
-You will have to work as a detective to figure out the co">
+You will have to work as a detective to figure out the c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="play framework with scalate and activerecord">
 <meta property="og:url" content="http://herringtondarkholme.github.io/2014/08/18/play-scala/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
 <meta property="og:description" content="WRYYYYYYYYYYYYYYYY
-— Dio Brando on Scala crazy dependencies
+– Dio Brando on Scala crazy dependencies
 
 Scala works like CSS selectors in that every successor overrides its predecessor.
-You will have to work as a detective to figure out the co">
+You will have to work as a detective to figure out the c">
 <meta property="og:updated_time" content="2014-08-18T14:52:21.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="play framework with scalate and activerecord">
 <meta name="twitter:description" content="WRYYYYYYYYYYYYYYYY
-— Dio Brando on Scala crazy dependencies
+– Dio Brando on Scala crazy dependencies
 
 Scala works like CSS selectors in that every successor overrides its predecessor.
-You will have to work as a detective to figure out the co">
+You will have to work as a detective to figure out the c">
 
 
 
@@ -269,6 +269,13 @@ You will have to work as a detective to figure out the co">
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/08/18/play-scala/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/08/18/play-scala/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -290,30 +297,30 @@ You will have to work as a detective to figure out the co">
       
         <blockquote>
 <p>WRYYYYYYYYYYYYYYYY</p>
-<p>— <cite>Dio Brando on Scala crazy dependencies</cite></p>
+<p>– <cite>Dio Brando on Scala crazy dependencies</cite></p>
 </blockquote>
 <p>Scala works like CSS selectors in that every successor overrides its predecessor.</p>
 <p>You will have to work as a detective to figure out the correct recipe to manage a huge casserole of hodgepodge.</p>
 <p>To achieve a working <em>Play</em> configuration with <code>scalate</code> and <code>activerecord</code> needs:</p>
 <p>In <code>build.sbt</code>:</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scalaVersion :=  <span class="string">"2.10.3"</span></span><br><span class="line"></span><br><span class="line">libraryDenpendencies ++= <span class="type">Seq</span>(</span><br><span class="line">  jdbc,</span><br><span class="line">  <span class="string">"org.scalatra.scalate"</span> %% <span class="string">"scalate-core"</span> % <span class="string">"1.7.0"</span>,</span><br><span class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord"</span> % <span class="string">"0.2.3"</span>,</span><br><span class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord-play2"</span> % <span class="string">"0.2.3"</span>,</span><br><span class="line">  <span class="string">"com.h2database"</span> % <span class="string">"h2"</span> % <span class="string">"1.3.170"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">scalaVersion :=  <span class="string">"2.10.3"</span></div><div class="line"></div><div class="line">libraryDenpendencies ++= <span class="type">Seq</span>(</div><div class="line">  jdbc,</div><div class="line">  <span class="string">"org.scalatra.scalate"</span> %% <span class="string">"scalate-core"</span> % <span class="string">"1.7.0"</span>,</div><div class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord"</span> % <span class="string">"0.2.3"</span>,</div><div class="line">  <span class="string">"com.github.aselab"</span> %% <span class="string">"scala-activerecord-play2"</span> % <span class="string">"0.2.3"</span>,</div><div class="line">  <span class="string">"com.h2database"</span> % <span class="string">"h2"</span> % <span class="string">"1.3.170"</span></div><div class="line">)</div></pre></td></tr></table></figure>
 <p>Several notes:</p>
 <ol>
 <li>Currently <code>scala-activerecord</code> only supports 2.10.3</li>
 <li><code>scalate</code> must be <code>1.7.0</code>+ for better support on scala 2.10 but the current stable version is <code>1.6.0</code></li>
 </ol>
-<p>Then in the root path of play project, create a new file located at <code>app/lib/ScalateIntegration.scala</code><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> controllers</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> play.api._</span><br><span class="line"><span class="keyword">import</span> http.&#123;<span class="type">Writeable</span>, <span class="type">ContentTypeOf</span>, <span class="type">ContentTypes</span>&#125;</span><br><span class="line"><span class="keyword">import</span> mvc.<span class="type">Codec</span></span><br><span class="line"><span class="keyword">import</span> play.api.<span class="type">Play</span>.current</span><br><span class="line"><span class="keyword">import</span> org.fusesource.scalate.layout.<span class="type">DefaultLayoutStrategy</span></span><br><span class="line"><span class="keyword">import</span> collection.<span class="type">JavaConversions</span>._</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Scalate</span> &#123;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> org.fusesource.scalate._</span><br><span class="line">  <span class="keyword">import</span> org.fusesource.scalate.util._</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> format = <span class="type">Play</span>.configuration.getString(<span class="string">"scalate.format"</span>) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(configuredFormat) =&gt; configuredFormat</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="string">"scaml"</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">lazy</span> <span class="function"><span class="keyword">val</span> <span class="title">scalateEngine</span> =</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">engine</span> =</span> <span class="keyword">new</span> <span class="type">TemplateEngine</span></span><br><span class="line">    engine.resourceLoader = <span class="keyword">new</span> <span class="type">FileResourceLoader</span>(<span class="type">Some</span>(<span class="type">Play</span>.getFile(<span class="string">"app/views"</span>)))</span><br><span class="line">    engine.layoutStrategy = <span class="keyword">new</span> <span class="type">DefaultLayoutStrategy</span>(engine, <span class="string">"app/views/layouts/default."</span> + format)</span><br><span class="line">    engine.classpath = <span class="string">"tmp/classes"</span></span><br><span class="line">    engine.workingDirectory = <span class="type">Play</span>.getFile(<span class="string">"tmp"</span>)</span><br><span class="line">    engine.combinedClassPath = <span class="literal">true</span></span><br><span class="line">    engine.classLoader = <span class="type">Play</span>.classloader</span><br><span class="line">    engine</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span>(</span>template: <span class="type">String</span>) = <span class="type">Template</span>(template)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Template</span>(</span>name: <span class="type">String</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">render</span>(</span>args: java.util.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">Any</span>]) = &#123;</span><br><span class="line">      <span class="type">ScalateContent</span>&#123;</span><br><span class="line">        scalateEngine.layout(name, args.map &#123;</span><br><span class="line">          <span class="keyword">case</span> (k, v) =&gt; k -&gt; v</span><br><span class="line">        &#125; toMap)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ScalateContent</span>(</span><span class="function"><span class="keyword">val</span> <span class="title">cont</span>:</span> <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">writeableOf_ScalateContent</span>(</span><span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">Writeable</span>[<span class="type">ScalateContent</span>] = &#123;</span><br><span class="line">    <span class="type">Writeable</span>[<span class="type">ScalateContent</span>]((scalate:<span class="type">ScalateContent</span>) =&gt; codec.encode(scalate.cont))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">contentTypeOf_ScalateContent</span>(</span><span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>] = &#123;</span><br><span class="line">    <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>](<span class="type">Some</span>(<span class="type">ContentTypes</span>.<span class="type">HTML</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Then in the root path of play project, create a new file located at <code>app/lib/ScalateIntegration.scala</code><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> controllers</div><div class="line"></div><div class="line"><span class="keyword">import</span> play.api._</div><div class="line"><span class="keyword">import</span> http.&#123;<span class="type">Writeable</span>, <span class="type">ContentTypeOf</span>, <span class="type">ContentTypes</span>&#125;</div><div class="line"><span class="keyword">import</span> mvc.<span class="type">Codec</span></div><div class="line"><span class="keyword">import</span> play.api.<span class="type">Play</span>.current</div><div class="line"><span class="keyword">import</span> org.fusesource.scalate.layout.<span class="type">DefaultLayoutStrategy</span></div><div class="line"><span class="keyword">import</span> collection.<span class="type">JavaConversions</span>._</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Scalate</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">import</span> org.fusesource.scalate._</div><div class="line">  <span class="keyword">import</span> org.fusesource.scalate.util._</div><div class="line"></div><div class="line">  <span class="keyword">var</span> format = <span class="type">Play</span>.configuration.getString(<span class="string">"scalate.format"</span>) <span class="keyword">match</span> &#123;</div><div class="line">    <span class="keyword">case</span> <span class="type">Some</span>(configuredFormat) =&gt; configuredFormat</div><div class="line">    <span class="keyword">case</span> _ =&gt; <span class="string">"scaml"</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">lazy</span> <span class="keyword">val</span> scalateEngine = &#123;</div><div class="line">    <span class="keyword">val</span> engine = <span class="keyword">new</span> <span class="type">TemplateEngine</span></div><div class="line">    engine.resourceLoader = <span class="keyword">new</span> <span class="type">FileResourceLoader</span>(<span class="type">Some</span>(<span class="type">Play</span>.getFile(<span class="string">"app/views"</span>)))</div><div class="line">    engine.layoutStrategy = <span class="keyword">new</span> <span class="type">DefaultLayoutStrategy</span>(engine, <span class="string">"app/views/layouts/default."</span> + format)</div><div class="line">    engine.classpath = <span class="string">"tmp/classes"</span></div><div class="line">    engine.workingDirectory = <span class="type">Play</span>.getFile(<span class="string">"tmp"</span>)</div><div class="line">    engine.combinedClassPath = <span class="literal">true</span></div><div class="line">    engine.classLoader = <span class="type">Play</span>.classloader</div><div class="line">    engine</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(template: <span class="type">String</span>) = <span class="type">Template</span>(template)</div><div class="line"></div><div class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Template</span>(<span class="params">name: <span class="type">String</span></span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">render</span></span>(args: java.util.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">Any</span>]) = &#123;</div><div class="line">      <span class="type">ScalateContent</span>&#123;</div><div class="line">        scalateEngine.layout(name, args.map &#123;</div><div class="line">          <span class="keyword">case</span> (k, v) =&gt; k -&gt; v</div><div class="line">        &#125; toMap)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ScalateContent</span>(<span class="params">val cont: <span class="type">String</span></span>)</span></div><div class="line"></div><div class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">writeableOf_ScalateContent</span></span>(<span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">Writeable</span>[<span class="type">ScalateContent</span>] = &#123;</div><div class="line">    <span class="type">Writeable</span>[<span class="type">ScalateContent</span>]((scalate:<span class="type">ScalateContent</span>) =&gt; codec.encode(scalate.cont))</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">contentTypeOf_ScalateContent</span></span>(<span class="keyword">implicit</span> codec: <span class="type">Codec</span>): <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>] = &#123;</div><div class="line">    <span class="type">ContentTypeOf</span>[<span class="type">ScalateContent</span>](<span class="type">Some</span>(<span class="type">ContentTypes</span>.<span class="type">HTML</span>))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>Again only works on scalate 1.6.</p>
 <p>Finally, according to <code>activerecord</code>‘s doc.<br>To load the plugin, in <code>conf/play.plugin</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9999:com.github.aselab.activerecord.ActiveRecordPlugin</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">9999:com.github.aselab.activerecord.ActiveRecordPlugin</div></pre></td></tr></table></figure>
 <p>To configure database, in <code>conf/application.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Database configuration&#10;# ~~~~~&#10;#&#10;&#10;# Scala ActiveRecord configurations&#10;db.activerecord.driver=org.h2.Driver&#10;db.activerecord.url=&#34;jdbc:h2:mem:play&#34;&#10;db.activerecord.user=&#34;sa&#34;&#10;db.activerecord.password=&#34;&#34;&#10;&#10;# Schema definition class&#10;activerecord.schema=models.Tables</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># Database configuration</div><div class="line"># ~~~~~</div><div class="line">#</div><div class="line"></div><div class="line"># Scala ActiveRecord configurations</div><div class="line">db.activerecord.driver=org.h2.Driver</div><div class="line">db.activerecord.url=&quot;jdbc:h2:mem:play&quot;</div><div class="line">db.activerecord.user=&quot;sa&quot;</div><div class="line">db.activerecord.password=&quot;&quot;</div><div class="line"></div><div class="line"># Schema definition class</div><div class="line">activerecord.schema=models.Tables</div></pre></td></tr></table></figure>
 <p>And in <code>app/models/person.scala</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package models&#10;&#10;import com.github.aselab.activerecord._&#10;import com.github.aselab.activerecord.dsl._&#10;&#10;case class Person(@Required name: String) extends ActiveRecord&#10;object Person extends ActiveRecordCompanion[Person] with PlayFormSupport[Person]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package models</div><div class="line"></div><div class="line">import com.github.aselab.activerecord._</div><div class="line">import com.github.aselab.activerecord.dsl._</div><div class="line"></div><div class="line">case class Person(@Required name: String) extends ActiveRecord</div><div class="line">object Person extends ActiveRecordCompanion[Person] with PlayFormSupport[Person]</div></pre></td></tr></table></figure>
 <p>In <code>app/models/tabels.scala</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package models&#10;&#10;import com.github.aselab.activerecord._&#10;import com.github.aselab.activerecord.dsl._&#10;&#10;object Tables extends ActiveRecordTables with PlaySupport &#123;&#10;  val models = table[Person]&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">package models</div><div class="line"></div><div class="line">import com.github.aselab.activerecord._</div><div class="line">import com.github.aselab.activerecord.dsl._</div><div class="line"></div><div class="line">object Tables extends ActiveRecordTables with PlaySupport &#123;</div><div class="line">  val models = table[Person]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>And finally you can try this in console</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">activator console&#10;&#10;import models._&#10;import play.core.StaticApplication&#10;&#10;new StaticApplication(new java.io.File(&#34;.&#34;))&#10;&#10;Person(&#34;f@ck&#34;).save&#10;Person.findBy(&#34;name&#34;, &#34;f@ck&#34;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">activator console</div><div class="line"></div><div class="line">import models._</div><div class="line">import play.core.StaticApplication</div><div class="line"></div><div class="line">new StaticApplication(new java.io.File(&quot;.&quot;))</div><div class="line"></div><div class="line">Person(&quot;f@ck&quot;).save</div><div class="line">Person.findBy(&quot;name&quot;, &quot;f@ck&quot;)</div></pre></td></tr></table></figure>
 <p>WTF have I done? I just typed mechanically what I have ferreted on Google and StackOverflow.<br>WTF is <code>play.core.StaticApplication</code> that is just one confusing <a href="https://www.playframework.com/documentation/2.2.x/api/scala/index.html#play.core.StaticApplication" target="_blank" rel="external">page</a> on the doc?<br>Speciously tantializing is the magical code under which lurk complicated dependencies.</p>
 <p>Reference: <a href="http://www.javacodegeeks.com/2012/04/play-framework-2-quicktip-scala-console.html" target="_blank" rel="external">PlayframeWork Quick Tip</a></p>
 
@@ -383,6 +390,13 @@ You will have to work as a detective to figure out the co">
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -425,7 +439,7 @@ You will have to work as a detective to figure out the co">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -483,7 +497,7 @@ You will have to work as a detective to figure out the co">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -580,6 +594,27 @@ You will have to work as a detective to figure out the co">
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2014/08/18/play-scala/';
+      var disqus_title = "play framework with scalate and activerecord";
+      var disqus_url = 'http://herringtondarkholme.github.io/2014/08/18/play-scala/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

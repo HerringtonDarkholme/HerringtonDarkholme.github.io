@@ -86,20 +86,20 @@
 
 <meta name="description" content="TypeScript has a decent tooling chain. However, sometimes a simple ctags is more handy and efficient.
 Here is a updated ctag configuration for TypeScript. It supports more features in TS 1.5+.
-1--lang">
+1234567">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Updated Ctags for TypeScript">
 <meta property="og:url" content="http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/index.html">
 <meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
 <meta property="og:description" content="TypeScript has a decent tooling chain. However, sometimes a simple ctags is more handy and efficient.
 Here is a updated ctag configuration for TypeScript. It supports more features in TS 1.5+.
-1--lang">
+1234567">
 <meta property="og:updated_time" content="2015-10-10T12:30:16.640Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Updated Ctags for TypeScript">
 <meta name="twitter:description" content="TypeScript has a decent tooling chain. However, sometimes a simple ctags is more handy and efficient.
 Here is a updated ctag configuration for TypeScript. It supports more features in TS 1.5+.
-1--lang">
+1234567">
 
 
 
@@ -263,6 +263,13 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/10/typescript-ctags/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/10/typescript-ctags/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -284,7 +291,7 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
       
         <p>TypeScript has a decent tooling chain. However, sometimes a simple <code>ctags</code> is more handy and efficient.</p>
 <p>Here is a updated ctag configuration for TypeScript. It supports more features in TS 1.5+.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--langdef=typescript&#10;--langmap=typescript:.ts&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*class[ \t]+([a-zA-Z0-9_]+)/\2/c,classes/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*abstract class[ \t]+([a-zA-Z0-9_]+)/\2/a,abstract classes/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*module[ \t]+([a-zA-Z0-9_]+)/\2/n,modules/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*type[ \t]+([a-zA-Z0-9_]+)/\2/t,types/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*namespace[ \t]+([a-zA-Z0-9_]+)/\2/n,modules/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*function[ \t]+([a-zA-Z0-9_]+)/\2/f,functions/&#10;--regex-typescript=/^[ \t]*export[ \t]+var[ \t]+([a-zA-Z0-9_]+)/\1/v,variables/&#10;--regex-typescript=/^[ \t]*var[ \t]+([a-zA-Z0-9_]+)[ \t]*=[ \t]*function[ \t]*\(\)/\1/l,varlambdas/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*(public|private)[ \t]+(static)?[ \t]*([a-zA-Z0-9_]+)/\4/m,members/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*interface[ \t]+([a-zA-Z0-9_]+)/\2/i,interfaces/&#10;--regex-typescript=/^[ \t]*(export)?[ \t]*enum[ \t]+([a-zA-Z0-9_]+)/\2/e,enums/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">--langdef=typescript</div><div class="line">--langmap=typescript:.ts</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*class[ \t]+([a-zA-Z0-9_]+)/\2/c,classes/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*abstract class[ \t]+([a-zA-Z0-9_]+)/\2/a,abstract classes/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*module[ \t]+([a-zA-Z0-9_]+)/\2/n,modules/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*type[ \t]+([a-zA-Z0-9_]+)/\2/t,types/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*namespace[ \t]+([a-zA-Z0-9_]+)/\2/n,modules/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*function[ \t]+([a-zA-Z0-9_]+)/\2/f,functions/</div><div class="line">--regex-typescript=/^[ \t]*export[ \t]+var[ \t]+([a-zA-Z0-9_]+)/\1/v,variables/</div><div class="line">--regex-typescript=/^[ \t]*var[ \t]+([a-zA-Z0-9_]+)[ \t]*=[ \t]*function[ \t]*\(\)/\1/l,varlambdas/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*(public|private)[ \t]+(static)?[ \t]*([a-zA-Z0-9_]+)/\4/m,members/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*interface[ \t]+([a-zA-Z0-9_]+)/\2/i,interfaces/</div><div class="line">--regex-typescript=/^[ \t]*(export)?[ \t]*enum[ \t]+([a-zA-Z0-9_]+)/\2/e,enums/</div></pre></td></tr></table></figure>
 <p>For more vim integration, you can give <a href="https://github.com/HerringtonDarkholme/yats.vim" target="_blank" rel="external">YATS</a> a look</p>
 
       
@@ -353,6 +360,13 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -395,7 +409,7 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -453,7 +467,7 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -550,6 +564,27 @@ Here is a updated ctag configuration for TypeScript. It supports more features i
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2015/10/10/typescript-ctags/';
+      var disqus_title = "Updated Ctags for TypeScript";
+      var disqus_url = 'http://herringtondarkholme.github.io/2015/10/10/typescript-ctags/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

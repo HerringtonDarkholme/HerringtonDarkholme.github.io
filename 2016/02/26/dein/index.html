@@ -266,6 +266,13 @@ Dein.vim">
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/26/dein/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/26/dein/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -285,29 +292,29 @@ Dein.vim">
       
 
       
-        <h2 id="Dark_Powered_Plugin">Dark Powered Plugin</h2><p><a href="http://qiita.com/yoza/items/2f8bd33a18225754f346" target="_blank" rel="external">Original Japanese post here</a></p>
+        <h2 id="Dark-Powered-Plugin"><a href="#Dark-Powered-Plugin" class="headerlink" title="Dark Powered Plugin"></a>Dark Powered Plugin</h2><p><a href="http://qiita.com/yoza/items/2f8bd33a18225754f346" target="_blank" rel="external">Original Japanese post here</a></p>
 <p>Vim already has a lot of plugin managers.<br>But our <a href="https://twitter.com/ShougoMatsu" target="_blank" rel="external">Dark Vim Master</a> has released neobundle’s successor, a brand-new plugin manger called <a href="https://github.com/Shougo/dein.vim" target="_blank" rel="external">dein.vim</a>.</p>
 <blockquote>
 <p>Dein.vim is a dark powered Vim/NeoVim plugin manager.</p>
 </blockquote>
 <p>To put it in plain English, dein.vim is a plugin manager focusing on both <strong>installation performance</strong> and <strong>startup performance</strong>.<br>It looks like a neobunle with vim-plug’s speed, or a vim-plug with neobunle’s feature. The best of both worlds.</p>
 <p>In this blog post I will first show minimal configuration for dein.vim, and then try to explain the dark power of dein, if you are interested in what makes dein.vim so fast.</p>
-<h2 id="Minimal_Configuration">Minimal Configuration</h2><blockquote>
+<h2 id="Minimal-Configuration"><a href="#Minimal-Configuration" class="headerlink" title="Minimal Configuration"></a>Minimal Configuration</h2><blockquote>
 <p>Though dark powered, dein.vim supports vim and neovim.</p>
 </blockquote>
 <p>Sadly, there is no installation script for dein.vim for now.<br>So let’s manually install it.</p>
 <p>First, clone dein.vim’s source.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.vim/dein/repos/github.com/Shougo/dein.vim <span class="comment">#recommended path</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/Shougo/dein.vim.git \</span><br><span class="line">    ~/.vim/dein/repos/github.com/Shougo/dein.vim</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir -p ~/.vim/dein/repos/github.com/Shougo/dein.vim <span class="comment">#recommended path</span></div><div class="line">git <span class="built_in">clone</span> https://github.com/Shougo/dein.vim.git \</div><div class="line">    ~/.vim/dein/repos/github.com/Shougo/dein.vim</div></pre></td></tr></table></figure>
 <p>If you are familiar with neobundle/vundle, you will find dein.vim’s path so different. It is because dein uses a new approach to manage plugin’s source.</p>
 <p>Optionally, you can backup your vimrc for profiling, as I will show later.</p>
-<p>Then, in your <code>init.vim</code> or <code>.vimrc</code>.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">set nocompatible</span><br><span class="line">set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim " path to dein.vim</span><br><span class="line"></span><br><span class="line">call dein#begin(expand('~/.vim/dein')) " plugins' root path</span><br><span class="line">call dein#add('Shougo/dein.vim')</span><br><span class="line">call dein#add('Shougo/vimproc.vim', &#123;</span><br><span class="line">    \ 'build': &#123;</span><br><span class="line">    \     'windows': 'tools\\update-dll-mingw',</span><br><span class="line">    \     'cygwin': 'make -f make_cygwin.mak',</span><br><span class="line">    \     'mac': 'make -f make_mac.mak',</span><br><span class="line">    \     'linux': 'make',</span><br><span class="line">    \     'unix': 'gmake',</span><br><span class="line">    \    &#125;,</span><br><span class="line">    \ &#125;)</span><br><span class="line"></span><br><span class="line">call dein#add('Shougo/unite.vim')</span><br><span class="line"></span><br><span class="line">" and a lot more plugins.....</span><br><span class="line"></span><br><span class="line">call dein#end()</span><br></pre></td></tr></table></figure></p>
+<p>Then, in your <code>init.vim</code> or <code>.vimrc</code>.<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> nocompatible</div><div class="line"><span class="keyword">set</span> runtimepath+=~/.<span class="keyword">vim</span>/dein/repos/github.<span class="keyword">com</span>/Shougo/dein.<span class="keyword">vim</span> <span class="comment">" path to dein.vim</span></div><div class="line"></div><div class="line"><span class="keyword">call</span> dein#begin(<span class="built_in">expand</span>(<span class="string">'~/.vim/dein'</span>)) <span class="comment">" plugins' root path</span></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'Shougo/dein.vim'</span>)</div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'Shougo/vimproc.vim'</span>, &#123;</div><div class="line">    \ <span class="string">'build'</span>: &#123;</div><div class="line">    \     <span class="string">'windows'</span>: <span class="string">'tools\\update-dll-mingw'</span>,</div><div class="line">    \     <span class="string">'cygwin'</span>: <span class="string">'make -f make_cygwin.mak'</span>,</div><div class="line">    \     <span class="string">'mac'</span>: <span class="string">'make -f make_mac.mak'</span>,</div><div class="line">    \     <span class="string">'linux'</span>: <span class="string">'make'</span>,</div><div class="line">    \     <span class="string">'unix'</span>: <span class="string">'gmake'</span>,</div><div class="line">    \    &#125;,</div><div class="line">    \ &#125;)</div><div class="line"></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'Shougo/unite.vim'</span>)</div><div class="line"></div><div class="line"><span class="comment">" and a lot more plugins.....</span></div><div class="line"></div><div class="line"><span class="keyword">call</span> dein#end()</div></pre></td></tr></table></figure></p>
 <p>Fire up your neovim/vim, call dein.vim’s installation function</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:call dein#install()</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:<span class="keyword">call</span> dein#install()</div></pre></td></tr></table></figure>
 <p>Wait and brew yourself a cup of (instant) coffee.<br>Then you can confirm your installation, for example call <code>:Unite dein</code></p>
-<h2 id="More_features">More features</h2><p>The most important feature of dein.vim is lazy load. Here are some typical usages worth mentioning.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">" lazy load on filetype</span><br><span class="line">call dein#add('justmao945/vim-clang',</span><br><span class="line">      \&#123;'on_ft': ['c', 'cpp']&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on command executed</span><br><span class="line">call dein#add('scrooloose/nerdtree',</span><br><span class="line">      \&#123;'on_cmd': 'NERDTreeToggle'&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on insert mode</span><br><span class="line">call dein#add('Shougo/deoplete.nvim',</span><br><span class="line">      \&#123;'on_i': 1&#125;)</span><br><span class="line"></span><br><span class="line">" lazy load on function call</span><br><span class="line">call dein#add('othree/eregex.vim',</span><br><span class="line">      \&#123;'on_func': 'eregex#toggle'&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="More-features"><a href="#More-features" class="headerlink" title="More features"></a>More features</h2><p>The most important feature of dein.vim is lazy load. Here are some typical usages worth mentioning.</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">" lazy load on filetype</span></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'justmao945/vim-clang'</span>,</div><div class="line">      \&#123;<span class="string">'on_ft'</span>: [<span class="string">'c'</span>, <span class="string">'cpp'</span>]&#125;)</div><div class="line"></div><div class="line"><span class="comment">" lazy load on command executed</span></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'scrooloose/nerdtree'</span>,</div><div class="line">      \&#123;<span class="string">'on_cmd'</span>: <span class="string">'NERDTreeToggle'</span>&#125;)</div><div class="line"></div><div class="line"><span class="comment">" lazy load on insert mode</span></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'Shougo/deoplete.nvim'</span>,</div><div class="line">      \&#123;<span class="string">'on_i'</span>: <span class="number">1</span>&#125;)</div><div class="line"></div><div class="line"><span class="comment">" lazy load on function call</span></div><div class="line"><span class="keyword">call</span> dein#add(<span class="string">'othree/eregex.vim'</span>,</div><div class="line">      \&#123;<span class="string">'on_func'</span>: <span class="string">'eregex#toggle'</span>&#125;)</div></pre></td></tr></table></figure>
 <p>The last two lazy loading conditions are not available in Vimplug. While lazy loading according to mode change is very convenient.</p>
-<h2 id="Two_Tales_of_Plugin_Manager">Two Tales of Plugin Manager</h2><p>From here on I will talk about dein’s internal feature. It’s my personal observation, please pardon my mistake and misunderstanding.</p>
+<h2 id="Two-Tales-of-Plugin-Manager"><a href="#Two-Tales-of-Plugin-Manager" class="headerlink" title="Two Tales of Plugin Manager"></a>Two Tales of Plugin Manager</h2><p>From here on I will talk about dein’s internal feature. It’s my personal observation, please pardon my mistake and misunderstanding.</p>
 <p>Vim’s plugin managers have to take two aspects into consideration: installation time and startup time.<br>You can read <a href="https://github.com/junegunn/" target="_blank" rel="external">junegunn</a>‘s blogs article, <a href="http://junegunn.kr/2013/09/writing-my-own-vim-plugin-manager/" target="_blank" rel="external">this</a> and <a href="http://junegunn.kr/2014/07/vim-plugins-and-startup-time/" target="_blank" rel="external">this</a>, for more details on plugin manager.</p>
 <blockquote>
 <p>dein.vim is fast because it uses dark power</p>
@@ -320,12 +327,12 @@ Dein.vim">
 </li>
 </ol>
 <p>Dein.vim also ditches command usage in favor of function calling, which may also contribute to performance(I’m not sure, though).</p>
-<h2 id="Troubleshooting">Troubleshooting</h2><p>Because dein.vim uses parallel processing, when errors occur in installation it may be hard to figure out which plugin went wrong. Usually you can see the error messages by <code>:message</code> after all plugin finished fetching (regardless of success or not). Or you can use <code>dein#check_install</code> function.</p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>Because dein.vim uses parallel processing, when errors occur in installation it may be hard to figure out which plugin went wrong. Usually you can see the error messages by <code>:message</code> after all plugin finished fetching (regardless of success or not). Or you can use <code>dein#check_install</code> function.</p>
 <p>Also, precomputed cache makes modifying plugin harder. You will need to call <code>dein#recache_runtimepath()</code> after modification. This also applies to disabling plugins.</p>
 <p>Lastly, if you happen to live in a country with stupid censorship which prevents github access. You will need a proxy and set <code>g:dein$install_process_timeout</code> to a larger value.</p>
 <p>For more info please refer to <a href="https://github.com/Shougo/dein.vim/blob/master/doc/dein.txt" target="_blank" rel="external">doc</a>.</p>
-<h2 id="Profiling_dein’s_power">Profiling dein’s power</h2><p>Profiling vim’s startup time has a rather <a href="http://usevim.com/2012/04/18/startuptime/" target="_blank" rel="external">standard method</a>. You can try it by backup old vimrc and compare it to dein.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvim -u old-init.vim --startuptime neobundle.log <span class="comment"># or change nvim to vim</span></span><br><span class="line">nvim -u new-init.vim --startuptime dein.log</span><br></pre></td></tr></table></figure>
+<h2 id="Profiling-dein’s-power"><a href="#Profiling-dein’s-power" class="headerlink" title="Profiling dein’s power"></a>Profiling dein’s power</h2><p>Profiling vim’s startup time has a rather <a href="http://usevim.com/2012/04/18/startuptime/" target="_blank" rel="external">standard method</a>. You can try it by backup old vimrc and compare it to dein.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nvim -u old-init.vim --startuptime neobundle.log <span class="comment"># or change nvim to vim</span></div><div class="line">nvim -u new-init.vim --startuptime dein.log</div></pre></td></tr></table></figure>
 <p>From the log, I can see dein.vim gives me 20ms startup boost! Mainly from boosting <code>sourcing vimrc</code>. Amazing!</p>
 <p>If you use a lot of plugins, dein is definitely a must-try!</p>
 
@@ -395,6 +402,13 @@ Dein.vim">
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -437,7 +451,7 @@ Dein.vim">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -476,7 +490,7 @@ Dein.vim">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dark_Powered_Plugin"><span class="nav-number">1.</span> <span class="nav-text">Dark Powered Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minimal_Configuration"><span class="nav-number">2.</span> <span class="nav-text">Minimal Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More_features"><span class="nav-number">3.</span> <span class="nav-text">More features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Two_Tales_of_Plugin_Manager"><span class="nav-number">4.</span> <span class="nav-text">Two Tales of Plugin Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting"><span class="nav-number">5.</span> <span class="nav-text">Troubleshooting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Profiling_dein’s_power"><span class="nav-number">6.</span> <span class="nav-text">Profiling dein’s power</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dark-Powered-Plugin"><span class="nav-number">1.</span> <span class="nav-text">Dark Powered Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minimal-Configuration"><span class="nav-number">2.</span> <span class="nav-text">Minimal Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-features"><span class="nav-number">3.</span> <span class="nav-text">More features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Two-Tales-of-Plugin-Manager"><span class="nav-number">4.</span> <span class="nav-text">Two Tales of Plugin Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting"><span class="nav-number">5.</span> <span class="nav-text">Troubleshooting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Profiling-dein’s-power"><span class="nav-number">6.</span> <span class="nav-text">Profiling dein’s power</span></a></li></ol></div>
             
           </div>
         </section>
@@ -495,7 +509,7 @@ Dein.vim">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -592,6 +606,27 @@ Dein.vim">
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2016/02/26/dein/';
+      var disqus_title = "Trying out dein.vim -- a dark powered plugin manager";
+      var disqus_url = 'http://herringtondarkholme.github.io/2016/02/26/dein/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

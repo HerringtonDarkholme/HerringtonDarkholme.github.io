@@ -98,6 +98,7 @@ Here is how to configure various popular open source project to use their CDN in
 <meta name="twitter:title" content="A collection of nodejs CDN for Celestial Imperial">
 <meta name="twitter:description" content="Living inside of the Great Fire Wall is a so onerous ordeal that survival guides can be compiled into an anthology.
 Here is how to configure various popular open source project to use their CDN in Ch*">
+<meta name="twitter:image" content="http://herringtondarkholme.github.io/images/Hatsune.Miku.full.2006986.jpg">
 
 
 
@@ -261,6 +262,13 @@ Here is how to configure various popular open source project to use their CDN in
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/07/how-to-config-node-cdn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/07/how-to-config-node-cdn/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -283,35 +291,35 @@ Here is how to configure various popular open source project to use their CDN in
         <p>Living inside of the Great Fire Wall is a so onerous ordeal that survival guides can be compiled into an anthology.</p>
 <p>Here is how to configure various popular open source project to use their CDN in Ch<strong>**</strong>na.</p>
 <p>Plenty of nodejs project provide environment variable to configure mirror/CDN to download source code or binary.</p>
-<h2 id="nvm_/_nodejs">nvm / nodejs</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node nvm install <span class="number">4</span></span><br></pre></td></tr></table></figure>
-<h2 id="npm">npm</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm --registry=https://registry.npm.taobao.org install koa</span><br></pre></td></tr></table></figure>
+<h2 id="nvm-nodejs"><a href="#nvm-nodejs" class="headerlink" title="nvm / nodejs"></a>nvm / nodejs</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node nvm install 4</div></pre></td></tr></table></figure>
+<h2 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h2><p><a href="https://cnodejs.org/topic/5338c5db7cbade005b023c98" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm --registry=https://registry.npm.taobao.org install koa</div></pre></td></tr></table></figure>
 <p>Kudos to <a href="https://cnodejs.org/user/fengmk2" target="_blank" rel="external">fengmk2</a></p>
-<h2 id="PhantomJS">PhantomJS</h2><p><a href="https://cnodejs.org/topic/538ed941c3ee0b5820889f66" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHANTOMJS_CDNURL=https://npm.taobao.org/dist/phantomjs npm install phantomjs --registry=https://registry.npm.taobao.org --no-proxy</span><br></pre></td></tr></table></figure>
+<h2 id="PhantomJS"><a href="#PhantomJS" class="headerlink" title="PhantomJS"></a>PhantomJS</h2><p><a href="https://cnodejs.org/topic/538ed941c3ee0b5820889f66" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">PHANTOMJS_CDNURL=https://npm.taobao.org/dist/phantomjs npm install phantomjs --registry=https://registry.npm.taobao.org --no-proxy</div></pre></td></tr></table></figure>
 <p>Kudos to <a href="https://cnodejs.org/user/fengmk2" target="_blank" rel="external">fengmk2</a>, again!</p>
-<h2 id="node-sass">node-sass</h2><p><a href="https://github.com/cnpm/cnpm/pull/76/files" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SASS_BINARY_SITE=https://registry.npmjs.org/node-sass npm install node-sass</span><br></pre></td></tr></table></figure>
+<h2 id="node-sass"><a href="#node-sass" class="headerlink" title="node-sass"></a>node-sass</h2><p><a href="https://github.com/cnpm/cnpm/pull/76/files" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SASS_BINARY_SITE=https://registry.npmjs.org/node-sass npm install node-sass</div></pre></td></tr></table></figure>
 <p>Kudos, again and again, to fengmk2</p>
-<h2 id="Docker">Docker</h2><p><a href="http://www.imike.me/2016/04/20/Docker%E4%B8%8B%E4%BD%BF%E7%94%A8%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F/" target="_blank" rel="external">Ref</a></p>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p><a href="http://www.imike.me/2016/04/20/Docker%E4%B8%8B%E4%BD%BF%E7%94%A8%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F/" target="_blank" rel="external">Ref</a></p>
 <p>Install Docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl <span class="_">-s</span>SL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</div></pre></td></tr></table></figure>
 <p>Config accelerator</p>
 <p>You need to register an account in <a href="http://xxxxxx.m.daocloud.io" target="_blank" rel="external">daocloud.io</a>.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"DOCKER_OPTS=\"--registry-mirror=http://xxxxxx.m.daocloud.io\""</span> | sudo tee <span class="operator">-a</span> /etc/default/docker</span><br><span class="line">sudo service docker restart</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="string">"DOCKER_OPTS=\"--registry-mirror=http://xxxxxx.m.daocloud.io\""</span> | sudo tee <span class="_">-a</span> /etc/default/docker</div><div class="line">sudo service docker restart</div></pre></td></tr></table></figure>
 <p>Kudos to daocloud.</p>
-<h2 id="Pypi">Pypi</h2><p><a href="http://www.cnblogs.com/meelo/p/4636340.html" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;~/.pip/pip.conf &lt;&lt;EOF</span><br><span class="line">[global]</span><br><span class="line">index-url = http://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="Pypi"><a href="#Pypi" class="headerlink" title="Pypi"></a>Pypi</h2><p><a href="http://www.cnblogs.com/meelo/p/4636340.html" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cat &lt;~/.pip/pip.conf &lt;&lt;EOF</div><div class="line">[global]</div><div class="line">index-url = http://mirrors.aliyun.com/pypi/simple/</div><div class="line">EOF</div></pre></td></tr></table></figure>
 <p>Kudos to aliyun</p>
-<h2 id="sbt">sbt</h2><p><a href="http://freewind.in/posts/2619-sbt-global-repo/" target="_blank" rel="external">Ref</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ~/.sbt/repositories &lt;&lt;EOF</span><br><span class="line">[repositories]</span><br><span class="line"><span class="built_in">local</span></span><br><span class="line">osc: http://maven.oschina.net/content/groups/public/</span><br><span class="line">typesafe: http://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[<span class="built_in">type</span>]s/[artifact](-[classifier]).[ext], bootOnly</span><br><span class="line">sonatype-oss-releases</span><br><span class="line">maven-central</span><br><span class="line">sonatype-oss-snapshots</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="sbt"><a href="#sbt" class="headerlink" title="sbt"></a>sbt</h2><p><a href="http://freewind.in/posts/2619-sbt-global-repo/" target="_blank" rel="external">Ref</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cat &gt; ~/.sbt/repositories &lt;&lt;EOF</div><div class="line">[repositories]</div><div class="line"><span class="built_in">local</span></div><div class="line">osc: http://maven.oschina.net/content/groups/public/</div><div class="line">typesafe: http://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[<span class="built_in">type</span>]s/[artifact](-[classifier]).[ext], bootOnly</div><div class="line">sonatype-oss-releases</div><div class="line">maven-central</div><div class="line">sonatype-oss-snapshots</div><div class="line">EOF</div></pre></td></tr></table></figure>
 <p>Kudos to <a href="http://freewind.in/" target="_blank" rel="external">freewind</a></p>
 <p>And these links is useful:<br><a href="https://segmentfault.com/a/1190000002474507" target="_blank" rel="external">加速 SBT 下载依赖库的速度</a><br><a href="http://afoo.me/posts/2014-11-05-how-make-sbt-jump-over-GFW.html" target="_blank" rel="external">how to make sbt jump over GFW</a></p>
-<h2 id="Gopm">Gopm</h2><p><a href="https://github.com/gpmgo/gopm" target="_blank" rel="external">Ref</a></p>
+<h2 id="Gopm"><a href="#Gopm" class="headerlink" title="Gopm"></a>Gopm</h2><p><a href="https://github.com/gpmgo/gopm" target="_blank" rel="external">Ref</a></p>
 <p>It is quite clear in the doc and help command.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gopm get &lt;import path&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</span><br><span class="line">gopm get &lt;package name&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</span><br><span class="line"></span><br><span class="line">useful options:</span><br><span class="line">   --update, -u		update package(s) and dependencies <span class="keyword">if</span> any</span><br><span class="line">   --gopath, -g		download all packages to GOPATH</span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><p>Hail Aliyun! Hail fengmk2!<br>For the unfortunate who live in a crappy ignorant country.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">gopm get &lt;import path&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</div><div class="line">gopm get &lt;package name&gt;@[&lt;tag|commit|branch&gt;:&lt;value&gt;]</div><div class="line"></div><div class="line">useful options:</div><div class="line">   --update, -u		update package(s) and dependencies <span class="keyword">if</span> any</div><div class="line">   --gopath, -g		download all packages to GOPATH</div></pre></td></tr></table></figure>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Hail Aliyun! Hail fengmk2!<br>For the unfortunate who live in a crappy ignorant country.</p>
 <img src="/images/Hatsune.Miku.full.2006986.jpg">
 
       
@@ -380,6 +388,13 @@ Here is how to configure various popular open source project to use their CDN in
           
   <div class="comments" id="comments">
     
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
   </div>
 
 
@@ -422,7 +437,7 @@ Here is how to configure various popular open source project to use their CDN in
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -461,7 +476,7 @@ Here is how to configure various popular open source project to use their CDN in
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nvm_/_nodejs"><span class="nav-number">1.</span> <span class="nav-text">nvm / nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm"><span class="nav-number">2.</span> <span class="nav-text">npm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PhantomJS"><span class="nav-number">3.</span> <span class="nav-text">PhantomJS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node-sass"><span class="nav-number">4.</span> <span class="nav-text">node-sass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker"><span class="nav-number">5.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pypi"><span class="nav-number">6.</span> <span class="nav-text">Pypi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sbt"><span class="nav-number">7.</span> <span class="nav-text">sbt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gopm"><span class="nav-number">8.</span> <span class="nav-text">Gopm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">9.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nvm-nodejs"><span class="nav-number">1.</span> <span class="nav-text">nvm / nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm"><span class="nav-number">2.</span> <span class="nav-text">npm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PhantomJS"><span class="nav-number">3.</span> <span class="nav-text">PhantomJS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node-sass"><span class="nav-number">4.</span> <span class="nav-text">node-sass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker"><span class="nav-number">5.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pypi"><span class="nav-number">6.</span> <span class="nav-text">Pypi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sbt"><span class="nav-number">7.</span> <span class="nav-text">sbt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gopm"><span class="nav-number">8.</span> <span class="nav-text">Gopm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">9.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
             
           </div>
         </section>
@@ -480,7 +495,7 @@ Here is how to configure various popular open source project to use their CDN in
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -577,6 +592,27 @@ Here is how to configure various popular open source project to use their CDN in
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = '2016/06/07/how-to-config-node-cdn/';
+      var disqus_title = "A collection of nodejs CDN for Celestial Imperial";
+      var disqus_url = 'http://herringtondarkholme.github.io/2016/06/07/how-to-config-node-cdn/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
   
 
 

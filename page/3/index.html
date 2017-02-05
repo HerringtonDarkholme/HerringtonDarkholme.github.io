@@ -238,6 +238,112 @@
             
               
                 
+                <a class="post-title-link" href="/2014/08/17/hm/" itemprop="url">
+                  Hindley Milner reference crafting Algorithm W from scratch
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-08-17T20:36:12+08:00" content="2014-08-17">
+              2014-08-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/08/17/hm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/08/17/hm/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Hindley-Milner!<br>なるほど！わからん！</p>
+<p>First Step:<br><a href="http://akgupta.ca/blog/2013/05/14/so-you-still-dont-understand-hindley-milner/" target="_blank" rel="external">So you still dont understand hindley milner</a></p>
+<p>Excellent explanation.</p>
+<p>Second Step:<br><a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system" target="_blank" rel="external">Wiki</a></p>
+<p>Third Step:<br><a href="http://grabmueller.de/martin/www/pub/AlgorithmW.pdf" target="_blank" rel="external">Haskell Implementation</a><br><a href="http://www.scala-lang.org/docu/files/ScalaByExample.pdf" target="_blank" rel="external">Scala Implementation</a></p>
+<p>Actually I still don’t understand it…</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2014/07/07/scaloid/" itemprop="url">
                   How to set up a scaloid project from scratch
                 </a>
@@ -260,6 +366,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/07/07/scaloid/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/07/07/scaloid/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -300,7 +413,7 @@
 <li><p>Create <code>build.sbt</code> in root directory(<a href="https://gist.github.com/pfn/5872691" target="_blank" rel="external">example</a>). Remember to import <code>android.Keys._</code></p>
 </li>
 </ol>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.<span class="type">Keys</span>._</span><br><span class="line"></span><br><span class="line">android.<span class="type">Plugin</span>.androidBuild</span><br><span class="line"></span><br><span class="line">name := <span class="string">"scaloidApp"</span></span><br><span class="line"></span><br><span class="line">scalaVersion := <span class="string">"2.11.0"</span></span><br><span class="line"></span><br><span class="line">platformTarget in <span class="type">Android</span> := <span class="string">"android-20"</span></span><br><span class="line"></span><br><span class="line">libraryDependencies += <span class="string">"org.scaloid"</span> %% <span class="string">"scaloid"</span> % <span class="string">"3.4-10"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> android.<span class="type">Keys</span>._</div><div class="line"></div><div class="line">android.<span class="type">Plugin</span>.androidBuild</div><div class="line"></div><div class="line">name := <span class="string">"scaloidApp"</span></div><div class="line"></div><div class="line">scalaVersion := <span class="string">"2.11.0"</span></div><div class="line"></div><div class="line">platformTarget in <span class="type">Android</span> := <span class="string">"android-20"</span></div><div class="line"></div><div class="line">libraryDependencies += <span class="string">"org.scaloid"</span> %% <span class="string">"scaloid"</span> % <span class="string">"3.4-10"</span></div></pre></td></tr></table></figure>
 <blockquote>
 <p>UPDATE: <code>scaloid-android-plugin</code> fixed the building =.=</p>
 </blockquote>
@@ -375,6 +488,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/05/17/html/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/05/17/html/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -476,6 +596,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/05/11/yuki/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/05/11/yuki/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -583,6 +710,13 @@
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/04/15/scala/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/04/15/scala/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -607,16 +741,16 @@
             <img src="/images/yandere.jpg">
 <p>source: <a href="https://yande.re/post/show/284731/hatsune_miku-headphones-pantsu-shimapan-suemizu_yu" target="_blank" rel="external">yande.re</a></p>
 <p>By no several pages could one explain or exhausted the absurd bizarre creepy daunting esoteric flabbergasting type system in Scala.<br>Here are some aspects that Learn Scala by example does not cover.</p>
-<h2 id="Digest:">Digest:</h2><p><a href="http://twitter.github.io/scala_school/advanced-types.html" target="_blank" rel="external">http://twitter.github.io/scala_school/advanced-types.html</a></p>
-<h2 id="Context_Bound_and_Implicitly:">Context Bound and Implicitly:</h2><p><code>def sort[A : Ordered] =&gt; def sort[A](implicit x: Ordred[A])</code><br><code>def implicitly[T](implicit e: T) = e</code><br><a href="http://stackoverflow.com/questions/3855595/what-is-the-scala-identifier-implicitly" target="_blank" rel="external">http://stackoverflow.com/questions/3855595/what-is-the-scala-identifier-implicitly</a></p>
-<h2 id="Type_Bound:">Type Bound:</h2><p><code>=:= &lt;:&lt; &lt;%&lt;</code><br><a href="http://stackoverflow.com/questions/3427345/what-do-and-mean-in-scala-2-8-and-where-are-they-documented" target="_blank" rel="external">http://stackoverflow.com/questions/3427345/what-do-and-mean-in-scala-2-8-and-where-are-they-documented</a></p>
-<h2 id="Existential_Type:">Existential Type:</h2><p><code>def foo(x: Array[_]) =&gt; def foo(x: Array[T] forSome {type T})</code><br><a href="http://www.drmaciver.com/2008/03/existential-types-in-scala/" target="_blank" rel="external">http://www.drmaciver.com/2008/03/existential-types-in-scala/</a></p>
-<h2 id="Self_Type">Self Type</h2><p><code>class BarUsingFooable {self: Fooable =&gt; ....} // yet-to-be Fooable, make this binded to self</code><br><a href="https://coderwall.com/p/t_rapw" target="_blank" rel="external">https://coderwall.com/p/t_rapw</a></p>
-<h2 id="Structural_Type">Structural Type</h2><p><code>def Quack(duck: {def quack: Unit})// inline anonymous class like ducktyping</code><br><a href="http://java.dzone.com/articles/duck-typing-scala-structural" target="_blank" rel="external">http://java.dzone.com/articles/duck-typing-scala-structural</a></p>
-<h2 id="Abstract_Type_member">Abstract Type member</h2><p><code>trait Job {type A; def get: A}</code><br><a href="http://docs.scala-lang.org/tutorials/tour/abstract-types.html" target="_blank" rel="external">http://docs.scala-lang.org/tutorials/tour/abstract-types.html</a></p>
-<h2 id="Type_Level_Programming:">Type Level Programming:</h2><p><a href="http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/" target="_blank" rel="external">http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/</a></p>
-<h2 id="Miscellaneous:">Miscellaneous:</h2><p><a href="http://stackoverflow.com/questions/1025181/hidden-features-of-scala" target="_blank" rel="external">http://stackoverflow.com/questions/1025181/hidden-features-of-scala</a></p>
-<h2 id="Last_but_not_least:">Last but not least:</h2><p><a href="http://symbolhound.com/" target="_blank" rel="external">Site significantly serving Scala symbol soup salvage saves spiritually severed souls</a></p>
+<h2 id="Digest"><a href="#Digest" class="headerlink" title="Digest:"></a>Digest:</h2><p><a href="http://twitter.github.io/scala_school/advanced-types.html" target="_blank" rel="external">http://twitter.github.io/scala_school/advanced-types.html</a></p>
+<h2 id="Context-Bound-and-Implicitly"><a href="#Context-Bound-and-Implicitly" class="headerlink" title="Context Bound and Implicitly:"></a>Context Bound and Implicitly:</h2><p><code>def sort[A : Ordered] =&gt; def sort[A](implicit x: Ordred[A])</code><br><code>def implicitly[T](implicit e: T) = e</code><br><a href="http://stackoverflow.com/questions/3855595/what-is-the-scala-identifier-implicitly" target="_blank" rel="external">http://stackoverflow.com/questions/3855595/what-is-the-scala-identifier-implicitly</a></p>
+<h2 id="Type-Bound"><a href="#Type-Bound" class="headerlink" title="Type Bound:"></a>Type Bound:</h2><p><code>=:= &lt;:&lt; &lt;%&lt;</code><br><a href="http://stackoverflow.com/questions/3427345/what-do-and-mean-in-scala-2-8-and-where-are-they-documented" target="_blank" rel="external">http://stackoverflow.com/questions/3427345/what-do-and-mean-in-scala-2-8-and-where-are-they-documented</a></p>
+<h2 id="Existential-Type"><a href="#Existential-Type" class="headerlink" title="Existential Type:"></a>Existential Type:</h2><p><code>def foo(x: Array[_]) =&gt; def foo(x: Array[T] forSome {type T})</code><br><a href="http://www.drmaciver.com/2008/03/existential-types-in-scala/" target="_blank" rel="external">http://www.drmaciver.com/2008/03/existential-types-in-scala/</a></p>
+<h2 id="Self-Type"><a href="#Self-Type" class="headerlink" title="Self Type"></a>Self Type</h2><p><code>class BarUsingFooable {self: Fooable =&gt; ....} // yet-to-be Fooable, make this binded to self</code><br><a href="https://coderwall.com/p/t_rapw" target="_blank" rel="external">https://coderwall.com/p/t_rapw</a></p>
+<h2 id="Structural-Type"><a href="#Structural-Type" class="headerlink" title="Structural Type"></a>Structural Type</h2><p><code>def Quack(duck: {def quack: Unit})// inline anonymous class like ducktyping</code><br><a href="http://java.dzone.com/articles/duck-typing-scala-structural" target="_blank" rel="external">http://java.dzone.com/articles/duck-typing-scala-structural</a></p>
+<h2 id="Abstract-Type-member"><a href="#Abstract-Type-member" class="headerlink" title="Abstract Type member"></a>Abstract Type member</h2><p><code>trait Job {type A; def get: A}</code><br><a href="http://docs.scala-lang.org/tutorials/tour/abstract-types.html" target="_blank" rel="external">http://docs.scala-lang.org/tutorials/tour/abstract-types.html</a></p>
+<h2 id="Type-Level-Programming"><a href="#Type-Level-Programming" class="headerlink" title="Type Level Programming:"></a>Type Level Programming:</h2><p><a href="http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/" target="_blank" rel="external">http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/</a></p>
+<h2 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous:"></a>Miscellaneous:</h2><p><a href="http://stackoverflow.com/questions/1025181/hidden-features-of-scala" target="_blank" rel="external">http://stackoverflow.com/questions/1025181/hidden-features-of-scala</a></p>
+<h2 id="Last-but-not-least"><a href="#Last-but-not-least" class="headerlink" title="Last but not least:"></a>Last but not least:</h2><p><a href="http://symbolhound.com/" target="_blank" rel="external">Site significantly serving Scala symbol soup salvage saves spiritually severed souls</a></p>
 
           
         
@@ -688,6 +822,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/04/12/descriptor/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/04/12/descriptor/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -808,6 +949,13 @@
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/02/17/generator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/02/17/generator/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -831,89 +979,89 @@
           
             <img src="/images/generator.jpg">
 <p>source: <a href="http://www.pixiv.net/member_illust.php?id=1315311" target="_blank" rel="external">かみやまねき</a></p>
-<h3 id="TL;DR:_The_most_intuitive_implementation_of_BFS_is_using_Queue">TL;DR: The most intuitive implementation of  BFS is using Queue</h3><p>Just out of fun, I wonder whether BFS can be implemented without Queue.<br>While DFS can be easily done by recursion, naive BFS implementation just incurs loop mayhem.</p>
+<h3 id="TL-DR-The-most-intuitive-implementation-of-BFS-is-using-Queue"><a href="#TL-DR-The-most-intuitive-implementation-of-BFS-is-using-Queue" class="headerlink" title="TL;DR: The most intuitive implementation of  BFS is using Queue"></a>TL;DR: The most intuitive implementation of  BFS is using Queue</h3><p>Just out of fun, I wonder whether BFS can be implemented without Queue.<br>While DFS can be easily done by recursion, naive BFS implementation just incurs loop mayhem.</p>
 <p>The first solution jumped into my mind is to add a depth parameter into BFS function.<br>The search function only visits nodes whose depth equals to the parameter and skips nodes whose depth does not.<br>I am <a href="http://stackoverflow.com/a/2549825/2198656" target="_blank" rel="external">not alone</a></p>
 <p><code>Generator</code> is <a href="http://koajs.com" target="_blank" rel="external">sweeping</a> <a href="https://github.com/petkaantonov/bluebird/blob/master/API.md#generators" target="_blank" rel="external">NodeJS</a> community (admittedly this is my exaggeration). I’m quite obsessed with generator’s suspension power. Here’s my try in Python.</p>
-<pre><code><span class="string">'''
+<pre><code>&apos;&apos;&apos;
     implicit BFS, without queue or depth
     incurs infinite circulation on loop graph
     implement for fun (Really need a queue)
-'''</span>
-<span class="function"><span class="keyword">def</span> <span class="title">bfs_gen</span><span class="params">(node)</span>:</span>
-    <span class="string">'''
+&apos;&apos;&apos;
+def bfs_gen(node):
+    &apos;&apos;&apos;
     generator function on a node, yield an iterator of frontier nodes
     the first call yield an iterator contains the node itself
-    each subsequent call yields an iterator that is composed of children's gen
-    try line chains children's yields, and thus accumulates frontier nodes
-    By recursion, the root node's bfs_gen yields all frontier nodes on the graph
+    each subsequent call yields an iterator that is composed of children&apos;s gen
+    try line chains children&apos;s yields, and thus accumulates frontier nodes
+    By recursion, the root node&apos;s bfs_gen yields all frontier nodes on the graph
     frontier is maintained on callstack, by the suspension feature of generators
-    '''</span>
-    <span class="keyword">try</span>:
-        <span class="keyword">yield</span> iter((node.value, ))
-        <span class="comment"># :( still needs a list to maintain generators</span>
-        children = [bfs_gen(n) <span class="keyword">for</span> n <span class="keyword">in</span> node.children]
-    <span class="keyword">except</span> AttributeError:
-        <span class="keyword">raise</span> StopIteration
+    &apos;&apos;&apos;
+    try:
+        yield iter((node.value, ))
+        # :( still needs a list to maintain generators
+        children = [bfs_gen(n) for n in node.children]
+    except AttributeError:
+        raise StopIteration
 
-    chain = <span class="number">0xDEADBABE</span>
-    <span class="keyword">while</span> chain != ():
+    chain = 0xDEADBABE
+    while chain != ():
         chain = ()
-        <span class="keyword">for</span> child <span class="keyword">in</span> children:
-            <span class="keyword">try</span>:
-                chain = (e <span class="keyword">for</span> it <span class="keyword">in</span> (chain, next(child)) <span class="keyword">for</span> e <span class="keyword">in</span> it)
-            <span class="keyword">except</span> StopIteration:
-                <span class="keyword">continue</span>
-        <span class="keyword">yield</span> chain
+        for child in children:
+            try:
+                chain = (e for it in (chain, next(child)) for e in it)
+            except StopIteration:
+                continue
+        yield chain
 
-<span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(root, pred)</span>:</span>
-    <span class="string">'''
+def bfs(root, pred):
+    &apos;&apos;&apos;
     make generator on root node
     call next method to yield frontier nodes
     apply predicate function on it, if any matches, return True
     else continues to yield more frontier
-    '''</span>
+    &apos;&apos;&apos;
     gens = bfs_gen(root)
-    <span class="keyword">try</span>:
-        <span class="keyword">while</span> <span class="keyword">not</span> any(pred(v) <span class="keyword">for</span> v <span class="keyword">in</span> next(gens)):
-            <span class="keyword">continue</span>
-        <span class="keyword">return</span> <span class="keyword">True</span>
-    <span class="keyword">except</span> StopIteration:
-        <span class="keyword">return</span> <span class="keyword">False</span>
+    try:
+        while not any(pred(v) for v in next(gens)):
+            continue
+        return True
+    except StopIteration:
+        return False
 
-<span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span>
-    <span class="string">'''
+def main():
+    &apos;&apos;&apos;
     3 4 5 6
      1   2
        0
-    '''</span>
-    <span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple
+    &apos;&apos;&apos;
+    from collections import namedtuple
 
-    node = namedtuple(<span class="string">'Node'</span>, [<span class="string">'value'</span>, <span class="string">'children'</span>])
-    six   = node(<span class="number">6</span>, [<span class="keyword">None</span>])
-    five  = node(<span class="number">5</span>, [<span class="keyword">None</span>])
-    four  = node(<span class="number">4</span>, [<span class="keyword">None</span>])
-    three = node(<span class="number">3</span>, [<span class="keyword">None</span>])
-    two   = node(<span class="number">2</span>, [five, six])
-    one   = node(<span class="number">1</span>, [three, four])
-    zero  = node(<span class="number">0</span>, [one, two])
+    node = namedtuple(&apos;Node&apos;, [&apos;value&apos;, &apos;children&apos;])
+    six   = node(6, [None])
+    five  = node(5, [None])
+    four  = node(4, [None])
+    three = node(3, [None])
+    two   = node(2, [five, six])
+    one   = node(1, [three, four])
+    zero  = node(0, [one, two])
 
-    <span class="function"><span class="keyword">def</span> <span class="title">demo</span><span class="params">(value)</span>:</span>
-        <span class="string">'''dumb log'''</span>
+    def demo(value):
+        &apos;&apos;&apos;dumb log&apos;&apos;&apos;
         print(value)
-        <span class="keyword">return</span> <span class="keyword">False</span>
+        return False
 
-    <span class="comment"># bfs(zero, demo)</span>
-    <span class="keyword">for</span> i <span class="keyword">in</span> bfs_gen(zero):
+    # bfs(zero, demo)
+    for i in bfs_gen(zero):
         demo(i.value)
 
-<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+if __name__ == &apos;__main__&apos;:
     main()
 </code></pre><p>Wow, much ugly, very obscure. But a old post on certain <a href="http://code.activestate.com/recipes/231503-breadth-first-traversal-of-tree/?in=user-218935" target="_blank" rel="external">unsung site</a> gives me an interesting solution.</p>
-<pre><code><span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(root)</span>:</span>
-    <span class="keyword">yield</span> root
-    <span class="keyword">for</span> node <span class="keyword">in</span> bfs(root):
-        <span class="keyword">for</span> child <span class="keyword">in</span> node.children:
-            <span class="keyword">yield</span> label(child)
+<pre><code>def bfs(root):
+    yield root
+    for node in bfs(root):
+        for child in node.children:
+            yield label(child)
 </code></pre><p>Tada, done! Let’s peruse this piece of code.<br>We want a generator that yields a sequence of nodes, this can be done by induction.</p>
 <ol>
 <li>Given the root of a tree, clearly the first node of the sequence is the root</li>
@@ -923,11 +1071,11 @@
 <p>Doing this recursively makes a BFS generator.</p>
 <p>The trick part is the second step, for a normal function, this will make infinite loops. But <code>generator</code> is expanded dynamically, execution jumps out of BFS, eschewing looping condition. Suspension of code also implicitly stores searching states, where calling stacks morph into a Queue. Of course, visited nodes also need to be maintained in a list(not checked here). Termination check is absent, as well.</p>
 <p>Interestingly, adapting BFS into DFS only requires swapping two lines, just as substituting stack for queue in classical implementation.</p>
-<pre><code><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root)</span>:</span>
-    <span class="keyword">yield</span> root
-    <span class="keyword">for</span> node <span class="keyword">in</span> node.children:
-        <span class="keyword">for</span> child <span class="keyword">in</span> dfs(node):
-            <span class="keyword">yield</span> child
+<pre><code>def dfs(root):
+    yield root
+    for node in node.children:
+        for child in dfs(node):
+            yield child
 </code></pre><p>Whatever fun generators have brought, BFS/DFS should probably never done like this. Storing information in stack does not save space. Static language like C/C++ lacks such generator feature. And, notably, <a href="http://www.python.org/doc/essays/list2str.html" target="_blank" rel="external">function overhead</a> and <a href="http://www.ruby-doc.org/stdlib-1.8.7/libdoc/generator/rdoc/Generator.html" target="_blank" rel="external">slow generator</a> in most script language make developers repugnant to such winding trick.</p>
 
           
@@ -1000,6 +1148,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/02/02/python-request/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/02/02/python-request/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1111,6 +1266,13 @@
 
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/01/31/vimscript/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/01/31/vimscript/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -1135,7 +1297,7 @@
             <img src="/images/Photo.jpg">
 <p>source: <a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=41290048" target="_blank" rel="external">pixiv</a></p>
 <blockquote>
-<p>Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.<br>                                               — Steve Losh, Learning Vimscript the hard way</p>
+<p>Exercises: Drink a beer to console yourself about Vim’s coercion of strings to integers.<br>                                               – Steve Losh, Learning Vimscript the hard way</p>
 </blockquote>
 <p>Vim is a superb and classy text-editor, but VimScript, well, is far from a usable scripting language.</p>
 <p>Vimscript is extremely powerful, but has grown organically over the years into a twisty maze ready to ensnare the unwary who enter it.<br>Options and commands are often terse and hard to read</p>
@@ -1216,7 +1378,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">29</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1263,7 +1425,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1356,6 +1518,25 @@
 
 
 
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'herrington_darkholme';
+      var disqus_identifier = 'page/3/index.html';
+      var disqus_title = "";
+      var disqus_url = '';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+    </script>
   
 
 
