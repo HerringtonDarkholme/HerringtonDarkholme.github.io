@@ -1,0 +1,669 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TypeScript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Vue 2.5 improves TypeScript definition! Before that, TS users will have to use class component API to get proper typing, but now canonical API is both precise and concise with few compromises!
+For ord">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep dive into Vue2.5 Typing -- A tour of advanced typing feature">
+<meta property="og:url" content="https://herringtondarkholme.github.io/2017/10/12/vue-ts3/index.html">
+<meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:description" content="Vue 2.5 improves TypeScript definition! Before that, TS users will have to use class component API to get proper typing, but now canonical API is both precise and concise with few compromises!
+For ord">
+<meta property="og:updated_time" content="2017-10-15T11:00:03.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep dive into Vue2.5 Typing -- A tour of advanced typing feature">
+<meta name="twitter:description" content="Vue 2.5 improves TypeScript definition! Before that, TS users will have to use class component API to get proper typing, but now canonical API is both precise and concise with few compromises!
+For ord">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://herringtondarkholme.github.io/2017/10/12/vue-ts3/"/>
+
+  <title> Deep dive into Vue2.5 Typing -- A tour of advanced typing feature | Abitrarily Idiosyncratic Randomness </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Abitrarily Idiosyncratic Randomness</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Hchan's Note</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep dive into Vue2.5 Typing -- A tour of advanced typing feature
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2017-10-12T00:00:00+08:00" content="2017-10-12">
+              2017-10-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/10/12/vue-ts3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/10/12/vue-ts3/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Vue 2.5 improves TypeScript definition! Before that, TS users will have to use class component API to get proper typing, but now canonical API is both precise and concise with few compromises!</p>
+<p>For ordinary users, Vue’s <a href="https://medium.com/the-vue-point/upcoming-typescript-changes-in-vue-2-5-e9bd7e2ecf08" target="_blank" rel="external">official blog</a> and <a href="https://vuejs.org/v2/guide/typescript.html" target="_blank" rel="external">updated documentation</a> will guide you to upgrade or create projects.<br>But curious audience might wonder how the improvement is done and why TS support isn’t integrated in Vue2.0 at first place.</p>
+<p>This blog post will deep dive into the technical details of Vue2.5 typing, which seems <a href="https://github.com/vuejs/vue/blob/dev/types/options.d.ts#L54" target="_blank" rel="external">daunting</a> at first glance. Don’t worry! We will show how TypeScript’s <a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html" target="_blank" rel="external">advanced types</a> can be used in a popular framework.</p>
+<blockquote>
+<p>Note: Reader’s familiarity with Vue and TypeScript is assumed in this post. If you are new to these two, checkout their <a href="https://vuejs.org/" target="_blank" rel="external">official</a> <a href="https://www.typescriptlang.org/docs/home.html" target="_blank" rel="external">website</a>!</p>
+</blockquote>
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR;"></a>TL;DR;</h2><p>Vue2.5 exploits <a href="https://github.com/Microsoft/TypeScript/pull/14141" target="_blank" rel="external">ThisType</a>, <a href="https://blog.mariusschulz.com/2017/01/20/typescript-2-1-mapped-types" target="_blank" rel="external">mapped type</a>, <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-3.html#generic-parameter-defaults" target="_blank" rel="external">generic defaults</a> and a clever trick to cover most APIs.</p>
+<p>We will also list some limitations in current typing schema.</p>
+<h2 id="this-is-Vue"><a href="#this-is-Vue" class="headerlink" title="this is Vue"></a><code>this</code> is Vue</h2><p>Let’s examine a basic Vue usage. We pass an object literal as component option to Vue constructor.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">  <span class="attr">methods</span>: &#123;</div><div class="line">    greet() &#123;</div><div class="line">      <span class="keyword">this</span>.$el <span class="comment">// `this` is Vue</span></div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'Hello World!'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><code>this</code> keyword is bound to Vue instance in component option. Prior to Vue2.5, we declare <code>this</code> as a plain Vue type. Here is a simplified <code>ComponentOption</code> type.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">interface</span> ComponentOption &#123;</div><div class="line">  methods: &#123; [key: <span class="built_in">string</span>]: (<span class="keyword">this</span>: Vue) =&gt; <span class="built_in">any</span> &#125;</div><div class="line">  <span class="comment">// other fields ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>However, we cannot access our custom methods/data via the declaration above since <code>this</code> is nothing but Vue. The typing doesn’t capture the fact that the VM injected into methods is instantiated with our custom methods/data/props.</p>
+<p>A new type parameter <code>V</code> can allow users to specify their custom properties. So a better solution will be:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">interface</span> ComponentOption&lt;V <span class="keyword">extends</span> Vue&gt; &#123;</div><div class="line">  methods: &#123; [key: <span class="built_in">string</span>]: (<span class="keyword">this</span>: V) =&gt; <span class="built_in">void</span> &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>And users can use it like this.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">newVue</span>&lt;<span class="title">V</span> <span class="title">extends</span> <span class="title">Vue</span>&gt;(<span class="params">option: ComponentOption&lt;V&gt;</span>): <span class="title">V</span></span></div><div class="line"></div><div class="line"><span class="title">interface</span> <span class="title">MyComponent</span> <span class="title">extends</span> <span class="title">Vue</span> &#123;</div><div class="line">  greet(str: <span class="built_in">string</span>): <span class="built_in">void</span></div><div class="line">  hello(): <span class="built_in">void</span></div><div class="line">&#125;</div><div class="line">newVue&lt;MyComponent&gt;(&#123;</div><div class="line">  methods: &#123;</div><div class="line">    greet(str) &#123;</div><div class="line">      <span class="built_in">console</span>.log(str)</div><div class="line">    &#125;,</div><div class="line">    hello() &#123;</div><div class="line">      <span class="keyword">this</span>.greet(<span class="string">'hello world'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>It works, but also requires one interface declaration and one explicit type annotation.<br>Can compiler be smarter and infer this for us?</p>
+<h2 id="ThisType-lt-Vue-gt"><a href="#ThisType-lt-Vue-gt" class="headerlink" title="ThisType&lt;Vue&gt;"></a><code>ThisType&lt;Vue&gt;</code></h2><p>We can strongly type <code>this</code> by a special marker interface <code>ThisType</code>. It is introduced in TypeScript 2.3, which is the very reason why we didn’t have strong type until Vue2.5.</p>
+<p>The original <a href="https://github.com/Microsoft/TypeScript/pull/14141" target="_blank" rel="external">pull request</a> has a detailed introduction and example for <code>ThisType</code>.</p>
+<p>The most important rule is quoted here.</p>
+<blockquote>
+<p>(If) the containing object literal has a contextual type that includes a <code>ThisType&lt;T&gt;</code>, <code>this</code> has type T</p>
+</blockquote>
+<p>What does this mean? Let’s break this rule down to several pieces.</p>
+<p><code>object literal</code> means the component option in Vue’s case; <code>contextual type</code> means the component option is passed to a function as argument and the component option is typed via function declaration, without caller’s annotation; and finally <code>ThisType&lt;T&gt;</code> needs to be used in the function parameter declaration. The type parameter <code>T</code> refers to the type of <code>this</code> in the component option. In simple terms, this rule says we can change <code>this</code> keyword’s type according to the component option passed to <code>new Vue</code> or so.</p>
+<p>Combining these together, we can write a simple declaration that understands our Vue component option.</p>
+<blockquote>
+<p>Note, you will need <code>noImplicitThis</code> compiler flag to enable this new type checking.</p>
+</blockquote>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">interface</span> ComponentOption&lt;Method&gt; &#123;</div><div class="line">  methods: Method</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">newVue</span>&lt;<span class="title">Method</span>&gt;(<span class="params"></span></span></div><div class="line">  option: ComponentOption&lt;Method&gt; &amp; ThisType&lt;Method &amp; Vue&gt;</div><div class="line">): <span class="title">Vue</span>&amp;<span class="title">Method</span></div><div class="line"></div><div class="line">// <span class="title">Method</span> <span class="title">is</span> <span class="title">inferred</span> <span class="title">as</span></div><div class="line">// &#123; greet(str): <span class="built_in">void</span>, hello(): <span class="built_in">void</span> &#125;</div><div class="line">newVue(&#123;</div><div class="line">  methods: &#123;</div><div class="line">    greet(str) &#123;</div><div class="line">      <span class="built_in">console</span>.log(str)</div><div class="line">    &#125;,</div><div class="line">    hello() &#123;</div><div class="line">      <span class="comment">// this is typed as Method &amp; Vue</span></div><div class="line">      <span class="keyword">this</span>.greet(<span class="string">'hello world'</span>)   <span class="comment">// custom methods works!</span></div><div class="line">      <span class="keyword">this</span>.$el <span class="comment">// vue property also works!</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>This code needs some explanation. First we define an <code>ComponentOption</code> and it takes a type parameter <code>Method</code>, which acts as a “stub” for compiler to infer custom properties on <code>this</code>.<br>Then in the function we declare a type parameter <code>Method</code> again and pass it to <code>ComponentOption</code> and <code>ThisType</code>.<br>Finally, <code>ThisType&lt;Method &amp; Vue&gt;</code> means the type of <code>this</code> inside option will be an intersection of <code>Vue</code> and <code>Method</code>.</p>
+<p>When we call <code>newVue</code>, compiler will first infer <code>Method</code> from <code>ComponentOption</code> object we pass to the function. Then the <code>Method</code> will flow into <code>this</code> keyword, resulting a type that has both Vue property and our own methods.</p>
+<h2 id="Mapping-Computed"><a href="#Mapping-Computed" class="headerlink" title="Mapping Computed"></a>Mapping Computed</h2><p>Typing <code>methods</code> alone is so far so good. However fields like <code>computed</code> have a different story.<br>The object in <code>methods</code> field has the same shape as part of <code>this</code> type. Say, <code>methods</code> has a <code>hello</code> function property and <code>this</code> also has a function property with the same name (in algebraic terms, <a href="https://en.wikipedia.org/wiki/Homomorphism#Endomorphism" target="_blank" rel="external">endomorphism</a>). But a property in <code>computed</code> is a function that returns a value and <code>this</code> has a namesake property with the same value type. For example.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">newVue(&#123;</div><div class="line">  computed: &#123;</div><div class="line">    myname: () =&gt; <span class="string">'world'</span> <span class="comment">// a function returns string</span></div><div class="line">  &#125;,</div><div class="line">  methods: &#123;</div><div class="line">    greet() &#123;</div><div class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>.myname)</div><div class="line">      <span class="comment">// myname is a string, not a function returning string</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>How can we get a new type from <code>computed</code> definition object?</p>
+<p>Here comes the mapped type, a new kind of object type that maps a type representing property names over a property declaration template. In other words, we can create computed type in Vue instance based on that in component option. (algebraically, <a href="https://en.wikipedia.org/wiki/Homomorphism#Definition" target="_blank" rel="external">homomorphism</a>)</p>
+<blockquote>
+<p>In a mapped type, the new type transforms each property in the old type in the same way.</p>
+</blockquote>
+<p>The <a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types" target="_blank" rel="external">official documentation</a> is crystal clear. Let’s see how we integrate this awesomeness into Vue.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// we map a plain type to a type of which the property is a function</span></div><div class="line"><span class="comment">// e.g. &#123; myname: string &#125; will be mapped to &#123; myname: () =&gt; string &#125;</span></div><div class="line"><span class="comment">// note this process can also be reversed during type inference</span></div><div class="line"><span class="keyword">type</span> Accessors&lt;T&gt; = &#123; [K <span class="keyword">in</span> keyof T]: () =&gt; T[K] &#125;</div><div class="line"></div><div class="line"><span class="keyword">interface</span> ComponentOption&lt;Method, Computed&gt; &#123;</div><div class="line">  methods: Method</div><div class="line">  computed: Accessors&lt;Computed&gt;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">type</span> ThisTypedOption&lt;Method, Computed&gt; =</div><div class="line">  ComponentOption&lt;Method, Computed&gt; &amp; ThisType&lt;Method &amp; Computed &amp; Vue&gt;</div><div class="line"></div><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">newVue</span>&lt;<span class="title">Method</span>, <span class="title">Computed</span>&gt;(<span class="params"></span></span></div><div class="line">  option: ThisTypedOption&lt;Method, Computed&gt;</div><div class="line">): <span class="title">Method</span> &amp; <span class="title">Computed</span> &amp; <span class="title">Vue</span></div></pre></td></tr></table></figure>
+<p><code>Accessors&lt;T&gt;</code> will map the type <code>T</code> to a new type with same property names. But property value type is a function returning the type in the original <code>T</code>. This process is reversed during type inference.  When we pass <code>computed</code> field as <code>{myname: () =&gt; string}</code> to <code>newVue</code> function, compiler will try to map the type to <code>Accessors&lt;T&gt;</code>, which results in <code>Computed</code> being <code>{myname: string}</code>.</p>
+<p>And <code>Computed</code> is mixed into <code>this</code>, so we can access <code>myname</code> as <code>string</code> from <code>this</code>.</p>
+<p>We skipped here <a href="https://vuejs.org/v2/guide/computed.html#Computed-Setter" target="_blank" rel="external">computed setter style</a> declaration for a more lucid demonstration. Supporting setter in <code>computed</code> is similar.</p>
+<h2 id="Prop-Types-Trick"><a href="#Prop-Types-Trick" class="headerlink" title="Prop Types Trick"></a>Prop Types Trick</h2><p><code>props</code> has a subtle difference from <code>computed</code>: we define a <code>prop</code> by giving a constructor of that value type.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> PropDef&lt;T&gt; = &#123; <span class="keyword">new</span>(...args: <span class="built_in">any</span>[]): T &#125;</div><div class="line"><span class="keyword">type</span> Props&lt;T&gt; = &#123; [K <span class="keyword">in</span> keyof T]: PropDef&lt;T[K]&gt; &#125;</div><div class="line"><span class="keyword">interface</span> ComponentOption&lt;Prop&gt; &#123;</div><div class="line">  props: Props&lt;Prop&gt;</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> ThisTypedOption&lt;Prop&gt; =</div><div class="line">  ComponentOption&lt;Prop&gt; &amp; ThisType&lt;Prop &amp; Vue&gt;</div><div class="line"></div><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">newVue</span>&lt;<span class="title">Prop</span>&gt;(<span class="params">option: ThisTypedOption&lt;Prop&gt;</span>): <span class="title">Prop</span> &amp; <span class="title">Vue</span></span></div><div class="line"></div><div class="line"><span class="title">class</span> <span class="title">User</span> &#123;&#125;</div><div class="line">newVue(&#123;</div><div class="line">  props: &#123;</div><div class="line">    user: User,</div><div class="line">    name: <span class="built_in">String</span></div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>One would naturally expect <code>newVue</code> will infer <code>Prop</code> as <code>{ user: User, name: string }</code>. Sadly, it is not.</p>
+<p>The problem lies in <code>PropDef</code>, which uses constructor type <code>new(): T</code>. Custom constructor is fine. For example <code>User</code>‘s  constructor returns <code>User</code>. But primitive value’s constructor doesn’t work because <code>String</code> has the signature <code>new(): String</code>.</p>
+<p>Alas! The return value is <code>String</code>, rather than <code>string</code>. Their difference is listed in the <a href="https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html" target="_blank" rel="external">first rule</a> of <em>TypeScript Do’s and Don’ts</em>. A <code>string</code> type is what we use and <code>String</code> refers to non-primitive boxed objects that are almost never used.</p>
+<p>We can use another signature to type primitive constructor and <a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#union-types" target="_blank" rel="external">union</a> custom constructor together. Note every primitive constructor has a call signature, that is, <code>String(value)</code> will return a primitive <code>string</code> value rather than a wrapper object.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> PropDef&lt;T&gt; = &#123; (): T &#125; | &#123; <span class="keyword">new</span>(...args: <span class="built_in">any</span>[]): T &#125;</div></pre></td></tr></table></figure>
+<p>It should work, shouldn’t it? Sadly again, NO.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">propTest</span>&lt;<span class="title">T</span>&gt;(<span class="params">t: PropDef&lt;T&gt;</span>): <span class="title">T</span></span></div><div class="line"><span class="title">propTest</span>(<span class="params"><span class="built_in">String</span></span>) // <span class="title">return</span> <span class="title">String</span>, <span class="title">not</span> <span class="title">string</span>!</div></pre></td></tr></table></figure>
+<p>Because <code>String</code> satisfy both call and constructor signature in <code>PropDef</code>, compiler will prefer returning <code>String</code>.</p>
+<p>How can we nudge compiler to prefer primitive type? <a href="https://github.com/HerringtonDarkholme/av-ts/issues/62" target="_blank" rel="external">Here</a> is an undocumented trick.<br>The main idea is to exploit <a href="https://github.com/Microsoft/TypeScript/blob/8e47c18636da814117071a2640ccf87c5f16fcfd/src/compiler/types.ts#L3563-L3583" target="_blank" rel="external">type inference priority</a>. If a type parameter is single naked, that is, not in <a href="https://github.com/Microsoft/TypeScript/pull/3622#issuecomment-116888221" target="_blank" rel="external">intersection type</a> nor in <a href="https://github.com/Microsoft/TypeScript/pull/1035" target="_blank" rel="external">union type</a>, compiler will prefer to infer from that single naked position over intersection/union position. So we can add an intersection to constructor signature and then compiler will first infer call signature. Exactly what we want! To make the signature more self explanatory, we can use the <a href="https://github.com/Microsoft/TypeScript/pull/12501" target="_blank" rel="external"><code>object</code> type</a> to flag constructor type should not return primitive type.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> PropDef&lt;T&gt; = &#123; (): T &#125; | &#123; <span class="keyword">new</span>(...args: <span class="built_in">any</span>[]): T &amp; object &#125;</div><div class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">propTest</span>&lt;<span class="title">T</span>&gt;(<span class="params">t: PropDef&lt;T&gt;</span>): <span class="title">T</span></span></div><div class="line"><span class="title">propTest</span>(<span class="params"><span class="built_in">String</span></span>) // <span class="title">return</span> <span class="title">string</span>, <span class="title">yay</span>!</div></pre></td></tr></table></figure>
+<p>Now we can happily infer <code>props</code> without manual annotation!</p>
+<h2 id="Compatibility"><a href="#Compatibility" class="headerlink" title="Compatibility"></a>Compatibility</h2><p>For better inference, our new type has many more type parameters than original <code>ComponentOption&lt;V&gt;</code> which only has one parameter. Nevertheless, it will be a catastrophic breaking change if we ship the new type without proper fallback. <a href="https://blog.mariusschulz.com/2017/06/02/typescript-2-3-generic-parameter-defaults" target="_blank" rel="external">Generic defaults</a> introduced in TS2.3 gives us a chance to bring about a more smooth upgrade.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">interface</span> ComponentOption&lt;V <span class="keyword">extends</span> Vue, Method=any, Data=any, Prop=any, Computed=any&gt; &#123;</div><div class="line">  <span class="comment">// ....</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">interface</span> MyVue <span class="keyword">extends</span> Vue &#123;</div><div class="line"> <span class="comment">// ...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// users can use ComponentOption without changing their code</span></div><div class="line"><span class="comment">// parameter with default can be skipped</span></div><div class="line"><span class="keyword">var</span> option: ComponentOption&lt;MyVue&gt; = &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Happy ending!</p>
+<h2 id="Limitation"><a href="#Limitation" class="headerlink" title="Limitation"></a>Limitation</h2><p>The “No silver bullet” rule also applies to typing. <strong>The more advanced types we use, the more complex error messages will be generated.</strong> Hope this blog post will help you to understand the new typing better and help you to debug your own application.</p>
+<p>There are also some type system limitations in Vue typing. Let’s see some examples.</p>
+<ul>
+<li>functions in <code>computed</code> need return type annotation</li>
+</ul>
+<p>Return type annotation is required if <code>computed</code> method uses <code>this</code>. It turns out that using mapped type and ThisType at the same time without explicit annotation will cause cyclic inference error in current compiler.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">  computed: &#123;</div><div class="line">    foo() &#123;</div><div class="line">      <span class="keyword">return</span> <span class="number">123</span></div><div class="line">    &#125;,</div><div class="line">    bar(): <span class="built_in">number</span> &#123; <span class="comment">// required</span></div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.foo</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>TypeScript has already opened an <a href="https://github.com/Microsoft/TypeScript/issues/18805" target="_blank" rel="external">issue</a> tracking this.</p>
+<ul>
+<li>Prop types’ union declaration requires manual type cast</li>
+</ul>
+<p>Vue accepts an array of constructors in prop’s definition as union type. However, <code>PropDef</code> cannot unify primitive constructors and custom constructors which have two heterogeneous signatures.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Vue.component(<span class="string">'union-prop'</span>, &#123;</div><div class="line">  props: &#123;</div><div class="line">    primitive: [<span class="built_in">String</span>, <span class="built_in">Number</span>], <span class="comment">// both primitive, ok</span></div><div class="line">    custom: [Cat, User],         <span class="comment">// both custom, ok</span></div><div class="line">    mixed: [User, <span class="built_in">Number</span>] as &#123;<span class="keyword">new</span>(): User | <span class="built_in">Number</span>&#125;[] <span class="comment">// requires annotation</span></div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>In general, you should avoid mixing primitive type and object type.</p>
+<h2 id="Final-words"><a href="#Final-words" class="headerlink" title="Final words"></a>Final words</h2><p>TypeScript has been constantly evolving since its birth. And finally its expressiveness enable us to type Vue’s cannonical API!</p>
+<p>Thank you, TypeScript team, for bring us these awesome features!<br>Thank you, Vue team, for embracing new advance in type system!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TypeScript/" rel="tag">#TypeScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/04/flow-sensitive/" rel="next" title="Grok control flow based analysis in TypeScript.">
+                <i class="fa fa-chevron-left"></i> Grok control flow based analysis in TypeScript.
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Herrington Darkholme" />
+          <p class="site-author-name" itemprop="name">Herrington Darkholme</p>
+          <p class="site-description motion-element" itemprop="description">あくまでも紳士です</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this-is-Vue"><span class="nav-number">2.</span> <span class="nav-text">this is Vue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThisType-lt-Vue-gt"><span class="nav-number">3.</span> <span class="nav-text">ThisType<Vue></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mapping-Computed"><span class="nav-number">4.</span> <span class="nav-text">Mapping Computed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prop-Types-Trick"><span class="nav-number">5.</span> <span class="nav-text">Prop Types Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compatibility"><span class="nav-number">6.</span> <span class="nav-text">Compatibility</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Limitation"><span class="nav-number">7.</span> <span class="nav-text">Limitation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Final-words"><span class="nav-number">8.</span> <span class="nav-text">Final words</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Herrington Darkholme</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'hchansnote';
+      var disqus_identifier = '2017/10/12/vue-ts3/';
+      var disqus_title = "Deep dive into Vue2.5 Typing -- A tour of advanced typing feature";
+      var disqus_url = 'https://herringtondarkholme.github.io/2017/10/12/vue-ts3/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
