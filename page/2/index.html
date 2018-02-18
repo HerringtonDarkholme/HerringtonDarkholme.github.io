@@ -238,6 +238,136 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/01/typesafe-di/" itemprop="url">
+                  TypeSafe DI in TypeScript
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-02-01T19:26:14+08:00" content="2016-02-01">
+              2016-02-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/01/typesafe-di/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/01/typesafe-di/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <img src="/images/miku805.jpg">
+<blockquote>
+<p>Yet Another Type Level Arithmetics</p>
+</blockquote>
+<p>DI is getting more popularity in JavaScript. Though, those solution is far way beyond JSR-330 compatible libraries in terms of type safety and performance.</p>
+<p>This snippet strives to dig more type-safety from TS’ type system. However, it can hardly achieve equivalent type safety like Java’s counterpart, e.g., Dagger, Guice.</p>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p><a href="https://gist.github.com/HerringtonDarkholme/f11152e6e29145040fa4" target="_blank" rel="external">This DI</a> snippet can, ideally, ensure every binding is resolved in compile time, which is a hard task for other DI solution. The main idea is an <code>Injector</code> can statically know its current binding, and judge whether dependencies of a new added binding can be already resolved by itself. Since dependency graph is a DAG, there exists a topological sorting order that every binding’s dependency can be resolved solely by those of preceding bindings . So once the injector is created and bindings are attached to it, we can assert that the dependencies can be resolved.</p>
+<p>Say, there is a minimal example to illustrate this:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Inject</span></div><div class="line"><span class="keyword">class</span> Clerk &#123;&#125;</div><div class="line"><span class="meta">@Inject</span></div><div class="line"><span class="keyword">class</span> Shop &#123;<span class="keyword">constructor</span>(<span class="params">c: Clerk</span>)&#125;</div><div class="line">var inj = Injector.create(<span class="params"></span>)</div><div class="line">  .bind(<span class="params">Shop</span>).toClass(<span class="params">Shop</span>) // compile error here, injector cannot resolve Clerk</div><div class="line"></div><div class="line">var inj = Injector.create(<span class="params"></span>)</div><div class="line">  .bind(<span class="params">Clerk</span>).toClass(<span class="params">Clerk</span>)</div><div class="line">  .bind(<span class="params">Shop</span>).toClass(<span class="params">Shop</span>) // compiles. Clerk resolved before Shop</div></pre></td></tr></table></figure>
+<p>To implement this, Injector has a shadow type <code>Base</code> that indicates resolved bindings. When new binding is added to injector, compiler will verify the new coming constructor/function will only depend on classes the injector has already resolved. Concretely, every argument in newly added constructor must be a subtype of <code>Base</code>.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Ctor = <span class="keyword">new</span> (...args: Base[]): T</div><div class="line"></div><div class="line">injector&lt;Base&gt;</div><div class="line">  .bind(NewClass)</div><div class="line">  .toClass(NewClass as Ctor)</div><div class="line"><span class="comment">/*</span></div><div class="line">Make sure here `toClass` is defined like</div><div class="line">type toClass = (Ctor) =&gt; Injector&lt;Base | T&gt;</div><div class="line">the union type indicates resolved type, and `T extends Base|T` holds valid</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p><code>Base</code> is a large union type storing all binding types, so every resolved type is a subtype of <code>Base</code>. And <code>bind</code> will return a <code>binder</code> that has <code>toClass / toFactory</code> method which further returns an injector whose resolved binding is a union of the previous binding type and the newly added binding type. Hence, after <code>bind ... toClass</code>, the injector has a new class appended to its resolved type list.</p>
+<p>The implementation and test can be found at <a href="https://gist.github.com/HerringtonDarkholme/f11152e6e29145040fa4" target="_blank" rel="external">Github Gist</a>.</p>
+<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><p>But TS’ type system does not allow a full-fledged DI in this way.</p>
+<ol>
+<li><p>First, runtime types are erased. One must annotate dependency for function in <code>toFactory</code> method. <code>toClass</code> is better because TS supports <code>emitDecoratorMetadata</code>. (maybe resolved in TS2.0). TS’ specific metadata implementation is also problematic. For cyclic dependent classes, at least one class’ annotation is <code>undefined</code>(ES3/5), or the script is crashed before it can run (ES6). Because metadata is attached to class declaration, in cyclic case there must be one class is used before it’s declared.</p>
+</li>
+<li><p>TypeScript has a double-edged sutructural type system. To fully exploit DI’s type check, user has to add a <code>private</code> <code>brand</code> field to every injectable class. This is not a good UI, though.</p>
+</li>
+<li><p>But even metadata is not enough. Runtime type data is first-order (in type-system’s view), that is, every type is represented by its constructor, no generic information is emitted. To work around this, token is introduced.</p>
+</li>
+</ol>
+<p>Token alleviates runtime type-system’s weakness, and enables binding multiple implementations to one single type. It also introduces more problem this DI wants to resolve in the first place. To work around point 1, we attached runtime types to constructor. Binding token will make type system think a type has resolved, but a following binding may not resolve it in runtime because it depends on constructor to find resolution.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">injector</div><div class="line">  .bind(clerkToken).toClass(Clerk)</div><div class="line">  .bind(Shop).toClass(Shop) <span class="comment">// compiles. but runtime error</span></div><div class="line"><span class="comment">// toClass will analyze Shop's signature and extract the Clerk constructor</span></div><div class="line"><span class="comment">// it can be found in type-level because Token&lt;Clerk&gt; enable injector to resolve Clerk, but at runtime injector can only resolve clerkToken, not Clerk</span></div></pre></td></tr></table></figure>
+<p>Also, tokens with same types cannot avoid this.</p>
+<p>The workaround is, well, abusing string literal type. So every token is different at type-level. This requires users to type more types, and casts string literal from string type to string literal type. (TS’s generic inference does not have something like <code>T extends StringLiteral</code> so that <code>T</code> is inferred as string literal type)</p>
+<p>Also, the <code>toClass</code> and <code>toFactory</code> signature should differentiate what can be resolved by constructor and by token.  This is technically possible, just override these signature to support distinguishing between token and constructor. But the number of resulting overriding is exponential to the number of argument. 2 ^ n, where n is the number of arguments.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To fully support type-safe DI and higher performance, a compiler extension or a code generator is needed. Java’s DI relies on annotations and code generation.</p>
+<p>Maybe Babel can do this right now. But TypeScript still needs a long way to go for a customizable emitter.</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'reflect-metadata'</span></div><div class="line"></div><div class="line"><span class="keyword">type</span> _ = &#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">type</span> ClassN&lt;N, T&gt; = &#123; <span class="keyword">new</span> (...a: N[]): T &#125;</div><div class="line"><span class="keyword">type</span> FN8&lt;A, B, C, D, E, F, G, H, R&gt; = (a?: A, b?: B, c?: C, d?: D, e?: E, f?: F, g?: G, h?: H) =&gt; R</div><div class="line"><span class="keyword">type</span> CLS8&lt;A, B, C, D, E, F, G, H, R&gt; = &#123; <span class="keyword">new</span> (a?: A, b?: B, c?: C, d?: D, e?: E, f?: F, g?: G, h?: H): R&#125;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Token&lt;T&gt; &#123;</div><div class="line">  <span class="keyword">private</span> _tokenBrand</div><div class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> Bindable&lt;T&gt; = Token&lt;T&gt; | ClassN&lt;_, T&gt;</div><div class="line"></div><div class="line"><span class="keyword">const</span> PARAMTYPE = <span class="string">'design:paramtypes'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSignature</span>&lt;<span class="title">T</span>&gt;(<span class="params">cls: ClassN&lt;T, _&gt;</span>): <span class="title">Array</span>&lt;<span class="title">Bindable</span>&lt;<span class="title">T</span>&gt;&gt; </span>&#123; <span class="keyword">return</span> Reflect.getOwnMetadata(PARAMTYPE, cls).slice() || [] &#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">enum</span> BindType &#123; CLASS, VALUE, FACTORY &#125;</div><div class="line"><span class="keyword">class</span> Binder&lt;T, Base&gt; &#123;</div><div class="line">  dependencies: Bindable&lt;Base&gt;[] = []</div><div class="line">  cacheable: <span class="built_in">boolean</span> = <span class="literal">false</span></div><div class="line">  <span class="keyword">private</span> _type: BindType</div><div class="line">  <span class="keyword">private</span> _cls: ClassN&lt;<span class="built_in">any</span>, T&gt; = <span class="literal">null</span></div><div class="line">  <span class="keyword">private</span> _val: T</div><div class="line">  <span class="keyword">private</span> _fn: <span class="built_in">Function</span></div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> _injector: Injector&lt;Base&gt;</span>) &#123;&#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> _releaseInjector() &#123;</div><div class="line">    <span class="keyword">let</span> injector = <span class="keyword">this</span>._injector</div><div class="line">    <span class="keyword">this</span>._injector = <span class="literal">null</span></div><div class="line">    <span class="keyword">return</span> injector</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toClass&lt;A extends Base, B extends Base, C extends Base, D extends Base, E extends Base, F extends Base, G extends Base, H extends Base&gt;(fn: CLS8&lt;A, B, C,  D, E, F, G, H, T&gt;, a?: Bindable&lt;A&gt;, b?: Bindable&lt;B&gt;, c?: Bindable&lt;C&gt;, d?: Bindable&lt;D&gt;, e?: Bindable&lt;E&gt;, f?: Bindable&lt;F&gt;, g?: Bindable&lt;G&gt;, h?: Bindable&lt;H&gt;): Injector&lt;Base | T&gt;</div><div class="line">  toClass(cls: ClassN&lt;Base, T&gt;, ...deps: Bindable&lt;Base&gt;[]): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.CLASS</div><div class="line">    <span class="keyword">this</span>._cls = cls</div><div class="line">    <span class="keyword">this</span>.dependencies = getSignature(cls)</div><div class="line">    deps.forEach((d, i) =&gt; &#123;</div><div class="line">      <span class="keyword">if</span> (d) <span class="keyword">this</span>.dependencies[i] = d</div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toValue(val: T): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.VALUE</div><div class="line">    <span class="keyword">this</span>._val = val</div><div class="line">    <span class="keyword">this</span>.cacheable = <span class="literal">true</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toFactory&lt;A extends Base, B extends Base, C extends Base, D extends Base, E extends Base, F extends Base, G extends Base, H extends Base&gt;(fn: FN8&lt;A, B, C,  D, E, F, G, H, T&gt;, a?: Bindable&lt;A&gt;, b?: Bindable&lt;B&gt;, c?: Bindable&lt;C&gt;, d?: Bindable&lt;D&gt;, e?: Bindable&lt;E&gt;, f?: Bindable&lt;F&gt;, g?: Bindable&lt;G&gt;, h?: Bindable&lt;H&gt;): Injector&lt;Base | T&gt;</div><div class="line">  toFactory(fn: (...a: Base[]) =&gt; T, ...deps: Bindable&lt;Base&gt;[]): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.FACTORY</div><div class="line">    <span class="keyword">this</span>._fn = fn</div><div class="line">    <span class="keyword">this</span>.dependencies = deps</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  resolve(deps: <span class="built_in">any</span>[]): Promise&lt;T&gt; &#123;</div><div class="line">    <span class="keyword">switch</span> (<span class="keyword">this</span>._type) &#123;</div><div class="line">      <span class="keyword">case</span> BindType.CLASS:</div><div class="line">        <span class="keyword">let</span> cls = <span class="keyword">this</span>._cls</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">new</span> cls(...deps))</div><div class="line">      <span class="keyword">case</span> BindType.VALUE:</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">this</span>._val)</div><div class="line">      <span class="keyword">case</span> BindType.FACTORY:</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">this</span>._fn(...deps))</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> Injector&lt;Base&gt; &#123;</div><div class="line">  <span class="keyword">private</span> _resolving = <span class="keyword">new</span> Set&lt;Bindable&lt;_&gt;&gt;()</div><div class="line">  <span class="keyword">private</span> _typeBinderMap = <span class="keyword">new</span> Map&lt;Bindable&lt;_&gt;, Binder&lt;_, Base&gt;&gt;()</div><div class="line">  <span class="keyword">private</span> _cache = <span class="keyword">new</span> Map&lt;Bindable&lt;_&gt;, Promise&lt;<span class="built_in">any</span>&gt;&gt;()</div><div class="line"></div><div class="line">  <span class="keyword">get</span>&lt;T extends Base&gt;(cls: Bindable&lt;T&gt;): Promise&lt;T&gt; &#123;</div><div class="line">    <span class="keyword">let</span> binder = <span class="keyword">this</span>._typeBinderMap.get(cls)</div><div class="line">    <span class="keyword">if</span> (!binder) <span class="keyword">throw</span> <span class="keyword">new</span> NoBinding(cls[<span class="string">'name'</span>])</div><div class="line"></div><div class="line">    <span class="keyword">let</span> cache = binder.cacheable ? <span class="keyword">this</span>._cache.get(cls) : <span class="literal">null</span></div><div class="line">    <span class="keyword">if</span> (cache) &#123;</div><div class="line">      <span class="keyword">return</span> cache</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._resolving.has(cls)) <span class="keyword">throw</span> <span class="keyword">new</span> CyclicDependency(cls[<span class="string">'name'</span>])</div><div class="line"></div><div class="line">    <span class="keyword">this</span>._resolving.add(cls)</div><div class="line">    <span class="keyword">let</span> depPromise = binder.dependencies.map(dep =&gt; <span class="keyword">this</span>.get(dep))</div><div class="line">    <span class="keyword">this</span>._resolving.delete(cls)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> ret = Promise.all(depPromise).then(args =&gt; binder.resolve(args))</div><div class="line">    <span class="keyword">if</span> (binder.cacheable) <span class="keyword">this</span>._cache.set(cls, ret)</div><div class="line">    <span class="keyword">return</span> ret</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  bind&lt;T&gt;(cls: Bindable&lt;T&gt;): Binder&lt;T, Base&gt; &#123;</div><div class="line">    <span class="keyword">let</span> binder = <span class="keyword">new</span> Binder&lt;T, Base&gt;(<span class="keyword">this</span>)</div><div class="line">    <span class="keyword">this</span>._typeBinderMap.set(cls, binder)</div><div class="line">    <span class="keyword">return</span> binder</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> create(): Injector&lt;Injector&lt;_&gt;&gt; &#123;</div><div class="line">    <span class="keyword">let</span> inj = <span class="keyword">new</span> Injector&lt;Injector&lt;_&gt;&gt;()</div><div class="line">    inj.bind(Injector).toValue(inj)</div><div class="line">    <span class="keyword">return</span> inj</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/06/rplugin-notfound/" itemprop="url">
                   Trouble Shooting NeoVim's rplugin not found
                 </a>
@@ -1258,143 +1388,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2014/09/30/scala-operator/" itemprop="url">
-                  Scala Generalized Type constraints
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-09-30T20:23:16+08:00" content="2014-09-30">
-              2014-09-30
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2014/09/30/scala-operator/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/09/30/scala-operator/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Generalized Type Constraints, also known as <code>&lt;:&lt;</code>, <code>&lt;%&lt;</code>(deprecated though) and <code>=:=</code>, also known as type relation operator, or call <a href="http://stackoverflow.com/questions/2603003/operator-in-scala/" target="_blank" rel="external">whatever</a> you want, are not operators but identifiers. It’s quite confusing for new comers to distinguish them from operators, well…, identifiers which are not that esoteric.</p>
-<p>This is just plain Scala feature that non-alphanum symbols can act as legal identifiers, just like <code>+</code> method.<br>More specifically, they are type-constructors. But before we inspect their implementations, let’s first consider their usage.</p>
-<h1 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h1><p>You want to implement a generic container for every type, however, you also want to add a special method that only applies to <code>Special</code> type. (notice: this is different from the annotation <code>@specialized</code> which deals with JVM’s primitive type. Here <code>Special</code> is just a plain old scala type)</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span>[<span class="type">A</span>](<span class="params">value: <span class="type">A</span></span>) </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">diff</span></span>[<span class="type">A</span> &lt;: <span class="type">Int</span>](b: <span class="type">Int</span>) = value - b</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// BOOM</span></div><div class="line"><span class="comment">// error: value - is not a member of type parameter A</span></div><div class="line"><span class="comment">//    def diff[A &lt;: Int](b: A) = value - b</span></div></pre></td></tr></table></figure>
-<p>Why? The type bound <code>A &lt;: Int</code> does not work. <code>A</code> has been defined at the class declaration, in the class body Scala compiler requries every type bound is consistent with A’s definition. Here, <code>A</code> has no bound so it is bounded by <code>Any</code>, not <code>Int</code>.</p>
-<p>Instead of setting type bound, methods may ask for some kinds of specific <em>ad-hoc</em> “evidence” for a type.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="class"><span class="keyword">class</span> <span class="title">Container</span>[<span class="type">A</span>](<span class="params">value: <span class="type">A</span></span>) </span>&#123;</div><div class="line">  <span class="comment">// other generic methods for A</span></div><div class="line">  <span class="comment">/* blah blah */</span></div><div class="line"></div><div class="line">  <span class="comment">// specialized method for Int</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addIt</span></span>(<span class="keyword">implicit</span> evidence: <span class="type">A</span> =:= <span class="type">Int</span>) = <span class="number">123</span> + value</div><div class="line">&#125;</div><div class="line">defined <span class="class"><span class="keyword">class</span> <span class="title">Container</span></span></div><div class="line"></div><div class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="number">123</span>)).addIt</div><div class="line">res11: <span class="type">Int</span> = <span class="number">246</span></div><div class="line"></div><div class="line">scala&gt; (<span class="keyword">new</span> <span class="type">Container</span>(<span class="string">"123"</span>)).addIt</div><div class="line">&lt;console&gt;:<span class="number">10</span>: error: could not find <span class="keyword">implicit</span> value <span class="keyword">for</span> parameter evidence: =:=[java.lang.<span class="type">String</span>,<span class="type">Int</span>]</div></pre></td></tr></table></figure>
-<p>Cool, <code>evidence</code> is an implicit provided by scala predef. And <code>A =:= Int</code> is just a type like <code>Map[Int, String]</code>, but is infixed due to scala’s syntactic sugar.</p>
-<p>Scala does not impose type constraints until the specific method is called, so <code>addIt</code> does not violate <code>A</code>‘s definition. Still, given the implicit <code>evidence</code>, compiler can still infer that value in <code>addIt</code> is an sub-instance of <code>Int</code>.</p>
-<p>As stated before, type constraints are <em>ad-hoc</em>. So it can achieve type inference more specific than type bound. (Fairly, this is the power of implicit).</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def foo[A, B &lt;: A](a: A, b: B) = (a,b)</div><div class="line"></div><div class="line">scala&gt; foo(1, List(1,2,3))</div><div class="line">res1: (Any, List[Int]) = (1,List(1, 2, 3))</div></pre></td></tr></table></figure>
-<p>1 is clearly <code>Int</code> but why does compiler infer it as <code>Any</code>? The <code>B &lt;: A</code> bound requires the first argument type is a super type of the second. <code>A</code> is inferred as the most general type between <code>Int</code> and <code>List[Int]</code>, <code>Any</code>.</p>
-<p><code>&lt;:&lt;</code> comes to help.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def bar[A,B](a: A, b: B)(implicit ev: B &lt;:&lt; A) = (a,b)</div><div class="line"></div><div class="line">scala&gt; bar(1,List(1,2,3))</div><div class="line">&lt;console&gt;:9: error: Cannot prove that List[Int] &lt;:&lt; Int.</div></pre></td></tr></table></figure>
-<p>Because generalized type constraints does not interfere with inference, <code>A</code> is <code>Int</code> here. Only then does the compiler find evidence for <code>&lt;:&lt;[Int, List[Int]]</code> and then fails.<br>(Actually, implicit can feedback type information back to inference, see <a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">typelevel programming’s</a> <code>HList</code> and scala collection library’s <code>CanBuildFrom</code>)</p>
-<p>Also implicit conversion does not impact <code>&lt;:&lt;</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">scala&gt; def foo[B, A&lt;:B] (a:A,b:B) = print(&quot;OK&quot;)</div><div class="line"></div><div class="line">scala&gt; class A; class B;</div><div class="line"></div><div class="line">scala&gt; implicit def a2b(a:A) = new B</div><div class="line"></div><div class="line">scala&gt; foo(new A, new B)  // implicit conversion!</div><div class="line">OK</div><div class="line"></div><div class="line">scala&gt; def bar[A,B](a:A,b:B)(implicit ev: A&lt;:&lt;B) = print(&quot;OK&quot;)</div><div class="line"></div><div class="line">scala&gt; bar(new A, new B)  // does not work</div><div class="line">&lt;console&gt;:17: error: Cannot prove that A &lt;:&lt; B.</div></pre></td></tr></table></figure>
-<h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><p>Actually <code>=:=</code> is just a type constructor in scala.<br>It is somewhat like <code>Map[A, B]</code>, that is,<br><code>=:=</code> is defined like</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class =:=[A, B]</div></pre></td></tr></table></figure>
-<p>so in the implictly’s bracket, <code>Int =:= Int</code> is just a type<br><code>A =:= B</code> is the infix form of type parameterization for<br>non-alphanumeric identifier. It is equivalent to <code>=:=[A, B]</code></p>
-<p>so one can define implicts for <code>=:=</code>, so that compiler can find</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">implicit def EqualTypeEvidence[A]: =:=[A, A] = new =:=[A, A]</div></pre></td></tr></table></figure>
-<p>So, when <code>implictly[A =:= B]</code> is compiled,<br>compiler tries to find the correct implicit evidence.</p>
-<p>If and only If A and B are the same, say Int, the compiler can find<br><code>=:=[Int, Int]</code>, by the result of <code>implicit function EqualTypeEvidence[Int]</code></p>
-<p>More compelling is &lt;:&lt;, the conformance evidence,<br>it leverages variance annotation in scala</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class &lt;:&lt;[-A, +B]</div><div class="line">implict def Conformance[A]: &lt;:&lt;[A, A] = new &lt;:&lt;[A, A]</div></pre></td></tr></table></figure>
-<p>Consider, when <code>String &lt;:&lt; java.io.Serializable</code> is needed,<br>compiler tries to find an instance of <code>&lt;:&lt;[String, j.i.Serializable]</code><br>It can only find instance of the type <code>&lt;:&lt;[String, String]</code><br>(or another alternative <code>&lt;:&lt;[Serializable, Serializable]</code>)<br>But given the variance annotation of &lt;:&lt;,<br>since String is the very type String<br>and String is a subtype of Serializable and B is in a covariant position<br>, or, in another direction<br>snice Serializable is a supertype of String and A is in a contravariant position<br>and Serializable is the very type Serializable</p>
-<p><code>&lt;:&lt;[String, String]</code> is a subtype of <code>&lt;:&lt;[String, Serializable]</code><br>So compiler finds the correct implicit instance as the evidence that<br>String is a subtype of Serializable. By the principle of subtype subsititution.<br>(Liskov)</p>
-<p>Similarly we can define</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Conversion evidence</div><div class="line"></div><div class="line">class &lt;%&lt;[A &lt;% B, B]</div><div class="line">implicit def Conversion[A, B] = new &lt;%&lt;[A, B]</div><div class="line"></div><div class="line">Contra-conformance</div><div class="line">class &gt;:&gt;[+A, -B]</div><div class="line">implicit def Contra[A] = new &gt;:&gt;[A, A]</div></pre></td></tr></table></figure>
-<p>Magic, Right?<br>The actual implementations uses singleton pattern so it is more efficient. For this illustration post, sloppy implementation is just fine :).</p>
-<p>Reference:<br><a href="http://hongjiang.info/scala-type-contraints-and-specialized-methods/" target="_blank" rel="external">http://hongjiang.info/scala-type-contraints-and-specialized-methods/</a><br><a href="http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/" target="_blank" rel="external">http://apocalisp.wordpress.com/2010/07/17/type-level-programming-in-scala-part-6d-hlist%C2%A0zipunzip/</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1435,7 +1433,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1445,7 +1443,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -1482,7 +1480,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

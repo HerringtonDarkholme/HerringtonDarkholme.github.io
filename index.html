@@ -238,6 +238,243 @@
             
               
                 
+                <a class="post-title-link" href="/2018/02/19/angular-ivy/" itemprop="url">
+                  A quick intro to Angular Ivy
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2018-02-19T00:00:00+08:00" content="2018-02-19">
+              2018-02-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/19/angular-ivy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/19/angular-ivy/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Angular recently announced a new render engine called <a href="https://github.com/angular/angular/issues/21706" target="_blank" rel="external">Ivy</a>.<br>Ivy is an amazing present from Angular team! It produces hello-world app in mere <a href="https://twitter.com/IgorMinar/status/961484134425088001" target="_blank" rel="external">3.2KB</a>, on a par with minimal framework like preact. Unfortunately little documentation, if any, exists to explain how Ivy works.</p>
+<p>This blog post strives to fill this gap, by translating an amazing answer from <a href="https://www.zhihu.com/question/266923267/answer/316279829" target="_blank" rel="external">zhihu</a>, a superior Q&amp;A website to Quora. I hope this post can communicate Angular’s innovation to broader front-end world by breaking language barrier.</p>
+<blockquote>
+<p>TL;DR: Ivy is an extremely building-tool friendly, web-first render engine that paves Angular’s way to web components.</p>
+</blockquote>
+<p>Opinion is not mine. Words in parentheses are from the original author unless explicitly annotated as from translator. Translator notes are added for audience with no Angular background.</p>
+<h2 id="Orignal-post"><a href="#Orignal-post" class="headerlink" title="Orignal post:"></a>Orignal post:</h2><p>How to comment on the fact that Angular’s new Ivy render engine produces 3.2KB compiled JavaScript? <em>(traslator note: <code>how to comment</code> is a jargon on zhihu, meaning <code>what&#39;s your opinion</code>)</em></p>
+<p>Let’s first answer several frequent questions:</p>
+<ol>
+<li><p>3.2KB is the result after minification + gzip (a convention to compare framework size), which is the exact payload size we send to browser. (if we use more advanced compression like brotli, the size will be smaller on modern browsers).</p>
+</li>
+<li><p>Ivy renderer won’t be default in Angular v6. You need to manually enable it by switching on certain compiler option. It might be default in v7 if no further issues are found.</p>
+</li>
+<li><p>Code completion isn’t proportional to feature completion. 50% code completed doesn’t imply 50% feature completed. For now Ivy has seemingly decent code completion rate, but it still has a long way before ready for production. It can’t even complete a simple app for <a href="https://github.com/krausest/js-framework-benchmark" target="_blank" rel="external">benchmark</a>.</p>
+</li>
+<li><p>Compared with previous Angular’s compiled code, Ivy’s result is almost like hand-written. And actually you can write it by hand! (Though in practice you won’t.)</p>
+</li>
+<li><p><code>NgModule</code> is challenged, <strong>again</strong>.</p>
+</li>
+<li><p>Ivy won’t promise you a plunge in code weight. Your bundle will still be bulky if a lot of CSS is inlined in your components.</p>
+</li>
+</ol>
+<hr>
+<p>Since the question is to <em>comment on</em> 3.2KB compiled file, I will focus on payload size optimization, thus, answering the question <em>“What optimization has Ivy Renderer done?”.</em></p>
+<p>It can never be overstated that the extreme size isn’t achieved by the ADVANCED mode of Closure Compiler. <strong>Rollup</strong> can achieve the same level optimization (within less than 1KB difference). Therefore Ivy is arguably the true <strong>building-tool friendly</strong> renderer, not Closure-Compiler-only renderer.</p>
+<p>Disclaimer: all the below is based on current (Feb, 2018) implementation, published roadmap. If following version changes leads to the following content outdated or incorrect, please pardon our no updating.</p>
+<h2 id="A-Removing-dependence-on-platform-browser"><a href="#A-Removing-dependence-on-platform-browser" class="headerlink" title="A. Removing dependence on platform-browser"></a>A. Removing dependence on <code>platform-browser</code></h2><p>As a platform independent framework, can we run application without platform specific code? The answer is NO, of course. Ivy just <strong>inlines DOM Rendere to its core.</strong> If you only need run your application on browser (taking no account of WebWorker), you can run Angular without including platform specific code. For example, the <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/instructions.ts#L842-L845" target="_blank" rel="external">code for binding text</a> is:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">value !== NO_CHANGE &amp;&amp;</div><div class="line">  ((renderer as ProceduralRenderer3).setValue ?</div><div class="line">    (renderer as ProceduralRenderer3).setValue(existingNode.native, stringify(value)) :</div><div class="line">    existingNode.native.textContent = stringify(value));</div></pre></td></tr></table></figure>
+<p>Fallback code is obvious: if no <code>renderer</code> exists <em>(translator note: the condition is better explained as <code>renderer</code> isn’t a <code>ProceduralRenderer3</code>)</em>, Ivy will directly modify dom element’s <code>textContent</code>.</p>
+<p>Currently no Ivy code relies on <code>platform</code>, thus common problems arise:</p>
+<ul>
+<li><p>No support for <a href="https://angular.io/api/platform-browser/EVENT_MANAGER_PLUGINS" target="_blank" rel="external">Event Plugin</a>. e.g. syntactic sugar for keyboard event (like <code>keydown.enter</code>) and events from Hammer, which are all provided by platform-browser.</p>
+</li>
+<li><p>No <code>Sanitizer</code>. Though Angular isn’t string template by itself and is naturally immune to XSS, it still cannot survive abhorrent abuse of <code>innerHTML</code>. <code>Sanitizer</code>, again currently bestowed by platform-browser, comes to rescue by filtering user content. Without platform hardly can we achieve the same level security.</p>
+</li>
+<li><p>No support for Component Style; No View Encapsulation. They are all implemented by different <code>Renderer</code>s in platform-browser package. Only inline style is available for component styling (Another better way is independent CSS and dynamic class).</p>
+</li>
+</ul>
+<p>So the current Ivy renderer demoed in hello-world app isn’t a full featured Angular for some users.</p>
+<h2 id="B-No-NgFactory-file-anymore"><a href="#B-No-NgFactory-file-anymore" class="headerlink" title="B. No NgFactory file anymore"></a>B. No NgFactory file anymore</h2><p>Under the new Ivy mode, compiled template will be stored in the static fields in class, instead of generating new wrapper class (NgFactory). For example:</p>
+<p><code>Component</code> -&gt; <code>ngComponentDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyComponent &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyComponent &#123;</div><div class="line">  <span class="keyword">static</span> ngComponentDef = defineComponent(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Directive</code> -&gt; <code>ngDirectiveDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Directive</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyDirective &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyDirective &#123;</div><div class="line">  <span class="keyword">static</span> ngDirectiveDef = defineDirective(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>NgModule</code> -&gt; <code>ngInjectorDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@NgModule</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyModule &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyModule &#123;</div><div class="line">  <span class="keyword">static</span> ngInjectorDef = defineInjector(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><del>WAT? How can Your Majesty NgModule compiled to one single Injector?(</del></p>
+<p>Due to the colocation of compiled template and class, the new compilation can fully enjoy building tool’s normal optimization. (Tree-Shaking for the most part), waiving most special process in build-optimizer.</p>
+<p><strong>In fact, this improvment is more significant for building than for size optimization.</strong> The new style compiler enables single file compilation, one ts file to one js file. We no longer need to worry about mapping from source file to ngfactory.</p>
+<p>Further more, this unifies library consumption in JIT and AOT. Once the compilation is stabilized, all libraries can compile code before publication, rather than at end uses’ bundling phase. This can lead to faster building.</p>
+<h2 id="C-Greatly-simplify-bootstrap-code"><a href="#C-Greatly-simplify-bootstrap-code" class="headerlink" title="C. Greatly simplify bootstrap code"></a>C. Greatly simplify bootstrap code</h2><p>All Angular applications need to configure bootstrap component (actually it isn’t mandatory, but alternatives are more complex), and initialize one <code>NgModule[Factory]</code>. Something like:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NgModule &#125; from <span class="string">'@angular/core'</span></div><div class="line"><span class="keyword">import</span> &#123; platformBrowser &#125; from <span class="string">'@angular/platform-browser'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  bootstrap: [AppComponent]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123; &#125;</div><div class="line"></div><div class="line">platformBrowserDynamic().bootstrapModule(AppModule)</div></pre></td></tr></table></figure>
+<p>New bootstrapping code is based on component:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// not available yet</span></div><div class="line"><span class="keyword">import</span> &#123; renderComponent &#125; from <span class="string">'@angular/core'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line">renderComponent(AppComponent)</div></pre></td></tr></table></figure>
+<p><del>Hey, why we still need AppModule?</del></p>
+<p>Ivy is based on NgModule-less bootstrapping for now. Though not completed yet, compilers can make bootstrapping accept NgModule (if it still exists) to provide Injector. In other word, <code>renderComponent</code> can accept <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/component.ts#L37" target="_blank" rel="external">an optional configuration argument</a>.</p>
+<p>By the way, this is also friendlier to bootstrapping multiple Angular instances in one page.</p>
+<h2 id="D-Redesigned-DevMode-configuration-and-checking"><a href="#D-Redesigned-DevMode-configuration-and-checking" class="headerlink" title="D. Redesigned DevMode configuration and checking"></a>D. Redesigned DevMode configuration and checking</h2><p>In the previous Angular, <code>DevMode</code> is disabled by function call dynamically.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; enableProdMode &#125; from <span class="string">'@angular/core'</span></div><div class="line"></div><div class="line">enableProdMode()</div><div class="line"></div><div class="line">platformFoo().bootstrapBar(baz)</div></pre></td></tr></table></figure>
+<p>In other word, whether DevMode is on is totally Angular’s <a href="https://github.com/angular/angular/blob/5.2.4/packages/core/src/application_ref.ts#L64-L67" target="_blank" rel="external">internal state</a>. Thus all debug related code is dynamically used and cannot be excluded in compile time. (Even closure compiler is ineffective).</p>
+<p>But in Ivy DevMode is purely compile time configuration, all debugging code will be executed after checking the global variable <code>ngDevMode</code>.  <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/instructions.ts#L231" target="_blank" rel="external">For example</a>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ngDevMode &amp;&amp; assertEqual((state as LView).node, <span class="literal">null</span>, <span class="string">'lView.node'</span>);</div></pre></td></tr></table></figure>
+<p>So building tool can replace the corresponding variable (e.g Webpack’s DefinePlugin), and corresponding debug code can be detected as dead code, and then optimizer (e.g UglifyJS) can remove it.</p>
+<h2 id="E-Feature-named-as-Feature"><a href="#E-Feature-named-as-Feature" class="headerlink" title="E. Feature named as Feature"></a>E. Feature named as Feature</h2><p>Ivy mode has added a new feature called Feature. Or, Ivy introduces a new concept called Feature. Simply put, Feature is a pre-processor for <code>DirectiveDef</code>, which can be thought as a “Decorator pattern” tailored for <code>DirectiveDef</code>. <em>(Translator note: More simply, you can provide a custom function to Angular, and Angular will apply it against <code>ComponentDef</code> metadata. So you can extend <code>ComponentDef</code>‘s <code>Feature</code> in your own function. <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L58-L59" target="_blank" rel="external">Source</a>)</em>.</p>
+<p>Let’s take an example in Ivy. <code>OnChanges</code> isn’t implemented by <code>Renderer</code> but a <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L71-L122" target="_blank" rel="external">predefined <code>Feature</code></a>. The Feature uses <code>defineProperty</code> to listen on the property decorated by <code>@Input</code>, and automatically stores <code>previousValue</code> in the instance to generate <code>SimpleChanges</code> for change detection, and finally triggers <code>OnChanges</code> by intercepting <code>OnInit</code> and <code>DoCheck</code> without Angular core’s help.</p>
+<p>This means <code>OnChanges</code>‘ code is also tree-shakable! If no component ever declares the lifecycle <code>ngOnChanges</code>, no <code>DirectiveDef</code> will import <code>NgOnChangesFeature</code>. So optimizer can reasonably eliminate dead code.</p>
+<p><del>WAT? How about the dirty check promise? From now on we have exception in Angular’s change detection?!</del></p>
+<p>So it is notable that <code>OnChanges</code> in Ivy is not a <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L50-L56" target="_blank" rel="external">real lifecycle</a> any more <em>(Translator note: it is not listed in the <code>ComponentDef</code>)</em>.<br>Put differently, users can extend lifecycle themselves, do as they please.</p>
+<p>But the direct aim of Feature concept is for the incoming <a href="https://github.com/angular/angular/issues/10185" target="_blank" rel="external">LifeCycle as Observables</a>. Users don’t need to declare methods (ngOnInt) in class, but rather use the lifecycle observables directly. Indeed. by intercepting <code>DirectiveDef</code>, users and third-party library authors can modify lifecycle hooks in runtime. We can even use decorators to declare lifecycles.</p>
+<p>In summary, <code>Feature</code> can be thought as a variant of <code>Higher Order Component</code> (compared with class factory): it modifies component type itself based on runtime requirement, instead of changing component’s internal state according to component logic.</p>
+<h2 id="F-New-Injectable-API"><a href="#F-New-Injectable-API" class="headerlink" title="F. New Injectable API"></a>F. New Injectable API</h2><p>Actually this isn’t related to the hello-world demo, nor related to even Ivy (since it can be used in non Ivy mode). However, the new Injectable API has a huge impact on Angular’s size.</p>
+<p>Besides the <code>XXXDef</code> properties listed above, we have another one called <code>ngInjectableDef</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">class</span> MyService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyService &#123;</div><div class="line">  <span class="keyword">static</span> ngInjectableDef = defineInjectable(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>In classical sense (if anyone ever cared), we can easily find <strong>dependency injection and dead code elimination are contradictory in priciple</strong>.</p>
+<ul>
+<li><p>DI’s nature is side effect: <code>Provider</code> <em>changes</em> execution context via configuration, and <code>Consumer</code> retrieves content <em>from context</em>.</p>
+</li>
+<li><p>DCE’s assumption is side-effect-free: <code>Consumer</code> should import <code>Provider</code> directly, and if <code>Consumer</code> doesn’t exist in application, <code>Provider</code> can be removed at all.</p>
+</li>
+</ul>
+<p>Apparently, all DI based code cannot be effectively DCE optimized.</p>
+<p>In current Angular pattern, we will configure <code>Provider</code> in <code>NgModule</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.service.ts</span></div><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">class</span> LibService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// lib.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  providers: [LibService],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> LibModule &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.component.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> AppComponent &#123;</div><div class="line">  <span class="keyword">constructor</span>(<span class="params">libService: LibService</span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  declarations: [AppComponent],</div><div class="line">  imports: [LibModule],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123;&#125;</div></pre></td></tr></table></figure>
+<p>The dependence flow is: <em>(translator note: in the below items parentheses after is added by translator for Angular newcomer)</em></p>
+<ul>
+<li>Library Module imports Library Service <em>(for exposing interface and providing implementation)</em></li>
+<li>Application Component imports Library Service <em>(for consuming interface)</em></li>
+<li>Application Module imports  Application Component</li>
+<li>Application Module imports Library Module <em>(for configuring which implementation to inject)</em></li>
+</ul>
+<p>Even if service isn’t used in application component, service cannot be removed. This is because we introduce additional dependence during DI configuration. <em>(translator note: consider app component doesn’t import libService. It is desirable libService is excluded from final build. But we cannot eliminate it because libModule imports it, and libModule is further imported by application module)</em></p>
+<p>To solve this problem, Angular allows to invert the dependence of configuration. The new API is like:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.module.ts</span></div><div class="line"><span class="meta">@NgModule</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> LibModule &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// lib.service.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"></div><div class="line"><span class="meta">@Injectable</span>(&#123; scope: LibModule &#125;)</div><div class="line"><span class="keyword">class</span> LibService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// app.component.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> AppComponent &#123;</div><div class="line">  <span class="keyword">constructor</span>(<span class="params">libService: LibService</span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  declarations: [AppComponent],</div><div class="line">  <span class="keyword">import</span>: [LibModule],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123;&#125;</div></pre></td></tr></table></figure>
+<p>The new dependence flow is:</p>
+<ul>
+<li>Library Service imports Library Module</li>
+<li>Application Component imports Library Service</li>
+<li>Application Module imports  Application Component</li>
+<li>Application Module imports Library Module</li>
+</ul>
+<p>Thus, as long as application component is removed, library service is not depended at all and can be safely removed together.</p>
+<p><del>WAT? So why is libModule there? As a cosmetic?</del></p>
+<p>We can optionally choose providers like <code>useClass</code>, <code>useFactory</code> to set implementation to other values instead of current class.<br><em>(translator note: they are Angular’s alternative DI functions and are DCE ready)</em></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>(&#123;</div><div class="line">  scope: SomeModule,</div><div class="line">  useValue: &#123; valueOfLife: <span class="number">42</span> &#125;,</div><div class="line">&#125;)</div><div class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> MyService &#123;</div><div class="line">  <span class="keyword">abstract</span> valueOfLife: <span class="built_in">number</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Of course, the new Injectable API only handles one ideal situation where <strong>dependency declared</strong> is <strong>dependency used</strong>. Nevertheless this is the most common situation. If intermediate Injector nodes overrides <code>Provider</code>, side effect is still ineluctable and thus adds code size. (But the injected dependency is probably used when one does override)</p>
+<h2 id="G-New-template-compilation"><a href="#G-New-template-compilation" class="headerlink" title="G. New template compilation"></a>G. New template compilation</h2><p>Template compilation, at macro level, <strong>has only two types:</strong></p>
+<ul>
+<li>(structural) data</li>
+<li>(operational) instructions</li>
+</ul>
+<p>Take a simple example. If we compile template (or equivalent) to some <code>render</code> method and if:</p>
+<ul>
+<li>calling <code>render</code> <strong>doesn’t make view changed</strong>, but its return value is <strong>what to be rendered</strong>. This is the former type.</li>
+<li>calling <code>render</code> <strong>does update view</strong>, and thus <strong>no return value is needed</strong>. This is the latter type.</li>
+</ul>
+<p>The most early Angular, v2 version, compiles template to instructions. One can refer to <a href="https://www.zhihu.com/question/53434390/answer/134956516" target="_blank" rel="external">this zhihu answer</a> for compilation behavior. This style is very similar to <a href="https://github.com/sveltejs/svelte" target="_blank" rel="external">Svelte</a>: compile as much detail as possible, in order to reduce common runtime dependency (shared code).</p>
+<p>But the problem of this approach is obvious. With more and more template authored, compiled code size will easily exceed shared code (Off-topic: the 0kb-boasting framework Svelte also provides a <code>shared</code> compile option to use library).</p>
+<p>Later Angular v4 compiles template to data and introduces <em>View Engine</em> as common dependency. Its compilation is explained <a href="https://zhuanlan.zhihu.com/p/32137489" target="_blank" rel="external">here</a>. This style is very close to virtual dom, except that dom-like data is stored per type, not per instance.</p>
+<p>Ivy renderer in v6 re-chooses compiling to instruction approach. Different from v2, v6 employs a strategy to minimize compiled code size.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppComponent  &#123;</div><div class="line">  <span class="keyword">static</span> ngComponentDef = defineComponent(&#123;</div><div class="line">    <span class="keyword">type</span>: AppComponent,</div><div class="line">    tag: <span class="string">'my-app'</span>,</div><div class="line">    template: <span class="function"><span class="keyword">function</span> <span class="title">AppComponent_Template</span>(<span class="params">comp: AppComponent, cm: <span class="built_in">boolean</span></span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (cm) &#123;</div><div class="line">        E(<span class="number">0</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'container'</span>])</div><div class="line">          E(<span class="number">1</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'jumbotron'</span>])</div><div class="line">            E(<span class="number">2</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'row'</span>])</div><div class="line">              E(<span class="number">3</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-6'</span>])</div><div class="line">                E(<span class="number">4</span>, <span class="string">'h1'</span>)</div><div class="line">                  T(<span class="number">5</span>, <span class="string">'Angular v6.x.x (Ivy Renderer)'</span>)</div><div class="line">                e()</div><div class="line">              e()</div><div class="line">              E(<span class="number">6</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-6'</span>])</div><div class="line">                E(<span class="number">7</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-sm-6 smallpad'</span>])</div><div class="line">                  E(<span class="number">8</span>, <span class="string">'button'</span>, [<span class="string">'type'</span>, <span class="string">'button'</span>, <span class="string">'id'</span>, <span class="string">'run'</span>, <span class="string">'class'</span>, <span class="string">'btn btn-primary btn-block'</span>])</div><div class="line">                    L(<span class="string">'click'</span>, () =&gt; &#123;</div><div class="line">                      comp.run()</div><div class="line">                      detectChanges(comp)</div><div class="line">                    &#125;)</div><div class="line">                    T(<span class="number">9</span>, <span class="string">'Create 1,000 rows'</span>)</div><div class="line">                  e()</div><div class="line">                  <span class="comment">//...</span></div><div class="line">                e()</div><div class="line">              e()</div><div class="line">            e()</div><div class="line">          e()</div><div class="line">          E(<span class="number">20</span>, <span class="string">'table'</span>, [<span class="string">'class'</span>, <span class="string">'table table-hover table-striped test-data'</span>])</div><div class="line">            E(<span class="number">21</span>, <span class="string">'tbody'</span>)</div><div class="line">              C(<span class="number">22</span>, [NgForOf], trTemplate)</div><div class="line">            e()</div><div class="line">          e()</div><div class="line">          E(<span class="number">24</span>, <span class="string">'span'</span>, [<span class="string">'aria-hidden'</span>, <span class="string">'true'</span>, <span class="string">'class'</span>, <span class="string">'preloadicon glyphicon glyphicon-remove'</span>])</div><div class="line">          e()</div><div class="line">        e()</div><div class="line">      &#125;</div><div class="line">      p(<span class="number">22</span>, <span class="string">'ngForOf'</span>, b(comp.data))</div><div class="line">      p(<span class="number">22</span>, <span class="string">'ngForTrackBy'</span>, b(comp.itemById))</div><div class="line">      cR(<span class="number">22</span>)</div><div class="line">        r(<span class="number">23</span>, <span class="number">0</span>)</div><div class="line">      cr()</div><div class="line"></div><div class="line">      <span class="function"><span class="keyword">function</span> <span class="title">trTemplate</span>(<span class="params">row: NgForOfContext&lt;Data&gt;, cm: <span class="built_in">boolean</span></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (cm) &#123;</div><div class="line">          E(<span class="number">0</span>, <span class="string">'tr'</span>)</div><div class="line">            E(<span class="number">1</span>, <span class="string">'td'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-1'</span>])</div><div class="line">              T(<span class="number">2</span>)</div><div class="line">            e()</div><div class="line">            E(<span class="number">3</span>, <span class="string">'td'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-4'</span>])</div><div class="line">              E(<span class="number">4</span>, <span class="string">'a'</span>, [<span class="string">'href'</span>, <span class="string">'#'</span>])</div><div class="line">                L(<span class="string">'click'</span>, (e: MouseEvent) =&gt; &#123;</div><div class="line">                  comp.select(row.$implicit, e)</div><div class="line">                  detectChanges(comp)</div><div class="line">                &#125;)</div><div class="line">                T(<span class="number">5</span>)</div><div class="line">              e()</div><div class="line">            e()</div><div class="line">            <span class="comment">//...</span></div><div class="line">          e()</div><div class="line">        &#125;</div><div class="line">        p(<span class="number">0</span>, <span class="string">'class.danger'</span>, b(row.$implicit.id === comp.selected))</div><div class="line">        t(<span class="number">2</span>, b(row.$implicit.id))</div><div class="line">        t(<span class="number">5</span>, b(row.$implicit.label))</div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    factory: () =&gt; <span class="keyword">new</span> AppComponent()</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>(The density of information is almost as high as HTML.)</em></p>
+<p>Compiling to instructions has another advantage over compiling to data: common dependency is still DCE friendly.<br>Used instructions will be directly depended, and non-used instructions will be removed by optimizer.<br>On the other hand compiling to data requires all operations used by template processor, and thus cannot be optimized statically.</p>
+<p>Therefore, Ivy’s new compilation strategy should be the one with minimal code size (not regarding of the cost to implement compiler).</p>
+<h2 id="Memory-and-Speed"><a href="#Memory-and-Speed" class="headerlink" title="Memory and Speed"></a>Memory and Speed</h2><ul>
+<li>New view layer employs compact binary frame design (and more bitwise operations).</li>
+<li>New view layer uses as many sequences (arrays) as possible rather than key-value pairs (objects) to store data.</li>
+<li>New view layer prefers adding expando properties on exposing types rather than new wrapping type.</li>
+<li>DI uses <a href="https://en.wikipedia.org/wiki/Bloom_filter" target="_blank" rel="external">bloom filter</a> to speed up <code>Directive</code> searching</li>
+</ul>
+<p>(View layer is less friendly to pull request)</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>The new Ivy mode push “building-friendliness” to extreme, but you can also say it is not “non-building-friendly”. It won’t be useful for projects built with bare <code>&lt;script&gt;</code> tags.</p>
+<p>Ivy’s most crucial target is cooperation with <a href="https://zhuanlan.zhihu.com/p/30717321" target="_blank" rel="external">Angular Element</a>. By encapsulating Angular components to custom elements (web components), we can achieve standalone publication, independent importing and independent usage of Angular as widgets. (To some degree this strangulates Svelte?)</p>
+<p>The most important part of this strategy is code size. Even wihout common runtime library, Angular should work with minial size.<br>Components used as Angular Elements will not depended on external packages like forms and router, hence creating great value for size reduction.</p>
+<p>Whether should NgModule still exist? It certainly has value on organizing code. That said, Dart version didn’t ever has NgModule. It is sure that application structure can be well formed without NgModule (at least for Googler).<br>With decreasing usage of NgModule in real world API, it might be optional in future. But I’m sure v6 won’t change NgModule. (I personally favor NgModule, but oppose enforcing it in app).</p>
+<p>For applications plumbing many third party libraries, the main size problem might not come from Angular but rather from, for example, incorrect use of RxJS, importing <code>moment.js</code> inadvertently, or writing all styles in “comonent styles”. For specific size problem one needs to analyze it specifically. Don’t pray to Angular’s advanced optimizer.</p>
+<p>The worst part of Ivy is <code>OnChanges</code>. It is now implemented by <code>Object.defineProperty</code>! It is no longer right to say Angular is based <strong>solely</strong> on dirty check. All articles about change detection need updating! And every section needs separate explaination!</p>
+<p>Lifecycles might have big change in near future. But it will await Ivy being the default, no earlier than v7. In fact, Angular’s overall extensibility and runtime preprocessing has been greatly improved.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/10/12/vue-ts3/" itemprop="url">
                   Deep dive into Vue2.5 Typing -- A tour of advanced typing feature
                 </a>
@@ -1511,141 +1748,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/02/01/typesafe-di/" itemprop="url">
-                  TypeSafe DI in TypeScript
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-02-01T19:26:14+08:00" content="2016-02-01">
-              2016-02-01
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/01/typesafe-di/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/01/typesafe-di/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <img src="/images/miku805.jpg">
-<blockquote>
-<p>Yet Another Type Level Arithmetics</p>
-</blockquote>
-<p>DI is getting more popularity in JavaScript. Though, those solution is far way beyond JSR-330 compatible libraries in terms of type safety and performance.</p>
-<p>This snippet strives to dig more type-safety from TS’ type system. However, it can hardly achieve equivalent type safety like Java’s counterpart, e.g., Dagger, Guice.</p>
-<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p><a href="https://gist.github.com/HerringtonDarkholme/f11152e6e29145040fa4" target="_blank" rel="external">This DI</a> snippet can, ideally, ensure every binding is resolved in compile time, which is a hard task for other DI solution. The main idea is an <code>Injector</code> can statically know its current binding, and judge whether dependencies of a new added binding can be already resolved by itself. Since dependency graph is a DAG, there exists a topological sorting order that every binding’s dependency can be resolved solely by those of preceding bindings . So once the injector is created and bindings are attached to it, we can assert that the dependencies can be resolved.</p>
-<p>Say, there is a minimal example to illustrate this:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Inject</span></div><div class="line"><span class="keyword">class</span> Clerk &#123;&#125;</div><div class="line"><span class="meta">@Inject</span></div><div class="line"><span class="keyword">class</span> Shop &#123;<span class="keyword">constructor</span>(<span class="params">c: Clerk</span>)&#125;</div><div class="line">var inj = Injector.create(<span class="params"></span>)</div><div class="line">  .bind(<span class="params">Shop</span>).toClass(<span class="params">Shop</span>) // compile error here, injector cannot resolve Clerk</div><div class="line"></div><div class="line">var inj = Injector.create(<span class="params"></span>)</div><div class="line">  .bind(<span class="params">Clerk</span>).toClass(<span class="params">Clerk</span>)</div><div class="line">  .bind(<span class="params">Shop</span>).toClass(<span class="params">Shop</span>) // compiles. Clerk resolved before Shop</div></pre></td></tr></table></figure>
-<p>To implement this, Injector has a shadow type <code>Base</code> that indicates resolved bindings. When new binding is added to injector, compiler will verify the new coming constructor/function will only depend on classes the injector has already resolved. Concretely, every argument in newly added constructor must be a subtype of <code>Base</code>.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Ctor = <span class="keyword">new</span> (...args: Base[]): T</div><div class="line"></div><div class="line">injector&lt;Base&gt;</div><div class="line">  .bind(NewClass)</div><div class="line">  .toClass(NewClass as Ctor)</div><div class="line"><span class="comment">/*</span></div><div class="line">Make sure here `toClass` is defined like</div><div class="line">type toClass = (Ctor) =&gt; Injector&lt;Base | T&gt;</div><div class="line">the union type indicates resolved type, and `T extends Base|T` holds valid</div><div class="line">*/</div></pre></td></tr></table></figure>
-<p><code>Base</code> is a large union type storing all binding types, so every resolved type is a subtype of <code>Base</code>. And <code>bind</code> will return a <code>binder</code> that has <code>toClass / toFactory</code> method which further returns an injector whose resolved binding is a union of the previous binding type and the newly added binding type. Hence, after <code>bind ... toClass</code>, the injector has a new class appended to its resolved type list.</p>
-<p>The implementation and test can be found at <a href="https://gist.github.com/HerringtonDarkholme/f11152e6e29145040fa4" target="_blank" rel="external">Github Gist</a>.</p>
-<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><p>But TS’ type system does not allow a full-fledged DI in this way.</p>
-<ol>
-<li><p>First, runtime types are erased. One must annotate dependency for function in <code>toFactory</code> method. <code>toClass</code> is better because TS supports <code>emitDecoratorMetadata</code>. (maybe resolved in TS2.0). TS’ specific metadata implementation is also problematic. For cyclic dependent classes, at least one class’ annotation is <code>undefined</code>(ES3/5), or the script is crashed before it can run (ES6). Because metadata is attached to class declaration, in cyclic case there must be one class is used before it’s declared.</p>
-</li>
-<li><p>TypeScript has a double-edged sutructural type system. To fully exploit DI’s type check, user has to add a <code>private</code> <code>brand</code> field to every injectable class. This is not a good UI, though.</p>
-</li>
-<li><p>But even metadata is not enough. Runtime type data is first-order (in type-system’s view), that is, every type is represented by its constructor, no generic information is emitted. To work around this, token is introduced.</p>
-</li>
-</ol>
-<p>Token alleviates runtime type-system’s weakness, and enables binding multiple implementations to one single type. It also introduces more problem this DI wants to resolve in the first place. To work around point 1, we attached runtime types to constructor. Binding token will make type system think a type has resolved, but a following binding may not resolve it in runtime because it depends on constructor to find resolution.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">injector</div><div class="line">  .bind(clerkToken).toClass(Clerk)</div><div class="line">  .bind(Shop).toClass(Shop) <span class="comment">// compiles. but runtime error</span></div><div class="line"><span class="comment">// toClass will analyze Shop's signature and extract the Clerk constructor</span></div><div class="line"><span class="comment">// it can be found in type-level because Token&lt;Clerk&gt; enable injector to resolve Clerk, but at runtime injector can only resolve clerkToken, not Clerk</span></div></pre></td></tr></table></figure>
-<p>Also, tokens with same types cannot avoid this.</p>
-<p>The workaround is, well, abusing string literal type. So every token is different at type-level. This requires users to type more types, and casts string literal from string type to string literal type. (TS’s generic inference does not have something like <code>T extends StringLiteral</code> so that <code>T</code> is inferred as string literal type)</p>
-<p>Also, the <code>toClass</code> and <code>toFactory</code> signature should differentiate what can be resolved by constructor and by token.  This is technically possible, just override these signature to support distinguishing between token and constructor. But the number of resulting overriding is exponential to the number of argument. 2 ^ n, where n is the number of arguments.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To fully support type-safe DI and higher performance, a compiler extension or a code generator is needed. Java’s DI relies on annotations and code generation.</p>
-<p>Maybe Babel can do this right now. But TypeScript still needs a long way to go for a customizable emitter.</p>
-<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'reflect-metadata'</span></div><div class="line"></div><div class="line"><span class="keyword">type</span> _ = &#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">type</span> ClassN&lt;N, T&gt; = &#123; <span class="keyword">new</span> (...a: N[]): T &#125;</div><div class="line"><span class="keyword">type</span> FN8&lt;A, B, C, D, E, F, G, H, R&gt; = (a?: A, b?: B, c?: C, d?: D, e?: E, f?: F, g?: G, h?: H) =&gt; R</div><div class="line"><span class="keyword">type</span> CLS8&lt;A, B, C, D, E, F, G, H, R&gt; = &#123; <span class="keyword">new</span> (a?: A, b?: B, c?: C, d?: D, e?: E, f?: F, g?: G, h?: H): R&#125;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Token&lt;T&gt; &#123;</div><div class="line">  <span class="keyword">private</span> _tokenBrand</div><div class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> Bindable&lt;T&gt; = Token&lt;T&gt; | ClassN&lt;_, T&gt;</div><div class="line"></div><div class="line"><span class="keyword">const</span> PARAMTYPE = <span class="string">'design:paramtypes'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSignature</span>&lt;<span class="title">T</span>&gt;(<span class="params">cls: ClassN&lt;T, _&gt;</span>): <span class="title">Array</span>&lt;<span class="title">Bindable</span>&lt;<span class="title">T</span>&gt;&gt; </span>&#123; <span class="keyword">return</span> Reflect.getOwnMetadata(PARAMTYPE, cls).slice() || [] &#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">enum</span> BindType &#123; CLASS, VALUE, FACTORY &#125;</div><div class="line"><span class="keyword">class</span> Binder&lt;T, Base&gt; &#123;</div><div class="line">  dependencies: Bindable&lt;Base&gt;[] = []</div><div class="line">  cacheable: <span class="built_in">boolean</span> = <span class="literal">false</span></div><div class="line">  <span class="keyword">private</span> _type: BindType</div><div class="line">  <span class="keyword">private</span> _cls: ClassN&lt;<span class="built_in">any</span>, T&gt; = <span class="literal">null</span></div><div class="line">  <span class="keyword">private</span> _val: T</div><div class="line">  <span class="keyword">private</span> _fn: <span class="built_in">Function</span></div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> _injector: Injector&lt;Base&gt;</span>) &#123;&#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> _releaseInjector() &#123;</div><div class="line">    <span class="keyword">let</span> injector = <span class="keyword">this</span>._injector</div><div class="line">    <span class="keyword">this</span>._injector = <span class="literal">null</span></div><div class="line">    <span class="keyword">return</span> injector</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toClass&lt;A extends Base, B extends Base, C extends Base, D extends Base, E extends Base, F extends Base, G extends Base, H extends Base&gt;(fn: CLS8&lt;A, B, C,  D, E, F, G, H, T&gt;, a?: Bindable&lt;A&gt;, b?: Bindable&lt;B&gt;, c?: Bindable&lt;C&gt;, d?: Bindable&lt;D&gt;, e?: Bindable&lt;E&gt;, f?: Bindable&lt;F&gt;, g?: Bindable&lt;G&gt;, h?: Bindable&lt;H&gt;): Injector&lt;Base | T&gt;</div><div class="line">  toClass(cls: ClassN&lt;Base, T&gt;, ...deps: Bindable&lt;Base&gt;[]): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.CLASS</div><div class="line">    <span class="keyword">this</span>._cls = cls</div><div class="line">    <span class="keyword">this</span>.dependencies = getSignature(cls)</div><div class="line">    deps.forEach((d, i) =&gt; &#123;</div><div class="line">      <span class="keyword">if</span> (d) <span class="keyword">this</span>.dependencies[i] = d</div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toValue(val: T): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.VALUE</div><div class="line">    <span class="keyword">this</span>._val = val</div><div class="line">    <span class="keyword">this</span>.cacheable = <span class="literal">true</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  toFactory&lt;A extends Base, B extends Base, C extends Base, D extends Base, E extends Base, F extends Base, G extends Base, H extends Base&gt;(fn: FN8&lt;A, B, C,  D, E, F, G, H, T&gt;, a?: Bindable&lt;A&gt;, b?: Bindable&lt;B&gt;, c?: Bindable&lt;C&gt;, d?: Bindable&lt;D&gt;, e?: Bindable&lt;E&gt;, f?: Bindable&lt;F&gt;, g?: Bindable&lt;G&gt;, h?: Bindable&lt;H&gt;): Injector&lt;Base | T&gt;</div><div class="line">  toFactory(fn: (...a: Base[]) =&gt; T, ...deps: Bindable&lt;Base&gt;[]): Injector&lt;Base | T&gt; &#123;</div><div class="line">    <span class="keyword">this</span>._type = BindType.FACTORY</div><div class="line">    <span class="keyword">this</span>._fn = fn</div><div class="line">    <span class="keyword">this</span>.dependencies = deps</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._releaseInjector()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  resolve(deps: <span class="built_in">any</span>[]): Promise&lt;T&gt; &#123;</div><div class="line">    <span class="keyword">switch</span> (<span class="keyword">this</span>._type) &#123;</div><div class="line">      <span class="keyword">case</span> BindType.CLASS:</div><div class="line">        <span class="keyword">let</span> cls = <span class="keyword">this</span>._cls</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">new</span> cls(...deps))</div><div class="line">      <span class="keyword">case</span> BindType.VALUE:</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">this</span>._val)</div><div class="line">      <span class="keyword">case</span> BindType.FACTORY:</div><div class="line">        <span class="keyword">return</span> Promise.resolve(<span class="keyword">this</span>._fn(...deps))</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> Injector&lt;Base&gt; &#123;</div><div class="line">  <span class="keyword">private</span> _resolving = <span class="keyword">new</span> Set&lt;Bindable&lt;_&gt;&gt;()</div><div class="line">  <span class="keyword">private</span> _typeBinderMap = <span class="keyword">new</span> Map&lt;Bindable&lt;_&gt;, Binder&lt;_, Base&gt;&gt;()</div><div class="line">  <span class="keyword">private</span> _cache = <span class="keyword">new</span> Map&lt;Bindable&lt;_&gt;, Promise&lt;<span class="built_in">any</span>&gt;&gt;()</div><div class="line"></div><div class="line">  <span class="keyword">get</span>&lt;T extends Base&gt;(cls: Bindable&lt;T&gt;): Promise&lt;T&gt; &#123;</div><div class="line">    <span class="keyword">let</span> binder = <span class="keyword">this</span>._typeBinderMap.get(cls)</div><div class="line">    <span class="keyword">if</span> (!binder) <span class="keyword">throw</span> <span class="keyword">new</span> NoBinding(cls[<span class="string">'name'</span>])</div><div class="line"></div><div class="line">    <span class="keyword">let</span> cache = binder.cacheable ? <span class="keyword">this</span>._cache.get(cls) : <span class="literal">null</span></div><div class="line">    <span class="keyword">if</span> (cache) &#123;</div><div class="line">      <span class="keyword">return</span> cache</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._resolving.has(cls)) <span class="keyword">throw</span> <span class="keyword">new</span> CyclicDependency(cls[<span class="string">'name'</span>])</div><div class="line"></div><div class="line">    <span class="keyword">this</span>._resolving.add(cls)</div><div class="line">    <span class="keyword">let</span> depPromise = binder.dependencies.map(dep =&gt; <span class="keyword">this</span>.get(dep))</div><div class="line">    <span class="keyword">this</span>._resolving.delete(cls)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> ret = Promise.all(depPromise).then(args =&gt; binder.resolve(args))</div><div class="line">    <span class="keyword">if</span> (binder.cacheable) <span class="keyword">this</span>._cache.set(cls, ret)</div><div class="line">    <span class="keyword">return</span> ret</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  bind&lt;T&gt;(cls: Bindable&lt;T&gt;): Binder&lt;T, Base&gt; &#123;</div><div class="line">    <span class="keyword">let</span> binder = <span class="keyword">new</span> Binder&lt;T, Base&gt;(<span class="keyword">this</span>)</div><div class="line">    <span class="keyword">this</span>._typeBinderMap.set(cls, binder)</div><div class="line">    <span class="keyword">return</span> binder</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> create(): Injector&lt;Injector&lt;_&gt;&gt; &#123;</div><div class="line">    <span class="keyword">let</span> inj = <span class="keyword">new</span> Injector&lt;Injector&lt;_&gt;&gt;()</div><div class="line">    inj.bind(Injector).toValue(inj)</div><div class="line">    <span class="keyword">return</span> inj</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1686,7 +1793,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1696,7 +1803,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -1733,7 +1840,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
