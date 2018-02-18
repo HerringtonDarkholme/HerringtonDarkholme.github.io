@@ -1,0 +1,726 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Angular," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Angular recently announced a new render engine called Ivy.Ivy is an amazing present from Angular team! It produces hello-world app in mere 3.2KB, on a par with minimal framework like preact. Unfortuna">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A quick intro to Angular Ivy">
+<meta property="og:url" content="https://herringtondarkholme.github.io/2018/02/19/angular-ivy/index.html">
+<meta property="og:site_name" content="Abitrarily Idiosyncratic Randomness">
+<meta property="og:description" content="Angular recently announced a new render engine called Ivy.Ivy is an amazing present from Angular team! It produces hello-world app in mere 3.2KB, on a par with minimal framework like preact. Unfortuna">
+<meta property="og:updated_time" content="2018-02-18T17:18:54.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A quick intro to Angular Ivy">
+<meta name="twitter:description" content="Angular recently announced a new render engine called Ivy.Ivy is an amazing present from Angular team! It produces hello-world app in mere 3.2KB, on a par with minimal framework like preact. Unfortuna">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://herringtondarkholme.github.io/2018/02/19/angular-ivy/"/>
+
+  <title> A quick intro to Angular Ivy | Abitrarily Idiosyncratic Randomness </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Abitrarily Idiosyncratic Randomness</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Hchan's Note</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                A quick intro to Angular Ivy
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2018-02-19T00:00:00+08:00" content="2018-02-19">
+              2018-02-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/19/angular-ivy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/19/angular-ivy/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Angular recently announced a new render engine called <a href="https://github.com/angular/angular/issues/21706" target="_blank" rel="external">Ivy</a>.<br>Ivy is an amazing present from Angular team! It produces hello-world app in mere <a href="https://twitter.com/IgorMinar/status/961484134425088001" target="_blank" rel="external">3.2KB</a>, on a par with minimal framework like preact. Unfortunately little documentation, if any, exists to explain how Ivy works.</p>
+<p>This blog post strives to fill this gap, by translating an amazing answer from <a href="https://www.zhihu.com/question/266923267/answer/316279829" target="_blank" rel="external">zhihu</a>, a superior Q&amp;A website to Quora. I hope this post can communicate Angular’s innovation to broader front-end world by breaking language barrier.</p>
+<blockquote>
+<p>TL;DR: Ivy is an extremely building-tool friendly, web-first render engine that paves Angular’s way to web components.</p>
+</blockquote>
+<p>Opinion is not mine. Words in parentheses are from the original author unless explicitly annotated as from translator. Translator notes are added for audience with no Angular background.</p>
+<h2 id="Orignal-post"><a href="#Orignal-post" class="headerlink" title="Orignal post:"></a>Orignal post:</h2><p>How to comment on the fact that Angular’s new Ivy render engine produces 3.2KB compiled JavaScript? <em>(traslator note: <code>how to comment</code> is a jargon on zhihu, meaning <code>what&#39;s your opinion</code>)</em></p>
+<p>Let’s first answer several frequent questions:</p>
+<ol>
+<li><p>3.2KB is the result after minification + gzip (a convention to compare framework size), which is the exact payload size we send to browser. (if we use more advanced compression like brotli, the size will be smaller on modern browsers).</p>
+</li>
+<li><p>Ivy renderer won’t be default in Angular v6. You need to manually enable it by switching on certain compiler option. It might be default in v7 if no further issues are found.</p>
+</li>
+<li><p>Code completion isn’t proportional to feature completion. 50% code completed doesn’t imply 50% feature completed. For now Ivy has seemingly decent code completion rate, but it still has a long way before ready for production. It can’t even complete a simple app for <a href="https://github.com/krausest/js-framework-benchmark" target="_blank" rel="external">benchmark</a>.</p>
+</li>
+<li><p>Compared with previous Angular’s compiled code, Ivy’s result is almost like hand-written. And actually you can write it by hand! (Though in practice you won’t.)</p>
+</li>
+<li><p><code>NgModule</code> is challenged, <strong>again</strong>.</p>
+</li>
+<li><p>Ivy won’t promise you a plunge in code weight. Your bundle will still be bulky if a lot of CSS is inlined in your components.</p>
+</li>
+</ol>
+<hr>
+<p>Since the question is to <em>comment on</em> 3.2KB compiled file, I will focus on payload size optimization, thus, answering the question <em>“What optimization has Ivy Renderer done?”.</em></p>
+<p>It can never be overstated that the extreme size isn’t achieved by the ADVANCED mode of Closure Compiler. <strong>Rollup</strong> can achieve the same level optimization (within less than 1KB difference). Therefore Ivy is arguably the true <strong>building-tool friendly</strong> renderer, not Closure-Compiler-only renderer.</p>
+<p>Disclaimer: all the below is based on current (Feb, 2018) implementation, published roadmap. If following version changes leads to the following content outdated or incorrect, please pardon our no updating.</p>
+<h2 id="A-Removing-dependence-on-platform-browser"><a href="#A-Removing-dependence-on-platform-browser" class="headerlink" title="A. Removing dependence on platform-browser"></a>A. Removing dependence on <code>platform-browser</code></h2><p>As a platform independent framework, can we run application without platform specific code? The answer is NO, of course. Ivy just <strong>inlines DOM Rendere to its core.</strong> If you only need run your application on browser (taking no account of WebWorker), you can run Angular without including platform specific code. For example, the <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/instructions.ts#L842-L845" target="_blank" rel="external">code for binding text</a> is:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">value !== NO_CHANGE &amp;&amp;</div><div class="line">  ((renderer as ProceduralRenderer3).setValue ?</div><div class="line">    (renderer as ProceduralRenderer3).setValue(existingNode.native, stringify(value)) :</div><div class="line">    existingNode.native.textContent = stringify(value));</div></pre></td></tr></table></figure>
+<p>Fallback code is obvious: if no <code>renderer</code> exists <em>(translator note: the condition is better explained as <code>renderer</code> isn’t a <code>ProceduralRenderer3</code>)</em>, Ivy will directly modify dom element’s <code>textContent</code>.</p>
+<p>Currently no Ivy code relies on <code>platform</code>, thus common problems arise:</p>
+<ul>
+<li><p>No support for <a href="https://angular.io/api/platform-browser/EVENT_MANAGER_PLUGINS" target="_blank" rel="external">Event Plugin</a>. e.g. syntactic sugar for keyboard event (like <code>keydown.enter</code>) and events from Hammer, which are all provided by platform-browser.</p>
+</li>
+<li><p>No <code>Sanitizer</code>. Though Angular isn’t string template by itself and is naturally immune to XSS, it still cannot survive abhorrent abuse of <code>innerHTML</code>. <code>Sanitizer</code>, again currently bestowed by platform-browser, comes to rescue by filtering user content. Without platform hardly can we achieve the same level security.</p>
+</li>
+<li><p>No support for Component Style; No View Encapsulation. They are all implemented by different <code>Renderer</code>s in platform-browser package. Only inline style is available for component styling (Another better way is independent CSS and dynamic class).</p>
+</li>
+</ul>
+<p>So the current Ivy renderer demoed in hello-world app isn’t a full featured Angular for some users.</p>
+<h2 id="B-No-NgFactory-file-anymore"><a href="#B-No-NgFactory-file-anymore" class="headerlink" title="B. No NgFactory file anymore"></a>B. No NgFactory file anymore</h2><p>Under the new Ivy mode, compiled template will be stored in the static fields in class, instead of generating new wrapper class (NgFactory). For example:</p>
+<p><code>Component</code> -&gt; <code>ngComponentDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyComponent &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyComponent &#123;</div><div class="line">  <span class="keyword">static</span> ngComponentDef = defineComponent(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Directive</code> -&gt; <code>ngDirectiveDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Directive</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyDirective &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyDirective &#123;</div><div class="line">  <span class="keyword">static</span> ngDirectiveDef = defineDirective(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>NgModule</code> -&gt; <code>ngInjectorDef</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@NgModule</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> MyModule &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyModule &#123;</div><div class="line">  <span class="keyword">static</span> ngInjectorDef = defineInjector(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><del>WAT? How can Your Majesty NgModule compiled to one single Injector?(</del></p>
+<p>Due to the colocation of compiled template and class, the new compilation can fully enjoy building tool’s normal optimization. (Tree-Shaking for the most part), waiving most special process in build-optimizer.</p>
+<p><strong>In fact, this improvment is more significant for building than for size optimization.</strong> The new style compiler enables single file compilation, one ts file to one js file. We no longer need to worry about mapping from source file to ngfactory.</p>
+<p>Further more, this unifies library consumption in JIT and AOT. Once the compilation is stabilized, all libraries can compile code before publication, rather than at end uses’ bundling phase. This can lead to faster building.</p>
+<h2 id="C-Greatly-simplify-bootstrap-code"><a href="#C-Greatly-simplify-bootstrap-code" class="headerlink" title="C. Greatly simplify bootstrap code"></a>C. Greatly simplify bootstrap code</h2><p>All Angular applications need to configure bootstrap component (actually it isn’t mandatory, but alternatives are more complex), and initialize one <code>NgModule[Factory]</code>. Something like:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NgModule &#125; from <span class="string">'@angular/core'</span></div><div class="line"><span class="keyword">import</span> &#123; platformBrowser &#125; from <span class="string">'@angular/platform-browser'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  bootstrap: [AppComponent]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123; &#125;</div><div class="line"></div><div class="line">platformBrowserDynamic().bootstrapModule(AppModule)</div></pre></td></tr></table></figure>
+<p>New bootstrapping code is based on component:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// not available yet</span></div><div class="line"><span class="keyword">import</span> &#123; renderComponent &#125; from <span class="string">'@angular/core'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line">renderComponent(AppComponent)</div></pre></td></tr></table></figure>
+<p><del>Hey, why we still need AppModule?</del></p>
+<p>Ivy is based on NgModule-less bootstrapping for now. Though not completed yet, compilers can make bootstrapping accept NgModule (if it still exists) to provide Injector. In other word, <code>renderComponent</code> can accept <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/component.ts#L37" target="_blank" rel="external">an optional configuration argument</a>.</p>
+<p>By the way, this is also friendlier to bootstrapping multiple Angular instances in one page.</p>
+<h2 id="D-Redesigned-DevMode-configuration-and-checking"><a href="#D-Redesigned-DevMode-configuration-and-checking" class="headerlink" title="D. Redesigned DevMode configuration and checking"></a>D. Redesigned DevMode configuration and checking</h2><p>In the previous Angular, <code>DevMode</code> is disabled by function call dynamically.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; enableProdMode &#125; from <span class="string">'@angular/core'</span></div><div class="line"></div><div class="line">enableProdMode()</div><div class="line"></div><div class="line">platformFoo().bootstrapBar(baz)</div></pre></td></tr></table></figure>
+<p>In other word, whether DevMode is on is totally Angular’s <a href="https://github.com/angular/angular/blob/5.2.4/packages/core/src/application_ref.ts#L64-L67" target="_blank" rel="external">internal state</a>. Thus all debug related code is dynamically used and cannot be excluded in compile time. (Even closure compiler is ineffective).</p>
+<p>But in Ivy DevMode is purely compile time configuration, all debugging code will be executed after checking the global variable <code>ngDevMode</code>.  <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/instructions.ts#L231" target="_blank" rel="external">For example</a>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ngDevMode &amp;&amp; assertEqual((state as LView).node, <span class="literal">null</span>, <span class="string">'lView.node'</span>);</div></pre></td></tr></table></figure>
+<p>So building tool can replace the corresponding variable (e.g Webpack’s DefinePlugin), and corresponding debug code can be detected as dead code, and then optimizer (e.g UglifyJS) can remove it.</p>
+<h2 id="E-Feature-named-as-Feature"><a href="#E-Feature-named-as-Feature" class="headerlink" title="E. Feature named as Feature"></a>E. Feature named as Feature</h2><p>Ivy mode has added a new feature called Feature. Or, Ivy introduces a new concept called Feature. Simply put, Feature is a pre-processor for <code>DirectiveDef</code>, which can be thought as a “Decorator pattern” tailored for <code>DirectiveDef</code>. <em>(Translator note: More simply, you can provide a custom function to Angular, and Angular will apply it against <code>ComponentDef</code> metadata. So you can extend <code>ComponentDef</code>‘s <code>Feature</code> in your own function. <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L58-L59" target="_blank" rel="external">Source</a>)</em>.</p>
+<p>Let’s take an example in Ivy. <code>OnChanges</code> isn’t implemented by <code>Renderer</code> but a <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L71-L122" target="_blank" rel="external">predefined <code>Feature</code></a>. The Feature uses <code>defineProperty</code> to listen on the property decorated by <code>@Input</code>, and automatically stores <code>previousValue</code> in the instance to generate <code>SimpleChanges</code> for change detection, and finally triggers <code>OnChanges</code> by intercepting <code>OnInit</code> and <code>DoCheck</code> without Angular core’s help.</p>
+<p>This means <code>OnChanges</code>‘ code is also tree-shakable! If no component ever declares the lifecycle <code>ngOnChanges</code>, no <code>DirectiveDef</code> will import <code>NgOnChangesFeature</code>. So optimizer can reasonably eliminate dead code.</p>
+<p><del>WAT? How about the dirty check promise? From now on we have exception in Angular’s change detection?!</del></p>
+<p>So it is notable that <code>OnChanges</code> in Ivy is not a <a href="https://github.com/angular/angular/blob/92d7060cb086632d2188c8da37ff72838d1abeef/packages/core/src/render3/definition.ts#L50-L56" target="_blank" rel="external">real lifecycle</a> any more <em>(Translator note: it is not listed in the <code>ComponentDef</code>)</em>.<br>Put differently, users can extend lifecycle themselves, do as they please.</p>
+<p>But the direct aim of Feature concept is for the incoming <a href="https://github.com/angular/angular/issues/10185" target="_blank" rel="external">LifeCycle as Observables</a>. Users don’t need to declare methods (ngOnInt) in class, but rather use the lifecycle observables directly. Indeed. by intercepting <code>DirectiveDef</code>, users and third-party library authors can modify lifecycle hooks in runtime. We can even use decorators to declare lifecycles.</p>
+<p>In summary, <code>Feature</code> can be thought as a variant of <code>Higher Order Component</code> (compared with class factory): it modifies component type itself based on runtime requirement, instead of changing component’s internal state according to component logic.</p>
+<h2 id="F-New-Injectable-API"><a href="#F-New-Injectable-API" class="headerlink" title="F. New Injectable API"></a>F. New Injectable API</h2><p>Actually this isn’t related to the hello-world demo, nor related to even Ivy (since it can be used in non Ivy mode). However, the new Injectable API has a huge impact on Angular’s size.</p>
+<p>Besides the <code>XXXDef</code> properties listed above, we have another one called <code>ngInjectableDef</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">class</span> MyService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// -&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> MyService &#123;</div><div class="line">  <span class="keyword">static</span> ngInjectableDef = defineInjectable(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>In classical sense (if anyone ever cared), we can easily find <strong>dependency injection and dead code elimination are contradictory in priciple</strong>.</p>
+<ul>
+<li><p>DI’s nature is side effect: <code>Provider</code> <em>changes</em> execution context via configuration, and <code>Consumer</code> retrieves content <em>from context</em>.</p>
+</li>
+<li><p>DCE’s assumption is side-effect-free: <code>Consumer</code> should import <code>Provider</code> directly, and if <code>Consumer</code> doesn’t exist in application, <code>Provider</code> can be removed at all.</p>
+</li>
+</ul>
+<p>Apparently, all DI based code cannot be effectively DCE optimized.</p>
+<p>In current Angular pattern, we will configure <code>Provider</code> in <code>NgModule</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.service.ts</span></div><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">class</span> LibService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// lib.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  providers: [LibService],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> LibModule &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.component.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> AppComponent &#123;</div><div class="line">  <span class="keyword">constructor</span>(<span class="params">libService: LibService</span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  declarations: [AppComponent],</div><div class="line">  imports: [LibModule],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123;&#125;</div></pre></td></tr></table></figure>
+<p>The dependence flow is: <em>(translator note: in the below items parentheses after is added by translator for Angular newcomer)</em></p>
+<ul>
+<li>Library Module imports Library Service <em>(for exposing interface and providing implementation)</em></li>
+<li>Application Component imports Library Service <em>(for consuming interface)</em></li>
+<li>Application Module imports  Application Component</li>
+<li>Application Module imports Library Module <em>(for configuring which implementation to inject)</em></li>
+</ul>
+<p>Even if service isn’t used in application component, service cannot be removed. This is because we introduce additional dependence during DI configuration. <em>(translator note: consider app component doesn’t import libService. It is desirable libService is excluded from final build. But we cannot eliminate it because libModule imports it, and libModule is further imported by application module)</em></p>
+<p>To solve this problem, Angular allows to invert the dependence of configuration. The new API is like:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.module.ts</span></div><div class="line"><span class="meta">@NgModule</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> LibModule &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// lib.service.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"></div><div class="line"><span class="meta">@Injectable</span>(&#123; scope: LibModule &#125;)</div><div class="line"><span class="keyword">class</span> LibService &#123; &#125;</div><div class="line"></div><div class="line"><span class="comment">// app.component.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibService &#125; from <span class="string">'./lib.service'</span></div><div class="line"></div><div class="line"><span class="meta">@Component</span>(&#123; <span class="comment">/*...*/</span> &#125;)</div><div class="line"><span class="keyword">class</span> AppComponent &#123;</div><div class="line">  <span class="keyword">constructor</span>(<span class="params">libService: LibService</span>) &#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// app.module.ts</span></div><div class="line"><span class="keyword">import</span> &#123; LibModule &#125; from <span class="string">'./lib.module'</span></div><div class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span></div><div class="line"></div><div class="line"><span class="meta">@NgModule</span>(&#123;</div><div class="line">  declarations: [AppComponent],</div><div class="line">  <span class="keyword">import</span>: [LibModule],</div><div class="line">&#125;)</div><div class="line"><span class="keyword">class</span> AppModule &#123;&#125;</div></pre></td></tr></table></figure>
+<p>The new dependence flow is:</p>
+<ul>
+<li>Library Service imports Library Module</li>
+<li>Application Component imports Library Service</li>
+<li>Application Module imports  Application Component</li>
+<li>Application Module imports Library Module</li>
+</ul>
+<p>Thus, as long as application component is removed, library service is not depended at all and can be safely removed together.</p>
+<p><del>WAT? So why is libModule there? As a cosmetic?</del></p>
+<p>We can optionally choose providers like <code>useClass</code>, <code>useFactory</code> to set implementation to other values instead of current class.<br><em>(translator note: they are Angular’s alternative DI functions and are DCE ready)</em></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>(&#123;</div><div class="line">  scope: SomeModule,</div><div class="line">  useValue: &#123; valueOfLife: <span class="number">42</span> &#125;,</div><div class="line">&#125;)</div><div class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> MyService &#123;</div><div class="line">  <span class="keyword">abstract</span> valueOfLife: <span class="built_in">number</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Of course, the new Injectable API only handles one ideal situation where <strong>dependency declared</strong> is <strong>dependency used</strong>. Nevertheless this is the most common situation. If intermediate Injector nodes overrides <code>Provider</code>, side effect is still ineluctable and thus adds code size. (But the injected dependency is probably used when one does override)</p>
+<h2 id="G-New-template-compilation"><a href="#G-New-template-compilation" class="headerlink" title="G. New template compilation"></a>G. New template compilation</h2><p>Template compilation, at macro level, <strong>has only two types:</strong></p>
+<ul>
+<li>(structural) data</li>
+<li>(operational) instructions</li>
+</ul>
+<p>Take a simple example. If we compile template (or equivalent) to some <code>render</code> method and if:</p>
+<ul>
+<li>calling <code>render</code> <strong>doesn’t make view changed</strong>, but its return value is <strong>what to be rendered</strong>. This is the former type.</li>
+<li>calling <code>render</code> <strong>does update view</strong>, and thus <strong>no return value is needed</strong>. This is the latter type.</li>
+</ul>
+<p>The most early Angular, v2 version, compiles template to instructions. One can refer to <a href="https://www.zhihu.com/question/53434390/answer/134956516" target="_blank" rel="external">this zhihu answer</a> for compilation behavior. This style is very similar to <a href="https://github.com/sveltejs/svelte" target="_blank" rel="external">Svelte</a>: compile as much detail as possible, in order to reduce common runtime dependency (shared code).</p>
+<p>But the problem of this approach is obvious. With more and more template authored, compiled code size will easily exceed shared code (Off-topic: the 0kb-boasting framework Svelte also provides a <code>shared</code> compile option to use library).</p>
+<p>Later Angular v4 compiles template to data and introduces <em>View Engine</em> as common dependency. Its compilation is explained <a href="https://zhuanlan.zhihu.com/p/32137489" target="_blank" rel="external">here</a>. This style is very close to virtual dom, except that dom-like data is stored per type, not per instance.</p>
+<p>Ivy renderer in v6 re-chooses compiling to instruction approach. Different from v2, v6 employs a strategy to minimize compiled code size.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppComponent  &#123;</div><div class="line">  <span class="keyword">static</span> ngComponentDef = defineComponent(&#123;</div><div class="line">    <span class="keyword">type</span>: AppComponent,</div><div class="line">    tag: <span class="string">'my-app'</span>,</div><div class="line">    template: <span class="function"><span class="keyword">function</span> <span class="title">AppComponent_Template</span>(<span class="params">comp: AppComponent, cm: <span class="built_in">boolean</span></span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (cm) &#123;</div><div class="line">        E(<span class="number">0</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'container'</span>])</div><div class="line">          E(<span class="number">1</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'jumbotron'</span>])</div><div class="line">            E(<span class="number">2</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'row'</span>])</div><div class="line">              E(<span class="number">3</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-6'</span>])</div><div class="line">                E(<span class="number">4</span>, <span class="string">'h1'</span>)</div><div class="line">                  T(<span class="number">5</span>, <span class="string">'Angular v6.x.x (Ivy Renderer)'</span>)</div><div class="line">                e()</div><div class="line">              e()</div><div class="line">              E(<span class="number">6</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-6'</span>])</div><div class="line">                E(<span class="number">7</span>, <span class="string">'div'</span>, [<span class="string">'class'</span>, <span class="string">'col-sm-6 smallpad'</span>])</div><div class="line">                  E(<span class="number">8</span>, <span class="string">'button'</span>, [<span class="string">'type'</span>, <span class="string">'button'</span>, <span class="string">'id'</span>, <span class="string">'run'</span>, <span class="string">'class'</span>, <span class="string">'btn btn-primary btn-block'</span>])</div><div class="line">                    L(<span class="string">'click'</span>, () =&gt; &#123;</div><div class="line">                      comp.run()</div><div class="line">                      detectChanges(comp)</div><div class="line">                    &#125;)</div><div class="line">                    T(<span class="number">9</span>, <span class="string">'Create 1,000 rows'</span>)</div><div class="line">                  e()</div><div class="line">                  <span class="comment">//...</span></div><div class="line">                e()</div><div class="line">              e()</div><div class="line">            e()</div><div class="line">          e()</div><div class="line">          E(<span class="number">20</span>, <span class="string">'table'</span>, [<span class="string">'class'</span>, <span class="string">'table table-hover table-striped test-data'</span>])</div><div class="line">            E(<span class="number">21</span>, <span class="string">'tbody'</span>)</div><div class="line">              C(<span class="number">22</span>, [NgForOf], trTemplate)</div><div class="line">            e()</div><div class="line">          e()</div><div class="line">          E(<span class="number">24</span>, <span class="string">'span'</span>, [<span class="string">'aria-hidden'</span>, <span class="string">'true'</span>, <span class="string">'class'</span>, <span class="string">'preloadicon glyphicon glyphicon-remove'</span>])</div><div class="line">          e()</div><div class="line">        e()</div><div class="line">      &#125;</div><div class="line">      p(<span class="number">22</span>, <span class="string">'ngForOf'</span>, b(comp.data))</div><div class="line">      p(<span class="number">22</span>, <span class="string">'ngForTrackBy'</span>, b(comp.itemById))</div><div class="line">      cR(<span class="number">22</span>)</div><div class="line">        r(<span class="number">23</span>, <span class="number">0</span>)</div><div class="line">      cr()</div><div class="line"></div><div class="line">      <span class="function"><span class="keyword">function</span> <span class="title">trTemplate</span>(<span class="params">row: NgForOfContext&lt;Data&gt;, cm: <span class="built_in">boolean</span></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (cm) &#123;</div><div class="line">          E(<span class="number">0</span>, <span class="string">'tr'</span>)</div><div class="line">            E(<span class="number">1</span>, <span class="string">'td'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-1'</span>])</div><div class="line">              T(<span class="number">2</span>)</div><div class="line">            e()</div><div class="line">            E(<span class="number">3</span>, <span class="string">'td'</span>, [<span class="string">'class'</span>, <span class="string">'col-md-4'</span>])</div><div class="line">              E(<span class="number">4</span>, <span class="string">'a'</span>, [<span class="string">'href'</span>, <span class="string">'#'</span>])</div><div class="line">                L(<span class="string">'click'</span>, (e: MouseEvent) =&gt; &#123;</div><div class="line">                  comp.select(row.$implicit, e)</div><div class="line">                  detectChanges(comp)</div><div class="line">                &#125;)</div><div class="line">                T(<span class="number">5</span>)</div><div class="line">              e()</div><div class="line">            e()</div><div class="line">            <span class="comment">//...</span></div><div class="line">          e()</div><div class="line">        &#125;</div><div class="line">        p(<span class="number">0</span>, <span class="string">'class.danger'</span>, b(row.$implicit.id === comp.selected))</div><div class="line">        t(<span class="number">2</span>, b(row.$implicit.id))</div><div class="line">        t(<span class="number">5</span>, b(row.$implicit.label))</div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    factory: () =&gt; <span class="keyword">new</span> AppComponent()</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>(The density of information is almost as high as HTML.)</em></p>
+<p>Compiling to instructions has another advantage over compiling to data: common dependency is still DCE friendly.<br>Used instructions will be directly depended, and non-used instructions will be removed by optimizer.<br>On the other hand compiling to data requires all operations used by template processor, and thus cannot be optimized statically.</p>
+<p>Therefore, Ivy’s new compilation strategy should be the one with minimal code size (not regarding of the cost to implement compiler).</p>
+<h2 id="Memory-and-Speed"><a href="#Memory-and-Speed" class="headerlink" title="Memory and Speed"></a>Memory and Speed</h2><ul>
+<li>New view layer employs compact binary frame design (and more bitwise operations).</li>
+<li>New view layer uses as many sequences (arrays) as possible rather than key-value pairs (objects) to store data.</li>
+<li>New view layer prefers adding expando properties on exposing types rather than new wrapping type.</li>
+<li>DI uses <a href="https://en.wikipedia.org/wiki/Bloom_filter" target="_blank" rel="external">bloom filter</a> to speed up <code>Directive</code> searching</li>
+</ul>
+<p>(View layer is less friendly to pull request)</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>The new Ivy mode push “building-friendliness” to extreme, but you can also say it is not “non-building-friendly”. It won’t be useful for projects built with bare <code>&lt;script&gt;</code> tags.</p>
+<p>Ivy’s most crucial target is cooperation with <a href="https://zhuanlan.zhihu.com/p/30717321" target="_blank" rel="external">Angular Element</a>. By encapsulating Angular components to custom elements (web components), we can achieve standalone publication, independent importing and independent usage of Angular as widgets. (To some degree this strangulates Svelte?)</p>
+<p>The most important part of this strategy is code size. Even wihout common runtime library, Angular should work with minial size.<br>Components used as Angular Elements will not depended on external packages like forms and router, hence creating great value for size reduction.</p>
+<p>Whether should NgModule still exist? It certainly has value on organizing code. That said, Dart version didn’t ever has NgModule. It is sure that application structure can be well formed without NgModule (at least for Googler).<br>With decreasing usage of NgModule in real world API, it might be optional in future. But I’m sure v6 won’t change NgModule. (I personally favor NgModule, but oppose enforcing it in app).</p>
+<p>For applications plumbing many third party libraries, the main size problem might not come from Angular but rather from, for example, incorrect use of RxJS, importing <code>moment.js</code> inadvertently, or writing all styles in “comonent styles”. For specific size problem one needs to analyze it specifically. Don’t pray to Angular’s advanced optimizer.</p>
+<p>The worst part of Ivy is <code>OnChanges</code>. It is now implemented by <code>Object.defineProperty</code>! It is no longer right to say Angular is based <strong>solely</strong> on dirty check. All articles about change detection need updating! And every section needs separate explaination!</p>
+<p>Lifecycles might have big change in near future. But it will await Ivy being the default, no earlier than v7. In fact, Angular’s overall extensibility and runtime preprocessing has been greatly improved.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Angular/" rel="tag">#Angular</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/12/vue-ts3/" rel="next" title="Deep dive into Vue2.5 Typing -- A tour of advanced typing feature">
+                <i class="fa fa-chevron-left"></i> Deep dive into Vue2.5 Typing -- A tour of advanced typing feature
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Herrington Darkholme" />
+          <p class="site-author-name" itemprop="name">Herrington Darkholme</p>
+          <p class="site-description motion-element" itemprop="description">あくまでも紳士です</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Orignal-post"><span class="nav-number">1.</span> <span class="nav-text">Orignal post:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Removing-dependence-on-platform-browser"><span class="nav-number">2.</span> <span class="nav-text">A. Removing dependence on platform-browser</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-No-NgFactory-file-anymore"><span class="nav-number">3.</span> <span class="nav-text">B. No NgFactory file anymore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-Greatly-simplify-bootstrap-code"><span class="nav-number">4.</span> <span class="nav-text">C. Greatly simplify bootstrap code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#D-Redesigned-DevMode-configuration-and-checking"><span class="nav-number">5.</span> <span class="nav-text">D. Redesigned DevMode configuration and checking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#E-Feature-named-as-Feature"><span class="nav-number">6.</span> <span class="nav-text">E. Feature named as Feature</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F-New-Injectable-API"><span class="nav-number">7.</span> <span class="nav-text">F. New Injectable API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G-New-template-compilation"><span class="nav-number">8.</span> <span class="nav-text">G. New template compilation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-and-Speed"><span class="nav-number">9.</span> <span class="nav-text">Memory and Speed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">10.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Herrington Darkholme</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'hchansnote';
+      var disqus_identifier = '2018/02/19/angular-ivy/';
+      var disqus_title = "A quick intro to Angular Ivy";
+      var disqus_url = 'https://herringtondarkholme.github.io/2018/02/19/angular-ivy/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
